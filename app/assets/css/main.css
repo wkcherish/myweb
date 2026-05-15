@@ -1,0 +1,56 @@
+:root {
+  --color-bg: #f7f8fa;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f0f2f6;
+  --color-text-primary: #111827;
+  --color-text-secondary: #4b5563;
+  --color-border: #d1d5db;
+}
+
+html[data-theme='dark'] {
+  --color-bg: #0f1218;
+  --color-surface: #171c24;
+  --color-surface-muted: #232a36;
+  --color-text-primary: #f3f4f6;
+  --color-text-secondary: #c5c9d3;
+  --color-border: #334155;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#__nuxt {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0 0 0.75rem;
+  line-height: 1.2;
+}
+
+p {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+code {
+  font-family: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.9em;
+}
+
+a {
+  color: inherit;
+}

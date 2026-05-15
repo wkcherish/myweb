@@ -19,187 +19,201 @@
 
 ### 环境确认
 
-- [ ] 确认本机 Node.js 版本满足 Nuxt 3 要求。
-- [ ] 确认包管理器，默认使用 `npm`；如果改用 `pnpm` 或 `yarn`，统一更新文档命令。
-- [ ] 确认项目目录为 `/home/cherish/project/notebook`。
-- [ ] 确认后续部署方式为静态生成，即 `nuxi generate` 输出 `.output/public`。
-- [ ] 确认第一版不做登录、不做数据库、不做在线编辑后台。
-- [ ] 确认网站不能在网页端写笔记、编辑 Wiki、修改 Todo、发布文章，因为纯前端无法安全保存到后端。
-- [ ] 确认博客和 Wiki 正式内容只来自 `content/` 目录里的 Markdown 文件。
-- [ ] 确认 Todo 正式内容只来自 `content/todo/` 目录里的 Markdown 或 JSON 文件。
-- [ ] 确认网页端只提供阅读、搜索、筛选、导航、播放、问答和偏好设置。
-- [ ] 确认 `localStorage` 只保存主题、背景、播放器、小狗和面板等偏好，不保存正式笔记或 Todo。
-- [ ] 确认 Todo 是路线图和规划展示，不是网页端可持久化任务管理器。
-- [ ] 确认 Wiki 是阅读和检索型知识库，不是在线 Notion、Obsidian 或 CMS。
-- [ ] 确认 AI 面板第一版不能提供“保存到 Wiki”“生成新文章并发布”“写入 Todo”等按钮。
-- [ ] 确认 AI 第一版优先做 UI 和安全配置预留，不在前端硬编码私密 Key。
-- [ ] 确认音乐第一版采用 APlayer + MetingJS 解析 QQ 音乐公开歌单。
+- [x] 确认本机 Node.js 版本满足 Nuxt 3 要求。
+- [x] 确认包管理器，默认使用 `npm`；如果改用 `pnpm` 或 `yarn`，统一更新文档命令。
+- [x] 确认项目目录为 `/home/cherish/project/notebook`。
+- [x] 确认后续部署方式为静态生成，即 `nuxi generate` 输出 `.output/public`。
+- [x] 确认第一版不做登录、不做数据库、不做在线编辑后台。
+- [x] 确认网站不能在网页端写笔记、编辑 Wiki、修改 Todo、发布文章，因为纯前端无法安全保存到后端。
+- [x] 确认博客和 Wiki 正式内容只来自 `content/` 目录里的 Markdown 文件。
+- [x] 确认 Todo 正式内容只来自 `content/todo/` 目录里的 Markdown 或 JSON 文件。
+- [x] 确认网页端只提供阅读、搜索、筛选、导航、播放、问答和偏好设置。
+- [x] 确认 `localStorage` 只保存主题、背景、播放器、小狗和面板等偏好，不保存正式笔记或 Todo。
+- [x] 确认 Todo 是路线图和规划展示，不是网页端可持久化任务管理器。
+- [x] 确认 Wiki 是阅读和检索型知识库，不是在线 Notion、Obsidian 或 CMS。
+- [x] 确认 AI 面板第一版不能提供“保存到 Wiki”“生成新文章并发布”“写入 Todo”等按钮。
+- [x] 确认 AI 第一版优先做 UI 和安全配置预留，不在前端硬编码私密 Key。
+- [x] 确认音乐第一版采用 APlayer + MetingJS 解析 QQ 音乐公开歌单。
+
+环境确认记录（2026-05-15）：
+- Node.js: `v20.20.2`
+- npm: `10.8.2`
+- 工作目录: `/home/cherish/project/notebook`
 
 ### 设计确认
 
-- [ ] 首页视觉参考 Xiaomi MiMo 官网构图，但不使用 Xiaomi 品牌 Logo、文案和素材。
-- [ ] 首页标题替换为个人博客身份，例如博客名称或 `你好，我是 Cherish`。
-- [ ] 界面关键词确定为高级、克制、干净、有层次、有个人识别度。
-- [ ] 内容页优先阅读体验，不沿用首页强视觉动效。
-- [ ] 全站固定元素包括小狗助手、音乐面板、设置入口，必须避开正文和移动端安全区。
-- [ ] 高级界面目标确认：像个人知识产品，不像后台管理页、模板站或无法保存的假编辑器。
-- [ ] 确认 Blog、Wiki、Todo 的主操作是浏览和定位内容，不是创建和管理内容。
-- [ ] 确认界面不能有明显 AI 味：不使用廉价炫光、模板化卡片堆叠、空泛口号、过度解释型文案。
-- [ ] 确认页面文案像真人写给自己的网站，而不是生成器默认文案。
-- [ ] 确认图标、背景、小狗、音乐面板都服务于个人识别度，不做没有意义的装饰。
+- [x] 首页视觉参考 Xiaomi MiMo 官网构图，但不使用 Xiaomi 品牌 Logo、文案和素材。
+- [x] 首页标题替换为个人博客身份，例如博客名称或 `你好，我是 Cherish`。
+- [x] 界面关键词确定为高级、克制、干净、有层次、有个人识别度。
+- [x] 内容页优先阅读体验，不沿用首页强视觉动效。
+- [x] 全站固定元素包括小狗助手、音乐面板、设置入口，必须避开正文和移动端安全区。
+- [x] 高级界面目标确认：像个人知识产品，不像后台管理页、模板站或无法保存的假编辑器。
+- [x] 确认 Blog、Wiki、Todo 的主操作是浏览和定位内容，不是创建和管理内容。
+- [x] 确认界面不能有明显 AI 味：不使用廉价炫光、模板化卡片堆叠、空泛口号、过度解释型文案。
+- [x] 确认页面文案像真人写给自己的网站，而不是生成器默认文案。
+- [x] 确认图标、背景、小狗、音乐面板都服务于个人识别度，不做没有意义的装饰。
 
 ### 品牌确认
 
-- [ ] 图标、favicon、站点标识不在前置阶段提前定稿，到品牌图标阶段再集中处理。
-- [ ] 图标方向优先高级、克制、有深意，不做普通头像、不做廉价皇冠、不做网红 Logo。
-- [ ] 图标概念到品牌图标阶段再生成候选图，确认合适后再落为 favicon 和站点标识资源。
-- [ ] 图标命名、含义和视觉符号只写抽象原则，不在文档中写入真实姓名。
+- [x] 图标、favicon、站点标识不在前置阶段提前定稿，到品牌图标阶段再集中处理。
+- [x] 图标方向优先高级、克制、有深意，不做普通头像、不做廉价皇冠、不做网红 Logo。
+- [x] 图标概念到品牌图标阶段再生成候选图，确认合适后再落为 favicon 和站点标识资源。
+- [x] 图标命名、含义和视觉符号只写抽象原则，不在文档中写入真实姓名。
 
 ## 阶段 0.5：工程规范与维护约束
 
 ### 代码结构原则
 
-- [ ] 页面文件只负责组织数据和布局，不承载大量业务逻辑。
-- [ ] 复杂 UI 拆成 `components/`，复杂状态拆成 `composables/`，固定配置拆成 `config/`。
-- [ ] Nuxt 页面组件的 `template`、`script setup`、`style` 每个分区尽量不超过 200 行。
-- [ ] 普通 Vue 组件的单个逻辑分区不超过 200 行；超过时拆子组件或 composable。
-- [ ] 单个函数不超过 100 行。
-- [ ] 单个 computed、watch、事件处理函数不超过 100 行。
-- [ ] 单个配置对象数组不超过 200 行；超过时按领域拆文件，例如 `backgrounds.ts`、`nav.ts`、`music.ts`。
-- [ ] 单个 CSS 分区不超过 200 行；复杂样式按 `base`、`layout`、`components`、`prose`、`utilities` 拆分。
-- [ ] 不把 API 配置、视觉 token、静态文案和业务逻辑混在一个文件里。
+- [x] 页面文件只负责组织数据和布局，不承载大量业务逻辑。
+- [x] 复杂 UI 拆成 `components/`，复杂状态拆成 `composables/`，固定配置拆成 `config/`。
+- [x] Nuxt 页面组件的 `template`、`script setup`、`style` 每个分区尽量不超过 200 行。
+- [x] 普通 Vue 组件的单个逻辑分区不超过 200 行；超过时拆子组件或 composable。
+- [x] 单个函数不超过 100 行。
+- [x] 单个 computed、watch、事件处理函数不超过 100 行。
+- [x] 单个配置对象数组不超过 200 行；超过时按领域拆文件，例如 `backgrounds.ts`、`nav.ts`、`music.ts`。
+- [x] 单个 CSS 分区不超过 200 行；复杂样式按 `base`、`layout`、`components`、`prose`、`utilities` 拆分。
+- [x] 不把 API 配置、视觉 token、静态文案和业务逻辑混在一个文件里。
 
 ### 命名与职责
 
-- [ ] 组件使用 PascalCase，例如 `MimoInspiredHero.vue`、`PetDogAssistant.vue`。
-- [ ] composable 使用 `useXxx.ts`，只暴露必要状态和方法。
-- [ ] 配置文件使用领域名，例如 `backgrounds.ts`、`site.ts`、`music.ts`、`ai.ts`。
-- [ ] 工具函数命名表达结果或动作，例如 `formatDate`、`getReadingTime`、`groupTasksByStatus`。
-- [ ] 布尔变量使用 `is`、`has`、`can`、`should` 开头。
-- [ ] 事件处理函数使用 `handle` 开头，例如 `handleThemeChange`。
-- [ ] 不使用 `data1`、`list2`、`temp`、`foo`、`bar` 这类无法维护的命名。
+- [x] 组件使用 PascalCase，例如 `MimoInspiredHero.vue`、`PetDogAssistant.vue`。
+- [x] composable 使用 `useXxx.ts`，只暴露必要状态和方法。
+- [x] 配置文件使用领域名，例如 `backgrounds.ts`、`site.ts`、`music.ts`、`ai.ts`。
+- [x] 工具函数命名表达结果或动作，例如 `formatDate`、`getReadingTime`、`groupTasksByStatus`。
+- [x] 布尔变量使用 `is`、`has`、`can`、`should` 开头。
+- [x] 事件处理函数使用 `handle` 开头，例如 `handleThemeChange`。
+- [x] 不使用 `data1`、`list2`、`temp`、`foo`、`bar` 这类无法维护的命名。
 
 ### TypeScript 规范
 
-- [ ] 为 Blog、Wiki、Todo、背景、音乐、AI 消息定义明确类型。
-- [ ] 避免使用 `any`；确实无法避免时写清楚原因并尽快收敛类型。
-- [ ] 对 frontmatter 建立类型或 schema，避免页面里到处猜字段。
-- [ ] 对状态枚举使用 union type，例如 `ThemeMode = 'system' | 'light' | 'dark'`。
-- [ ] 对 Todo 状态和优先级使用固定 union type，不散落字符串。
-- [ ] 对外部库对象做好空值判断，避免静态生成和客户端挂载阶段报错。
+- [x] 为 Blog、Wiki、Todo、背景、音乐、AI 消息定义明确类型。
+- [x] 避免使用 `any`；确实无法避免时写清楚原因并尽快收敛类型。
+- [x] 对 frontmatter 建立类型或 schema，避免页面里到处猜字段。
+- [x] 对状态枚举使用 union type，例如 `ThemeMode = 'system' | 'light' | 'dark'`。
+- [x] 对 Todo 状态和优先级使用固定 union type，不散落字符串。
+- [x] 对外部库对象做好空值判断，避免静态生成和客户端挂载阶段报错。
 
 ### Vue 与 Nuxt 规范
 
-- [ ] 所有访问 `window`、`document`、`localStorage` 的逻辑只在客户端执行。
-- [ ] 第三方播放器、AI 面板等浏览器依赖组件使用 `<ClientOnly>` 或 mounted 状态保护。
-- [ ] 页面级数据读取使用 Nuxt Content 的约定 API，不在多个页面重复写复杂查询。
-- [ ] 列表渲染必须使用稳定 key，不使用数组 index 作为长期 key。
-- [ ] 弹层、抽屉、菜单都支持关闭按钮、点击外部关闭和 Escape 关闭。
-- [ ] 组件 props 要有清晰类型，必要时提供默认值。
-- [ ] emit 事件命名保持明确，例如 `update:open`、`select-background`。
+- [x] 所有访问 `window`、`document`、`localStorage` 的逻辑只在客户端执行。
+- [x] 第三方播放器、AI 面板等浏览器依赖组件使用 `<ClientOnly>` 或 mounted 状态保护。
+- [x] 页面级数据读取使用 Nuxt Content 的约定 API，不在多个页面重复写复杂查询。
+- [x] 列表渲染必须使用稳定 key，不使用数组 index 作为长期 key。
+- [x] 弹层、抽屉、菜单都支持关闭按钮、点击外部关闭和 Escape 关闭。
+- [x] 组件 props 要有清晰类型，必要时提供默认值。
+- [x] emit 事件命名保持明确，例如 `update:open`、`select-background`。
 
 ### 样式规范
 
-- [ ] 所有颜色优先来自 CSS token，不在组件里散落硬编码颜色。
-- [ ] 间距、圆角、阴影、动效时间优先使用统一 token。
-- [ ] 不使用负字距。
-- [ ] 不用大面积渐变、光斑、霓虹、毛玻璃堆叠制造“高级感”。
-- [ ] 每个固定定位元素都要有移动端和安全区策略。
-- [ ] 组件 hover 不做大幅移动，避免廉价浮动感。
-- [ ] 图标按钮优先使用 lucide 图标，并补充 `aria-label`。
+- [x] 所有颜色优先来自 CSS token，不在组件里散落硬编码颜色。
+- [x] 间距、圆角、阴影、动效时间优先使用统一 token。
+- [x] 不使用负字距。
+- [x] 不用大面积渐变、光斑、霓虹、毛玻璃堆叠制造“高级感”。
+- [x] 每个固定定位元素都要有移动端和安全区策略。
+- [x] 组件 hover 不做大幅移动，避免廉价浮动感。
+- [x] 图标按钮优先使用 lucide 图标，并补充 `aria-label`。
 
 ### 文案规范
 
-- [ ] 页面文案短、具体、有人味，不写空泛口号。
-- [ ] 避免 `探索无限可能`、`开启智慧之旅`、`赋能创作`、`灵感宇宙` 等 AI 味强的模板句。
-- [ ] 空状态说明下一步，但不暗示网页端可以新增或保存正式内容。
-- [ ] 错误状态说明发生了什么、用户能做什么，不甩锅给“系统繁忙”。
-- [ ] 关于页文案保持真实、克制，可以有个性，但不过度包装。
+- [x] 页面文案短、具体、有人味，不写空泛口号。
+- [x] 避免 `探索无限可能`、`开启智慧之旅`、`赋能创作`、`灵感宇宙` 等 AI 味强的模板句。
+- [x] 空状态说明下一步，但不暗示网页端可以新增或保存正式内容。
+- [x] 错误状态说明发生了什么、用户能做什么，不甩锅给“系统繁忙”。
+- [x] 关于页文案保持真实、克制，可以有个性，但不过度包装。
 
 ### 注释与可维护性
 
-- [ ] 代码只在复杂逻辑前写简短注释，不写“把 A 赋值给 B”这类无效注释。
-- [ ] 复杂计算拆函数，并用函数名表达意图。
-- [ ] 组件顶部保持结构清楚：imports、types、props、state、computed、methods、lifecycle。
-- [ ] 每个 composable 只解决一个领域问题，不做万能状态中心。
-- [ ] 新增依赖前确认现有工具无法满足需求。
-- [ ] 不为一次性需求过度抽象。
+- [x] 代码只在复杂逻辑前写简短注释，不写“把 A 赋值给 B”这类无效注释。
+- [x] 复杂计算拆函数，并用函数名表达意图。
+- [x] 组件顶部保持结构清楚：imports、types、props、state、computed、methods、lifecycle。
+- [x] 每个 composable 只解决一个领域问题，不做万能状态中心。
+- [x] 新增依赖前确认现有工具无法满足需求。
+- [x] 不为一次性需求过度抽象。
 
 ### 提交前自检
 
-- [ ] 运行类型检查或构建命令。
-- [ ] 检查控制台没有关键错误。
-- [ ] 检查新增文件没有真实 Key、隐私信息和本地绝对路径。
-- [ ] 检查函数长度和组件分区长度是否超过约束。
-- [ ] 检查新增 UI 是否符合高级、克制、无 AI 味的方向。
-- [ ] 检查网页端没有新增正式内容写入能力。
+- [x] 运行类型检查或构建命令。
+- [x] 检查控制台没有关键错误。
+- [x] 检查新增文件没有真实 Key、隐私信息和本地绝对路径。
+- [x] 检查函数长度和组件分区长度是否超过约束。
+- [x] 检查新增 UI 是否符合高级、克制、无 AI 味的方向。
+- [x] 检查网页端没有新增正式内容写入能力。
+
+阶段 0.5 规范生效记录（2026-05-15）：
+- 本阶段作为团队开发约束基线，即日起用于后续所有代码实现与提交自检。
 
 ## 阶段 1：初始化 Nuxt 项目
 
 ### 项目脚手架
 
-- [ ] 在仓库根目录初始化 Nuxt 3 项目。
-- [ ] 创建或更新 `package.json`。
-- [ ] 安装 Nuxt、Vue、TypeScript 相关基础依赖。
-- [ ] 安装 Nuxt Content。
-- [ ] 安装 Pinia。
-- [ ] 安装 Tailwind CSS 或 UnoCSS，优先选择一种，不同时引入两套原子 CSS。
-- [ ] 安装 `lucide-vue-next`。
-- [ ] 安装或通过 CDN 引入 APlayer 和 MetingJS，实际方案在音乐阶段最终确认。
-- [ ] 创建 `.gitignore`，忽略 `node_modules`、`.output`、`.nuxt`、`.env.local`。
-- [ ] 创建 `.env.example`，只写占位配置，不写真实 Key。
+- [x] 在仓库根目录初始化 Nuxt 3 项目。
+- [x] 创建或更新 `package.json`。
+- [x] 安装 Nuxt、Vue、TypeScript 相关基础依赖。
+- [x] 安装 Nuxt Content。
+- [x] 安装 Pinia。
+- [x] 安装 Tailwind CSS 或 UnoCSS，优先选择一种，不同时引入两套原子 CSS。
+- [x] 安装 `lucide-vue-next`。
+- [x] 安装或通过 CDN 引入 APlayer 和 MetingJS，实际方案在音乐阶段最终确认。
+- [x] 创建 `.gitignore`，忽略 `node_modules`、`.output`、`.nuxt`、`.env.local`。
+- [x] 创建 `.env.example`，只写占位配置，不写真实 Key。
 
 ### 推荐初始文件
 
-- [ ] 创建 `nuxt.config.ts`。
-- [ ] 创建 `app/app.vue` 或 Nuxt 约定入口文件。
-- [ ] 创建 `app/layouts/default.vue`。
-- [ ] 创建 `app/pages/index.vue`。
-- [ ] 创建 `app/pages/blog/index.vue`。
-- [ ] 创建 `app/pages/wiki/index.vue`。
-- [ ] 创建 `app/pages/todo/index.vue`。
-- [ ] 创建 `app/pages/about.vue`。
-- [ ] 创建 `app/assets/css/main.css`。
-- [ ] 创建 `content/blog/README.md`。
-- [ ] 创建 `content/wiki/README.md`。
-- [ ] 创建 `content/todo/README.md`。
-- [ ] 在 `content/README.md` 或项目 README 中说明内容只能通过本地文件维护。
-- [ ] 创建 `public/backgrounds/`。
-- [ ] 创建 `public/backgrounds/home/`。
-- [ ] 创建 `public/backgrounds/home/day/`，用于后续放入博客主页白天模式背景。
-- [ ] 创建 `public/backgrounds/home/night/`，用于后续放入博客主页黑夜模式背景。
-- [ ] 创建 `public/backgrounds/shared/`，用于多个页面可复用的通用背景。
-- [ ] 创建 `public/pet/`。
-- [ ] 创建 `public/music/`。
-- [ ] 创建 `public/images/`。
-- [ ] 创建 `public/icons/`，用于存放站点图标、favicon、PWA 图标和候选稿。
-- [ ] 创建 `app/config/backgrounds.ts`，集中维护背景路径、名称、适用主题和遮罩强度。
-- [ ] 创建 `app/config/site.ts`，集中维护站点名称、作者名、描述、导航、图标路径和社交链接。
+- [x] 创建 `nuxt.config.ts`。
+- [x] 创建 `app/app.vue` 或 Nuxt 约定入口文件。
+- [x] 创建 `app/layouts/default.vue`。
+- [x] 创建 `app/pages/index.vue`。
+- [x] 创建 `app/pages/blog/index.vue`。
+- [x] 创建 `app/pages/wiki/index.vue`。
+- [x] 创建 `app/pages/todo/index.vue`。
+- [x] 创建 `app/pages/about.vue`。
+- [x] 创建 `app/assets/css/main.css`。
+- [x] 创建 `content/blog/README.md`。
+- [x] 创建 `content/wiki/README.md`。
+- [x] 创建 `content/todo/README.md`。
+- [x] 在 `content/README.md` 或项目 README 中说明内容只能通过本地文件维护。
+- [x] 创建 `public/backgrounds/`。
+- [x] 创建 `public/backgrounds/home/`。
+- [x] 创建 `public/backgrounds/home/day/`，用于后续放入博客主页白天模式背景。
+- [x] 创建 `public/backgrounds/home/night/`，用于后续放入博客主页黑夜模式背景。
+- [x] 创建 `public/backgrounds/shared/`，用于多个页面可复用的通用背景。
+- [x] 创建 `public/pet/`。
+- [x] 创建 `public/music/`。
+- [x] 创建 `public/images/`。
+- [x] 创建 `public/icons/`，用于存放站点图标、favicon、PWA 图标和候选稿。
+- [x] 创建 `app/config/backgrounds.ts`，集中维护背景路径、名称、适用主题和遮罩强度。
+- [x] 创建 `app/config/site.ts`，集中维护站点名称、作者名、描述、导航、图标路径和社交链接。
 
 ### Nuxt 基础配置
 
-- [ ] 在 `nuxt.config.ts` 启用 TypeScript 严格模式。
-- [ ] 配置全局 CSS 入口。
-- [ ] 配置 Nuxt Content 模块。
-- [ ] 配置 Pinia 模块或插件。
-- [ ] 配置站点 `head` 基础信息，包括 title、description、viewport。
-- [ ] 配置 favicon 占位路径，最终图标确认后替换。
-- [ ] 配置 Apple touch icon 和 PWA icon 的预留位置。
-- [ ] 配置静态生成所需选项。
-- [ ] 配置深色模式 class 或 data attribute 策略。
-- [ ] 配置白天/黑夜主题切换策略，支持 system、light、dark。
-- [ ] 确认 light 对应白天模式，dark 对应黑夜模式。
-- [ ] 预留 APlayer/MetingJS 的 head script/link 配置位置。
-- [ ] 配置 Vue compiler，把 `meting-js` 识别为自定义元素。
-- [ ] 不配置任何网页端写文件、提交表单到后端或在线 CMS 的入口。
+- [x] 在 `nuxt.config.ts` 启用 TypeScript 严格模式。
+- [x] 配置全局 CSS 入口。
+- [x] 配置 Nuxt Content 模块。
+- [x] 配置 Pinia 模块或插件。
+- [x] 配置站点 `head` 基础信息，包括 title、description、viewport。
+- [x] 配置 favicon 占位路径，最终图标确认后替换。
+- [x] 配置 Apple touch icon 和 PWA icon 的预留位置。
+- [x] 配置静态生成所需选项。
+- [x] 配置深色模式 class 或 data attribute 策略。
+- [x] 配置白天/黑夜主题切换策略，支持 system、light、dark。
+- [x] 确认 light 对应白天模式，dark 对应黑夜模式。
+- [x] 预留 APlayer/MetingJS 的 head script/link 配置位置。
+- [x] 配置 Vue compiler，把 `meting-js` 识别为自定义元素。
+- [x] 不配置任何网页端写文件、提交表单到后端或在线 CMS 的入口。
 
 ### 阶段验收
 
-- [ ] `npm install` 成功。
-- [ ] `npm run dev` 能启动。
-- [ ] 首页、博客、Wiki、Todo、关于路由能访问。
-- [ ] 页面没有明显控制台错误。
-- [ ] `.env.local` 没有被提交。
+- [x] `npm install` 成功。
+- [x] `npm run dev` 能启动。
+- [x] 首页、博客、Wiki、Todo、关于路由能访问。
+- [x] 页面没有明显控制台错误。
+- [x] `.env.local` 没有被提交。
+
+阶段 1 验收记录（2026-05-15）：
+- 依赖安装完成，技术栈锁定为 Nuxt 3（`nuxt@3.21.5`）。
+- `npm run dev` 已启动并提供本地访问地址（自动切换到 `127.0.0.1:3007`）。
+- 首页、Blog、Wiki、Todo、关于路由均返回 `HTTP 200`。
+- `npm run generate` 成功，静态产物输出到 `.output/public`。
 
 ## 阶段 2：设计系统与高级界面基础
 
