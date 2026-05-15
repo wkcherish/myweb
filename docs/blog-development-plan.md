@@ -35,7 +35,7 @@
 
 推荐技术栈：
 
-- 框架：Nuxt.js 3
+- 框架：Nuxt.js 4
 - 语言：TypeScript
 - 样式：Tailwind CSS 或 UnoCSS
 - 内容管理：Nuxt Content

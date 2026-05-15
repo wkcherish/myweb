@@ -1,8 +1,15 @@
 import { defineNuxtConfig } from 'nuxt/config'
+import packageJson from './package.json'
+
+const rawNuxtVersion = packageJson.devDependencies.nuxt ?? '4'
+const installedNuxtVersion = rawNuxtVersion.replace(/^[^\d]*/, '')
 
 export default defineNuxtConfig({
   compatibilityDate: '2026-05-15',
   srcDir: 'app/',
+  dir: {
+    public: 'public',
+  },
   devtools: { enabled: true },
   typescript: {
     strict: true,
@@ -60,6 +67,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
+      nuxtVersion: installedNuxtVersion,
       aiApiBase: '',
       aiModel: '',
       qqPlaylistId: '',
@@ -67,6 +75,8 @@ export default defineNuxtConfig({
     },
   },
   nitro: {
+    debug: false,
+    timing: false,
     preset: 'static',
     prerender: {
       crawlLinks: true,

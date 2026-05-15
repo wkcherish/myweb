@@ -1,6 +1,6 @@
 # 个人博客开发 Todo 清单
 
-本清单基于 `docs/blog-development-plan.md` 拆分，目标是可以直接按顺序开发。默认技术路线为 Nuxt.js 3、TypeScript、Tailwind CSS 或 UnoCSS、Nuxt Content、Pinia、lucide-vue-next、APlayer + MetingJS、静态生成部署。
+本清单基于 `docs/blog-development-plan.md` 拆分，目标是可以直接按顺序开发。默认技术路线为 Nuxt.js 4、TypeScript、Tailwind CSS 或 UnoCSS、Nuxt Content、Pinia、lucide-vue-next、APlayer + MetingJS、静态生成部署。
 
 ## 使用方式
 
@@ -19,7 +19,7 @@
 
 ### 环境确认
 
-- [x] 确认本机 Node.js 版本满足 Nuxt 3 要求。
+- [x] 确认本机 Node.js 版本满足 Nuxt 4 要求。
 - [x] 确认包管理器，默认使用 `npm`；如果改用 `pnpm` 或 `yarn`，统一更新文档命令。
 - [x] 确认项目目录为 `/home/cherish/project/notebook`。
 - [x] 确认后续部署方式为静态生成，即 `nuxi generate` 输出 `.output/public`。
@@ -146,7 +146,7 @@
 
 ### 项目脚手架
 
-- [x] 在仓库根目录初始化 Nuxt 3 项目。
+- [x] 在仓库根目录初始化 Nuxt 4 项目。
 - [x] 创建或更新 `package.json`。
 - [x] 安装 Nuxt、Vue、TypeScript 相关基础依赖。
 - [x] 安装 Nuxt Content。
@@ -210,8 +210,8 @@
 - [x] `.env.local` 没有被提交。
 
 阶段 1 验收记录（2026-05-15）：
-- 依赖安装完成，技术栈锁定为 Nuxt 3（`nuxt@3.21.5`）。
-- `npm run dev` 已启动并提供本地访问地址（自动切换到 `127.0.0.1:3007`）。
+- 依赖安装完成，技术栈锁定为 Nuxt 4（`nuxt@4.4.5`）。
+- `npm run dev` 已启动并提供本地访问地址（`127.0.0.1:5176`）。
 - 首页、Blog、Wiki、Todo、关于路由均返回 `HTTP 200`。
 - `npm run generate` 成功，静态产物输出到 `.output/public`。
 
@@ -219,72 +219,77 @@
 
 ### 设计 Token
 
-- [ ] 在 `app/assets/css/main.css` 中定义浅色主题 CSS 变量。
-- [ ] 定义深色主题 CSS 变量。
-- [ ] 定义白天模式主页背景遮罩 token，例如 `--home-bg-overlay-light`。
-- [ ] 定义黑夜模式主页背景遮罩 token，例如 `--home-bg-overlay-dark`。
-- [ ] 定义颜色 token：背景、前景、弱文本、边框、主色、强调色、危险色、成功色、警告色。
-- [ ] 定义间距 token：`4px`、`8px`、`12px`、`16px`、`24px`、`32px`、`48px`、`64px`。
-- [ ] 定义圆角 token：`4px`、`8px`、`12px`、`999px`。
-- [ ] 定义阴影 token：轻阴影、中阴影、浮层阴影。
-- [ ] 定义动效 token：`120ms`、`180ms`、`240ms`、`280ms`。
-- [ ] 定义布局宽度：正文宽度、内容区宽度、宽屏区宽度。
-- [ ] 定义 `prefers-reduced-motion` 下的动效降级规则。
+- [x] 在 `app/assets/css/main.css` 中定义浅色主题 CSS 变量。
+- [x] 定义深色主题 CSS 变量。
+- [x] 定义白天模式主页背景遮罩 token，例如 `--home-bg-overlay-light`。
+- [x] 定义黑夜模式主页背景遮罩 token，例如 `--home-bg-overlay-dark`。
+- [x] 定义颜色 token：背景、前景、弱文本、边框、主色、强调色、危险色、成功色、警告色。
+- [x] 定义间距 token：`4px`、`8px`、`12px`、`16px`、`24px`、`32px`、`48px`、`64px`。
+- [x] 定义圆角 token：`4px`、`8px`、`12px`、`999px`。
+- [x] 定义阴影 token：轻阴影、中阴影、浮层阴影。
+- [x] 定义动效 token：`120ms`、`180ms`、`240ms`、`280ms`。
+- [x] 定义布局宽度：正文宽度、内容区宽度、宽屏区宽度。
+- [x] 定义 `prefers-reduced-motion` 下的动效降级规则。
 
 ### 全局基础样式
 
-- [ ] 设置 `html`、`body`、`#__nuxt` 的高度和基础背景。
-- [ ] 设置全局字体栈，包含中文系统字体。
-- [ ] 设置正文行高、默认字体大小、文本渲染。
-- [ ] 设置链接默认样式、hover 样式、focus-visible 样式。
-- [ ] 设置按钮、输入框、textarea 的基础 reset。
-- [ ] 设置图片、视频、canvas 的响应式规则。
-- [ ] 设置滚动条样式，保证深浅色主题一致。
-- [ ] 设置选中文本颜色。
+- [x] 设置 `html`、`body`、`#__nuxt` 的高度和基础背景。
+- [x] 设置全局字体栈，包含中文系统字体。
+- [x] 设置正文行高、默认字体大小、文本渲染。
+- [x] 设置链接默认样式、hover 样式、focus-visible 样式。
+- [x] 设置按钮、输入框、textarea 的基础 reset。
+- [x] 设置图片、视频、canvas 的响应式规则。
+- [x] 设置滚动条样式，保证深浅色主题一致。
+- [x] 设置选中文本颜色。
 
 ### 基础 UI 组件
 
-- [ ] 创建 `app/components/ui/BaseButton.vue`。
-- [ ] `BaseButton` 支持 primary、secondary、ghost、danger 四种 variant。
-- [ ] `BaseButton` 支持 loading、disabled、icon-only 状态。
-- [ ] `BaseButton` 保证移动端触控高度不低于 `44px`。
-- [ ] 创建 `app/components/ui/IconButton.vue`。
-- [ ] `IconButton` 使用 lucide 图标插槽或 prop。
-- [ ] `IconButton` 支持 tooltip 或 aria-label。
-- [ ] 创建 `app/components/ui/BasePanel.vue`。
-- [ ] `BasePanel` 统一浮层边框、阴影、背景模糊和圆角。
-- [ ] 创建 `app/components/ui/BaseTag.vue`。
-- [ ] `BaseTag` 支持分类、状态、优先级样式。
-- [ ] 创建 `app/components/ui/EmptyState.vue`。
-- [ ] 创建 `app/components/ui/ErrorState.vue`。
-- [ ] 创建 `app/components/ui/LoadingState.vue`。
+- [x] 创建 `app/components/ui/BaseButton.vue`。
+- [x] `BaseButton` 支持 primary、secondary、ghost、danger 四种 variant。
+- [x] `BaseButton` 支持 loading、disabled、icon-only 状态。
+- [x] `BaseButton` 保证移动端触控高度不低于 `44px`。
+- [x] 创建 `app/components/ui/IconButton.vue`。
+- [x] `IconButton` 使用 lucide 图标插槽或 prop。
+- [x] `IconButton` 支持 tooltip 或 aria-label。
+- [x] 创建 `app/components/ui/BasePanel.vue`。
+- [x] `BasePanel` 统一浮层边框、阴影、背景模糊和圆角。
+- [x] 创建 `app/components/ui/BaseTag.vue`。
+- [x] `BaseTag` 支持分类、状态、优先级样式。
+- [x] 创建 `app/components/ui/EmptyState.vue`。
+- [x] 创建 `app/components/ui/ErrorState.vue`。
+- [x] 创建 `app/components/ui/LoadingState.vue`。
 
 ### 高级感检查
 
-- [ ] 检查页面没有使用浏览器默认蓝色按钮。
-- [ ] 检查卡片没有过大圆角和过重阴影。
-- [ ] 检查没有大面积霓虹、渐变光斑或装饰性浮球。
-- [ ] 检查文本没有负字距。
-- [ ] 检查按钮文字不会挤出容器。
-- [ ] 检查深色模式不是纯黑铺底。
-- [ ] 检查白天模式背景不影响深色标题可读性。
-- [ ] 检查黑夜模式背景不出现刺眼高亮区域。
-- [ ] 检查首页背景、字母矩阵、圆形和标题在两种主题下层级清楚。
-- [ ] 检查首页有强识别度，内容页保持克制阅读体验。
-- [ ] 检查组件状态完整，包括 hover、focus、active、disabled、loading、empty、error。
-- [ ] 检查固定元素不遮挡正文、目录、代码块、播放器和移动端底部安全区。
-- [ ] 检查 UI 文案没有暗示网页端可以保存正式内容。
-- [ ] 检查 Todo、Wiki、Blog 没有使用后台管理风格的工具栏。
+- [x] 检查页面没有使用浏览器默认蓝色按钮。
+- [x] 检查卡片没有过大圆角和过重阴影。
+- [x] 检查没有大面积霓虹、渐变光斑或装饰性浮球。
+- [x] 检查文本没有负字距。
+- [x] 检查按钮文字不会挤出容器。
+- [x] 检查深色模式不是纯黑铺底。
+- [x] 检查白天模式背景不影响深色标题可读性。
+- [x] 检查黑夜模式背景不出现刺眼高亮区域。
+- [x] 检查首页背景、字母矩阵、圆形和标题在两种主题下层级清楚。
+- [x] 检查首页有强识别度，内容页保持克制阅读体验。
+- [x] 检查组件状态完整，包括 hover、focus、active、disabled、loading、empty、error。
+- [x] 检查固定元素不遮挡正文、目录、代码块、播放器和移动端底部安全区。
+- [x] 检查 UI 文案没有暗示网页端可以保存正式内容。
+- [x] 检查 Todo、Wiki、Blog 没有使用后台管理风格的工具栏。
 
 ### 无 AI 味检查
 
-- [ ] 检查页面是否出现模板站常见的大而空 hero 文案。
-- [ ] 检查是否使用过多发光边框、渐变网格、玻璃卡片和悬浮装饰。
-- [ ] 检查插图、图标和背景是否有廉价生成感，例如细节脏、光源混乱、符号无意义。
-- [ ] 检查文案是否像真人个人博客，而不是 SaaS 营销页。
-- [ ] 检查每个模块是否有真实信息价值，不用装饰性内容填满页面。
-- [ ] 检查 AI 面板的语气克制，不自称“智能助手为你赋能创作”。
-- [ ] 检查小狗助手有个人记忆点，但不使用过度拟人和夸张台词。
+- [x] 检查页面是否出现模板站常见的大而空 hero 文案。
+- [x] 检查是否使用过多发光边框、渐变网格、玻璃卡片和悬浮装饰。
+- [x] 检查插图、图标和背景是否有廉价生成感，例如细节脏、光源混乱、符号无意义。
+- [x] 检查文案是否像真人个人博客，而不是 SaaS 营销页。
+- [x] 检查每个模块是否有真实信息价值，不用装饰性内容填满页面。
+- [x] 检查 AI 面板的语气克制，不自称“智能助手为你赋能创作”。
+- [x] 检查小狗助手有个人记忆点，但不使用过度拟人和夸张台词。
+
+阶段 2 验收记录（2026-05-16）：
+- 首页 Nuxt 技术标签改为读取运行时真实版本（当前显示 `Nuxt 4.4.5`）。
+- 首页补充低透明字母矩阵与圆形视觉锚点，浅色/深色模式下层级和可读性通过检查。
+- 按钮、卡片、空状态、错误状态、加载状态及浮动入口的交互状态完成核对。
 
 ## 阶段 2.5：品牌图标与站点标识
 
@@ -331,25 +336,25 @@
 
 ### 布局组件
 
-- [ ] 创建 `app/components/layout/AppHeader.vue`。
-- [ ] 创建 `app/components/layout/AppFooter.vue`。
-- [ ] 创建 `app/components/layout/MobileNav.vue`。
-- [ ] 创建 `app/components/layout/PageShell.vue`。
-- [ ] 在 `default.vue` 中挂载 Header、主内容、Footer、小狗助手、音乐面板、设置面板、AI 面板入口。
-- [ ] Header 左侧展示站点名称或 Logo。
-- [ ] Header 右侧展示 Blog、Wiki、Todo、About 导航。
-- [ ] Header 提供主题切换入口或设置入口。
-- [ ] 移动端 Header 使用紧凑菜单，不让导航挤满顶部。
-- [ ] Footer 展示版权、站点说明、备案号占位。
+- [x] 创建 `app/components/layout/AppHeader.vue`。
+- [x] 创建 `app/components/layout/AppFooter.vue`。
+- [x] 创建 `app/components/layout/MobileNav.vue`。
+- [x] 创建 `app/components/layout/PageShell.vue`。
+- [x] 在 `default.vue` 中挂载 Header、主内容、Footer、小狗助手、音乐面板、设置面板、AI 面板入口。
+- [x] Header 左侧展示站点名称或 Logo。
+- [x] Header 右侧展示 Blog、Wiki、Todo、About 导航。
+- [x] Header 提供主题切换入口或设置入口。
+- [x] 移动端 Header 使用紧凑菜单，不让导航挤满顶部。
+- [x] Footer 展示版权、站点说明、备案号占位。
 
 ### 路由与导航状态
 
-- [ ] 高亮当前路由。
-- [ ] 导航 hover、active、focus 状态一致。
-- [ ] 移动端菜单打开后可关闭。
-- [ ] 点击路由后移动端菜单自动关闭。
-- [ ] 键盘 Tab 可以访问导航。
-- [ ] Escape 可以关闭移动端菜单。
+- [x] 高亮当前路由。
+- [x] 导航 hover、active、focus 状态一致。
+- [x] 移动端菜单打开后可关闭。
+- [x] 点击路由后移动端菜单自动关闭。
+- [x] 键盘 Tab 可以访问导航。
+- [x] Escape 可以关闭移动端菜单。
 
 ### 阶段验收
 
