@@ -218,7 +218,6 @@ onBeforeUnmount(() => {
   transition:
     width var(--motion-180) ease,
     height var(--motion-180) ease,
-    transform var(--motion-240) ease,
     background-color var(--motion-180) ease,
     border-color var(--motion-180) ease,
     opacity var(--motion-120) ease;
