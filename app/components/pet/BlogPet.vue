@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
 import { useHomeBackground } from '~/composables/useHomeBackground'
+import { useMusicPlayer } from '~/composables/useMusicPlayer'
 
 const isMenuOpen = ref(false)
 const isBackgroundPickerOpen = ref(false)
@@ -41,6 +42,7 @@ const celebrationParticles = [
 let celebrationTimer: ReturnType<typeof setTimeout> | null = null
 const { availableBackgrounds, selectedBackgroundId, setHomeBackground, refreshHomeBackgrounds, syncHomeBackgroundFromStorage } =
   useHomeBackground()
+const { isPlaying: isMusicPlaying } = useMusicPlayer()
 
 const petStyle = computed(() => {
   if (!hasCustomPosition.value) {
@@ -364,7 +366,7 @@ onBeforeUnmount(() => {
     v-else
     ref="petRoot"
     class="blog-pet"
-    :class="{ 'is-open': isMenuOpen, 'is-dragging': didDrag, 'is-celebrating': isCelebrating }"
+    :class="{ 'is-open': isMenuOpen, 'is-dragging': didDrag, 'is-celebrating': isCelebrating, 'is-music-playing': isMusicPlaying }"
     :style="petStyle"
     @pointerdown="handlePointerDown"
     @pointermove="handlePointerMove"
@@ -511,6 +513,15 @@ onBeforeUnmount(() => {
           <path class="dog-face-highlight" d="M68 57c7-10 15-15 24-15" />
           <path class="dog-brow dog-brow--left" d="M52 61c8-9 18-12 29-7-8 9-18 13-29 7Z" />
           <path class="dog-brow dog-brow--right" d="M132 61c-8-9-18-12-29-7 8 9 18 13 29 7Z" />
+          <g v-if="isMusicPlaying" class="dog-headphones" aria-hidden="true">
+            <path class="dog-headphones-band" d="M40 58c4-20 22-32 50-32s46 12 50 32" />
+            <path class="dog-headphones-cable" d="M33 70v18" />
+            <path class="dog-headphones-cable" d="M147 70v18" />
+            <rect class="dog-headphones-earcup" x="24" y="55" width="18" height="28" rx="8" />
+            <rect class="dog-headphones-earcup" x="138" y="55" width="18" height="28" rx="8" />
+            <rect class="dog-headphones-pad" x="28" y="60" width="10" height="18" rx="4" />
+            <rect class="dog-headphones-pad" x="142" y="60" width="10" height="18" rx="4" />
+          </g>
 
           <g class="dog-eyes">
             <g class="dog-eye dog-eye--left">
@@ -712,6 +723,31 @@ onBeforeUnmount(() => {
 .dog-brow {
   fill: #fff8ed;
   opacity: 0.95;
+}
+
+.dog-headphones-band {
+  fill: none;
+  stroke: #60a5fa;
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+
+.dog-headphones-cable {
+  fill: none;
+  stroke: #93c5fd;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+}
+
+.dog-headphones-earcup {
+  fill: #1e3a8a;
+  stroke: #dbeafe;
+  stroke-width: 1.8;
+}
+
+.dog-headphones-pad {
+  fill: #bfdbfe;
+  opacity: 0.84;
 }
 
 .dog-eyes {
@@ -1064,6 +1100,12 @@ onBeforeUnmount(() => {
   animation: bandana-pop 780ms ease both;
 }
 
+.blog-pet.is-music-playing .dog-headphones {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: headphone-bounce 760ms ease-in-out infinite;
+}
+
 .pet-menu-enter-active,
 .pet-menu-leave-active,
 .pet-panel-enter-active,
@@ -1169,6 +1211,17 @@ onBeforeUnmount(() => {
 
   44% {
     transform: scale(1.08);
+  }
+}
+
+@keyframes headphone-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-0.8px);
   }
 }
 

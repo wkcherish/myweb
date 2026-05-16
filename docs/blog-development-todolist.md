@@ -720,93 +720,58 @@
 - 新增 `PetDogAssistant` 与 `PetActionMenu`，小狗默认右下角偏上显示，支持拖动、隐藏、复位、点击外部关闭和 Escape 关闭。
 - 小狗菜单接入 AI、音乐、设置占位面板，支持换背景和回到顶部；没有加入任何正式内容写入入口。
 
-## 阶段 10：设置与背景系统
-
-### 状态管理
-
-- [ ] 创建 `app/composables/useSiteSettings.ts`。
-- [ ] 管理主题模式：system、light、dark。
-- [ ] light 显示为白天模式，dark 显示为黑夜模式。
-- [ ] 管理背景选择。
-- [ ] 管理主页背景模式：跟随主题、指定白天背景、指定黑夜背景、随机。
-- [ ] 从 `app/config/backgrounds.ts` 读取背景分组。
-- [ ] 管理字体密度：standard、comfortable、compact。
-- [ ] 管理动效强度：normal、reduced。
-- [ ] 管理小狗显示状态。
-- [ ] 设置保存到 `localStorage`。
-- [ ] 初始化时读取系统主题。
-
-### 设置面板
-
-- [ ] 创建 `app/components/settings/SettingsPanel.vue`。
-- [ ] 创建 `app/components/settings/ThemeSegmentedControl.vue`。
-- [ ] 创建 `app/components/settings/BackgroundPicker.vue`。
-- [ ] 创建 `app/components/settings/MotionToggle.vue`。
-- [ ] 设置面板桌面端使用右侧抽屉。
-- [ ] 设置面板移动端使用底部弹层。
-- [ ] 主题切换展示白天、黑夜、跟随系统三个选项。
-- [ ] 背景缩略图可以选中。
-- [ ] 背景选择按白天背景、黑夜背景、通用背景分组展示。
-- [ ] 背景缩略图来自 `public/backgrounds/home/day/`、`public/backgrounds/home/night/` 和 `public/backgrounds/shared/` 的配置。
-- [ ] 当前主题不适合所选背景时显示轻提示或自动使用默认背景。
-- [ ] 换背景功能可以随机切换背景。
-- [ ] 设置变更即时生效。
-
-### 阶段验收
-
-- [ ] 刷新页面后设置保留。
-- [ ] 浅色和深色主题都高级一致。
-- [ ] 白天模式和黑夜模式可以手动切换。
-- [ ] system 模式可以跟随系统偏好切换主题和背景组。
-- [ ] 背景不会降低正文可读性。
-- [ ] 主页背景更换只影响视觉偏好，不影响内容数据。
-
-## 阶段 11：音乐播放器 APlayer + MetingJS
+## 阶段 10：音乐播放器 APlayer + MetingJS
 
 ### 配置
 
-- [ ] 创建 `app/config/music.ts`。
-- [ ] 配置 `provider: 'meting'`。
-- [ ] 配置 `server: 'tencent'`。
-- [ ] 配置 `type: 'playlist'`。
-- [ ] 配置 `playlistId: '待补充'`。
-- [ ] 配置 `api: '默认或待配置'`。
-- [ ] 配置 `autoplay: false`。
-- [ ] 配置 `fallbackTracks: []`。
-- [ ] 等开发时填入你的 QQ 音乐公开歌单 ID。
+- [x] 创建 `app/config/music.ts`。
+- [x] 配置 `provider: 'meting'`。
+- [x] 配置 `server: 'tencent'`。
+- [x] 配置 `type: 'playlist'`。
+- [x] 配置 `playlistId: '8490098388'`。
+- [x] 配置 `api: '默认或待配置'`。
+- [x] 配置 `autoplay: false`。
+- [x] 配置 `fallbackTracks: []`。
+- [x] 等开发时填入你的 QQ 音乐公开歌单 ID。
 - [ ] 如果歌单无法公开访问，准备本地备用曲目。
 
 ### Nuxt 接入
 
-- [ ] 在 `nuxt.config.ts` 加载 APlayer CSS。
-- [ ] 在 `nuxt.config.ts` 加载 APlayer 脚本。
-- [ ] 在 `nuxt.config.ts` 加载 MetingJS 脚本。
-- [ ] 配置 `meting-js` 为 Vue 自定义元素。
-- [ ] 确保播放器只在客户端渲染。
-- [ ] 网络资源失败时页面不崩溃。
+- [x] 在 `nuxt.config.ts` 加载 APlayer CSS。
+- [x] 在 `nuxt.config.ts` 加载 APlayer 脚本。
+- [x] 在 `nuxt.config.ts` 加载 MetingJS 脚本。
+- [x] 配置 `meting-js` 为 Vue 自定义元素。
+- [x] 确保播放器只在客户端渲染。
+- [x] 网络资源失败时页面不崩溃。
 
 ### 播放器状态
 
-- [ ] 创建 `app/composables/useMusicPlayer.ts`。
-- [ ] 管理播放器打开/关闭。
-- [ ] 管理播放器展开/收起。
-- [ ] 管理播放中、暂停、加载、错误状态。
-- [ ] 管理当前歌曲标题。
-- [ ] 保存展开/收起状态到 `localStorage`。
-- [ ] 向小狗助手同步 music 状态。
+- [x] 创建 `app/composables/useMusicPlayer.ts`。
+- [x] 管理播放器打开/关闭。
+- [x] 管理播放器展开/收起。
+- [x] 管理播放中、暂停、加载、错误状态。
+- [x] 管理当前歌曲标题。
+- [x] 保存展开/收起状态到 `localStorage`。
+- [x] 向小狗助手同步 music 状态。
 
 ### 组件实现
 
-- [ ] 创建 `app/components/music/MusicPlayer.vue`。
-- [ ] 创建 `app/components/music/MiniMusicPlayer.vue`。
-- [ ] `MusicPlayer` 内部渲染 `<meting-js>`。
-- [ ] `MusicPlayer` 外层使用自己的高级面板样式。
-- [ ] 重写 APlayer 默认皮肤为暗色玻璃或浅色浮层风格。
-- [ ] 播放器展开时展示列表。
-- [ ] 播放器收起时展示迷你条。
-- [ ] 移动端播放器贴近底部但避开安全区。
-- [ ] 播放失败时显示错误提示。
-- [ ] QQ 音乐不可用时展示 fallbackTracks 或空状态。
+- [x] 创建 `app/components/music/MusicPlayer.vue`。
+- [x] 创建 `app/components/music/MiniMusicPlayer.vue`。
+- [x] `MusicPlayer` 内部渲染 `<meting-js>`。
+- [x] `MusicPlayer` 外层使用自己的高级面板样式。
+- [x] 重写 APlayer 默认皮肤为暗色玻璃或浅色浮层风格。
+- [x] 播放器展开时展示列表。
+- [x] 播放器收起时展示迷你条。
+- [x] 移动端播放器贴近底部但避开安全区。
+- [x] 播放失败时显示错误提示。
+- [x] QQ 音乐不可用时展示 fallbackTracks 或空状态。
+
+阶段 10 进展记录（2026-05-16）：
+- 新增 `app/config/music.ts`，使用 QQ 公开歌单 ID `8490098388`。
+- 新增 `useMusicPlayer`、`MusicPlayer`、`MiniMusicPlayer`，并在 `default.vue` 内以客户端方式挂载。
+- 播放器通过监听 `notebook:open-utility` 事件与小狗菜单联动，点击小狗菜单中的音乐按钮即可打开。
+- 加入 Meting/APlayer 加载失败错误提示与备用曲目空状态兜底。
 
 ### 阶段验收
 
@@ -816,7 +781,7 @@
 - [ ] 播放器不会遮挡正文和小狗。
 - [ ] 深色模式下播放器不突兀。
 
-## 阶段 12：AI 问答面板与安全配置
+## 阶段 11：AI 问答面板与安全配置
 
 ### 配置与安全
 
@@ -863,7 +828,7 @@
 - [ ] 不会暴露真实 API Key。
 - [ ] AI 问答不会突破纯前端只读内容边界。
 
-## 阶段 13：移动端与响应式精修
+## 阶段 12：移动端与响应式精修
 
 ### 断点检查
 
@@ -889,7 +854,7 @@
 ### 触控与可读性
 
 - [ ] 所有可点击元素不小于 `44px`。
-- [ ] 图标按钮有 aria-label。
+- [ ] 图标按钮有 a\ria-label。
 - [ ] 输入框不会被移动端键盘完全遮挡。
 - [ ] 长中文标题自动换行。
 - [ ] 长英文单词不会撑破布局。
@@ -901,7 +866,7 @@
 - [ ] 移动端无文字重叠。
 - [ ] 移动端核心功能都可用。
 
-## 阶段 14：性能、可访问性与 SEO
+## 阶段 13：性能、可访问性与 SEO
 
 ### 性能
 
@@ -947,7 +912,7 @@
 - [ ] 浏览器标签页图标显示正常。
 - [ ] 生成后的静态资源路径正确。
 
-## 阶段 15：构建与部署
+## 阶段 14：构建与部署
 
 ### 构建检查
 
@@ -983,7 +948,7 @@
 - [ ] 资源路径正确。
 - [ ] 控制台无关键错误。
 
-## 阶段 16：最终体验验收
+## 阶段 15：最终体验验收
 
 ### 视觉验收
 
@@ -1049,8 +1014,8 @@
 2. 再完成阶段 1 到阶段 2.5，让项目有骨架、设计系统和站点图标方向。
 3. 接着完成阶段 3 到阶段 4，让网站有全站布局和首页气质。
 4. 再完成阶段 5 到阶段 8，让博客、Wiki、Todo 可以真实承载内容。
-5. 接着完成阶段 9 到阶段 12，把小狗、设置、音乐、AI 接进来。
-6. 最后完成阶段 13 到阶段 16，集中做移动端、性能、部署和最终验收。
+5. 接着完成阶段 9 到阶段 11，把小狗、音乐、AI 接进来。
+6. 最后完成阶段 12 到阶段 15，集中做移动端、性能、部署和最终验收。
 
 ## 暂缓事项
 

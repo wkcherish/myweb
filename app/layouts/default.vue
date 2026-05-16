@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppFooter from '~/components/layout/AppFooter.vue'
 import AppHeader from '~/components/layout/AppHeader.vue'
+import MusicPlayer from '~/components/music/MusicPlayer.vue'
 import PageShell from '~/components/layout/PageShell.vue'
 import BlogPet from '~/components/pet/BlogPet.vue'
 </script>
@@ -19,6 +20,7 @@ import BlogPet from '~/components/pet/BlogPet.vue'
 
     <template #floating>
       <ClientOnly>
+        <MusicPlayer />
         <BlogPet />
       </ClientOnly>
     </template>
