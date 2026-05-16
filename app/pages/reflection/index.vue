@@ -25,8 +25,8 @@ const { data: reflections } = await useAsyncData('reflection-list', async () => 
   return entries
     .filter((entry) => !(entry.path || '').toLowerCase().endsWith('/readme'))
     .sort((a, b) => {
-      const left = new Date(readString(a, 'date')).getTime() || 0
-      const right = new Date(readString(b, 'date')).getTime() || 0
+      const left = new Date(getContentDate(a, ['date'])).getTime() || 0
+      const right = new Date(getContentDate(b, ['date'])).getTime() || 0
 
       return right - left
     })
@@ -45,7 +45,7 @@ const { data: reflections } = await useAsyncData('reflection-list', async () => 
 
     <div v-if="reflections?.length" class="reflection-list">
       <article v-for="item in reflections" :key="item.path" class="reflection-card">
-        <time>{{ readString(item, 'date') || '未标注日期' }}</time>
+        <time>{{ formatContentDate(getContentDate(item, ['date'])) }}</time>
         <h2>{{ readString(item, 'title') || '未命名反思' }}</h2>
         <p>{{ readString(item, 'description') || '暂无摘要。' }}</p>
       </article>

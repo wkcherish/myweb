@@ -2,40 +2,17 @@
 import BasePanel from '~/components/ui/BasePanel.vue'
 import BaseTag from '~/components/ui/BaseTag.vue'
 import EmptyState from '~/components/ui/EmptyState.vue'
+import ErrorState from '~/components/ui/ErrorState.vue'
+import type { ContentEntry } from '~/utils/content'
 
-type BlogEntry = {
-  path?: string
-  title?: string
-  description?: string
-  date?: string
-  publishedAt?: string
-  meta?: Record<string, unknown>
-}
+const { data: postsResult } = await useAsyncData('blog-list', async () => {
+  try {
+    const entries = (await queryCollection('blog').all()) as ContentEntry[]
 
-const readString = (entry: BlogEntry, key: string) => {
-  const directValue = entry[key as keyof BlogEntry]
-  const metaValue = entry.meta?.[key]
-  const value = directValue || metaValue
-
-  return typeof value === 'string' ? value : ''
-}
-
-const getDate = (entry: BlogEntry) => readString(entry, 'date') || readString(entry, 'publishedAt')
-
-const formatDate = (date: string) => {
-  const parsed = date ? new Date(date) : null
-
-  return parsed && !Number.isNaN(parsed.getTime())
-    ? new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(parsed)
-    : '未标注日期'
-}
-
-const { data: posts } = await useAsyncData('blog-list', async () => {
-  const entries = (await queryCollection('blog').all()) as BlogEntry[]
-
-  return entries
-    .filter((entry) => !(entry.path || '').toLowerCase().endsWith('/readme'))
-    .sort((a, b) => (new Date(getDate(b)).getTime() || 0) - (new Date(getDate(a)).getTime() || 0))
+    return toContentResult(sortEntriesByDate(filterPublishedEntries(entries), ['date', 'publishedAt']))
+  } catch (error) {
+    return toContentResult<ContentEntry>([], error)
+  }
 })
 </script>
 
@@ -49,19 +26,24 @@ const { data: posts } = await useAsyncData('blog-list', async () => {
       </p>
     </BasePanel>
 
-    <div v-if="posts?.length" class="blog-list">
-      <NuxtLink v-for="post in posts" :key="post.path" class="blog-card" :to="post.path || '/blog'">
+    <BasePanel v-if="postsResult?.error">
+      <ErrorState title="文章读取失败" :description="postsResult.error" />
+    </BasePanel>
+
+    <div v-else-if="postsResult?.data.length" class="blog-list">
+      <NuxtLink v-for="post in postsResult.data" :key="post.path" class="blog-card" :to="post.path || '/blog'">
         <div class="doc-card__meta">
-          <time>{{ formatDate(getDate(post)) }}</time>
+          <time>{{ formatContentDate(getContentDate(post, ['date', 'publishedAt'])) }}</time>
+          <span>{{ readContentString(post, 'category') || '未分类' }}</span>
           <ContentVisitCount :path="post.path" />
         </div>
-        <h2>{{ readString(post, 'title') || '未命名文章' }}</h2>
-        <p>{{ readString(post, 'description') || '暂无摘要。' }}</p>
+        <h2>{{ readContentString(post, 'title') || '未命名文章' }}</h2>
+        <p>{{ readContentString(post, 'description') || '暂无摘要。' }}</p>
       </NuxtLink>
     </div>
 
-    <BasePanel v-else>
-      <EmptyState title="还没有文章" description="请在本地 content/blog/ 新增 Markdown。" />
+    <BasePanel v-else-if="postsResult?.isEmpty">
+      <EmptyState title="还没有文章" description="请在本地 content/blog/ 添加 Markdown 后重新预览。" />
     </BasePanel>
   </section>
 </template>

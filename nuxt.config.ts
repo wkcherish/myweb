@@ -15,7 +15,7 @@ export default defineNuxtConfig({
     strict: true,
     typeCheck: true,
   },
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/prose.css'],
   modules: ['@nuxt/content', '@pinia/nuxt', '@nuxtjs/tailwindcss'],
   vite: {
     build: {

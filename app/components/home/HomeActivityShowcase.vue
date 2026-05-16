@@ -1,17 +1,7 @@
 <script setup lang="ts">
-type CollectionName = 'todo' | 'blog' | 'wiki'
+import type { ContentEntry } from '~/utils/content'
 
-type ContentEntry = {
-  path?: string
-  title?: string
-  description?: string
-  date?: string
-  publishedAt?: string
-  updatedAt?: string
-  targetDate?: string
-  status?: string
-  meta?: Record<string, unknown>
-}
+type CollectionName = 'todo' | 'blog' | 'wiki'
 
 type ActivityItem = {
   title: string
@@ -74,10 +64,7 @@ const readString = (entry: ContentEntry, key: string) => {
 }
 
 const getEntryDate = (entry: ContentEntry) =>
-  readString(entry, 'date') ||
-  readString(entry, 'publishedAt') ||
-  readString(entry, 'updatedAt') ||
-  readString(entry, 'targetDate')
+  getContentDate(entry, ['date', 'publishedAt', 'updatedAt', 'startDate', 'targetDate'])
 
 const parseEntryDate = (entry: ContentEntry) => {
   const rawDate = getEntryDate(entry)

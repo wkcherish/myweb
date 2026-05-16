@@ -2,41 +2,17 @@
 import BasePanel from '~/components/ui/BasePanel.vue'
 import BaseTag from '~/components/ui/BaseTag.vue'
 import EmptyState from '~/components/ui/EmptyState.vue'
+import ErrorState from '~/components/ui/ErrorState.vue'
+import type { ContentEntry } from '~/utils/content'
 
-type WikiEntry = {
-  path?: string
-  title?: string
-  description?: string
-  updatedAt?: string
-  date?: string
-  category?: string
-  meta?: Record<string, unknown>
-}
+const { data: docsResult } = await useAsyncData('wiki-list', async () => {
+  try {
+    const entries = (await queryCollection('wiki').all()) as ContentEntry[]
 
-const readString = (entry: WikiEntry, key: string) => {
-  const directValue = entry[key as keyof WikiEntry]
-  const metaValue = entry.meta?.[key]
-  const value = directValue || metaValue
-
-  return typeof value === 'string' ? value : ''
-}
-
-const getDate = (entry: WikiEntry) => readString(entry, 'updatedAt') || readString(entry, 'date')
-
-const formatDate = (date: string) => {
-  const parsed = date ? new Date(date) : null
-
-  return parsed && !Number.isNaN(parsed.getTime())
-    ? new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(parsed)
-    : '未标注日期'
-}
-
-const { data: docs } = await useAsyncData('wiki-list', async () => {
-  const entries = (await queryCollection('wiki').all()) as WikiEntry[]
-
-  return entries
-    .filter((entry) => !(entry.path || '').toLowerCase().endsWith('/readme'))
-    .sort((a, b) => (new Date(getDate(b)).getTime() || 0) - (new Date(getDate(a)).getTime() || 0))
+    return toContentResult(sortEntriesByDate(filterPublishedEntries(entries), ['updatedAt', 'date']))
+  } catch (error) {
+    return toContentResult<ContentEntry>([], error)
+  }
 })
 </script>
 
@@ -50,20 +26,24 @@ const { data: docs } = await useAsyncData('wiki-list', async () => {
       </p>
     </BasePanel>
 
-    <div v-if="docs?.length" class="wiki-grid">
-      <NuxtLink v-for="doc in docs" :key="doc.path" class="wiki-card" :to="doc.path || '/wiki'">
+    <BasePanel v-if="docsResult?.error">
+      <ErrorState title="Wiki 读取失败" :description="docsResult.error" />
+    </BasePanel>
+
+    <div v-else-if="docsResult?.data.length" class="wiki-grid">
+      <NuxtLink v-for="doc in docsResult.data" :key="doc.path" class="wiki-card" :to="doc.path || '/wiki'">
         <div class="wiki-card__meta">
-          <span>{{ readString(doc, 'category') || 'Wiki' }}</span>
-          <time>{{ formatDate(getDate(doc)) }}</time>
+          <span>{{ readContentString(doc, 'category') || 'Wiki' }}</span>
+          <time>{{ formatContentDate(getContentDate(doc, ['updatedAt', 'date'])) }}</time>
           <ContentVisitCount :path="doc.path" />
         </div>
-        <h2>{{ readString(doc, 'title') || '未命名 Wiki' }}</h2>
-        <p>{{ readString(doc, 'description') || '暂无摘要。' }}</p>
+        <h2>{{ readContentString(doc, 'title') || '未命名 Wiki' }}</h2>
+        <p>{{ readContentString(doc, 'description') || '暂无摘要。' }}</p>
       </NuxtLink>
     </div>
 
-    <BasePanel v-else>
-      <EmptyState title="暂无 Wiki 文档" description="请在本地 content/wiki/ 新增 Markdown。" />
+    <BasePanel v-else-if="docsResult?.isEmpty">
+      <EmptyState title="暂无 Wiki 文档" description="请在本地 content/wiki/ 添加 Markdown 后重新预览。" />
     </BasePanel>
   </section>
 </template>

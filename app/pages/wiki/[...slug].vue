@@ -2,8 +2,11 @@
 const route = useRoute()
 const slug = Array.isArray(route.params.slug) ? route.params.slug.join('/') : route.params.slug
 const path = `/wiki/${slug}`
+const noteDate = computed(() => formatContentDate(getContentDateFromPath(path)))
 
-const { data: page } = await useAsyncData(`wiki-${path}`, () => queryCollection('wiki').path(path).first())
+const { data: page } = await useAsyncData(`wiki-${path}`, () => {
+  return queryCollection('wiki').path(path).first()
+})
 
 if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: 'Wiki not found' })
@@ -16,6 +19,7 @@ if (!page.value) {
       <NuxtLink to="/wiki">Wiki</NuxtLink>
       <h1>{{ page?.title }}</h1>
       <div class="content-detail__meta">
+        <time>{{ noteDate }}</time>
         <p v-if="page?.description">{{ page.description }}</p>
         <ContentVisitCount :path="path" increment />
       </div>

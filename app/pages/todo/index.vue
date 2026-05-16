@@ -2,42 +2,17 @@
 import BasePanel from '~/components/ui/BasePanel.vue'
 import BaseTag from '~/components/ui/BaseTag.vue'
 import EmptyState from '~/components/ui/EmptyState.vue'
+import ErrorState from '~/components/ui/ErrorState.vue'
+import type { ContentEntry } from '~/utils/content'
 
-type TodoEntry = {
-  path?: string
-  title?: string
-  description?: string
-  targetDate?: string
-  date?: string
-  status?: string
-  priority?: string
-  meta?: Record<string, unknown>
-}
+const { data: todosResult } = await useAsyncData('todo-list', async () => {
+  try {
+    const entries = (await queryCollection('todo').all()) as ContentEntry[]
 
-const readString = (entry: TodoEntry, key: string) => {
-  const directValue = entry[key as keyof TodoEntry]
-  const metaValue = entry.meta?.[key]
-  const value = directValue || metaValue
-
-  return typeof value === 'string' ? value : ''
-}
-
-const getDate = (entry: TodoEntry) => readString(entry, 'targetDate') || readString(entry, 'date')
-
-const formatDate = (date: string) => {
-  const parsed = date ? new Date(date) : null
-
-  return parsed && !Number.isNaN(parsed.getTime())
-    ? new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' }).format(parsed)
-    : '未标注日期'
-}
-
-const { data: todos } = await useAsyncData('todo-list', async () => {
-  const entries = (await queryCollection('todo').all()) as TodoEntry[]
-
-  return entries
-    .filter((entry) => !(entry.path || '').toLowerCase().endsWith('/readme'))
-    .sort((a, b) => (new Date(getDate(b)).getTime() || 0) - (new Date(getDate(a)).getTime() || 0))
+    return toContentResult(sortEntriesByDate(filterPublishedEntries(entries), ['targetDate', 'startDate', 'date']))
+  } catch (error) {
+    return toContentResult<ContentEntry>([], error)
+  }
 })
 </script>
 
@@ -62,21 +37,25 @@ const { data: todos } = await useAsyncData('todo-list', async () => {
       <p class="content-page__hint">当前为只读展示，不提供网页端新增或保存任务。</p>
     </BasePanel>
 
-    <div v-if="todos?.length" class="todo-list">
-      <NuxtLink v-for="todo in todos" :key="todo.path" class="todo-card" :to="todo.path || '/todo'">
+    <BasePanel v-if="todosResult?.error">
+      <ErrorState title="Todo 读取失败" :description="todosResult.error" />
+    </BasePanel>
+
+    <div v-else-if="todosResult?.data.length" class="todo-list">
+      <NuxtLink v-for="todo in todosResult.data" :key="todo.path" class="todo-card" :to="todo.path || '/todo'">
         <div class="todo-card__meta">
-          <span>{{ readString(todo, 'status') || '计划中' }}</span>
-          <span>{{ readString(todo, 'priority') || 'normal' }}</span>
-          <time>{{ formatDate(getDate(todo)) }}</time>
+          <span>{{ readContentString(todo, 'status') || 'planned' }}</span>
+          <span>{{ readContentString(todo, 'priority') || 'medium' }}</span>
+          <time>{{ formatContentDate(getContentDate(todo, ['targetDate', 'startDate', 'date'])) }}</time>
           <ContentVisitCount :path="todo.path" />
         </div>
-        <h2>{{ readString(todo, 'title') || '未命名 Todo' }}</h2>
-        <p>{{ readString(todo, 'description') || '暂无摘要。' }}</p>
+        <h2>{{ readContentString(todo, 'title') || '未命名 Todo' }}</h2>
+        <p>{{ readContentString(todo, 'description') || '暂无摘要。' }}</p>
       </NuxtLink>
     </div>
 
-    <BasePanel v-else>
-      <EmptyState title="暂无任务条目" description="请在本地 content/todo/ 补充规划文件。" />
+    <BasePanel v-else-if="todosResult?.isEmpty">
+      <EmptyState title="暂无任务条目" description="请在本地 content/todo/ 添加 Markdown 后重新预览。" />
     </BasePanel>
   </section>
 </template>

@@ -477,45 +477,54 @@
 
 ### 内容结构
 
-- [ ] 在 `content/blog/` 添加 Markdown 示例文章。
-- [ ] 在 `content/wiki/` 添加 Markdown 示例 Wiki 文档。
-- [ ] 在 `content/todo/` 添加示例 Roadmap 文档。
-- [ ] 每个 Markdown 文件包含 frontmatter。
-- [ ] 博客文章统一使用 `.md` 文件，不使用 MDX。
-- [ ] Wiki 文档统一使用 `.md` 文件，不使用 MDX。
-- [ ] 博客 frontmatter 包含 title、description、date、tags、category、draft。
-- [ ] Wiki frontmatter 包含 title、description、category、tags、updatedAt。
-- [ ] Todo frontmatter 包含 title、status、priority、startDate、targetDate。
+- [x] 在 `content/blog/` 添加 Markdown 示例文章。
+- [x] 在 `content/wiki/` 添加 Markdown 示例 Wiki 文档。
+- [x] 在 `content/todo/` 添加示例 Roadmap 文档。
+- [x] 每个 Markdown 文件包含 frontmatter。
+- [x] 博客文章统一使用 `.md` 文件，不使用 MDX。
+- [x] Wiki 文档统一使用 `.md` 文件，不使用 MDX。
+- [x] Markdown 文件名采用 `YYYY-MM-DD-笔记名.md`，前端从文件名解析笔记日期。
+- [x] 博客 frontmatter 包含 title、description、tags、category、draft。
+- [x] Wiki frontmatter 包含 title、description、category、tags。
+- [x] Todo frontmatter 包含 title、status、priority、targetDate。
 
 ### 内容工具
 
-- [ ] 创建 `app/utils/content.ts` 或 composable 封装内容读取逻辑。
-- [ ] 统一处理日期格式。
-- [ ] 统一处理标签颜色。
-- [ ] 统一处理草稿过滤。
-- [ ] 统一处理空结果。
-- [ ] 统一处理内容加载错误。
+- [x] 创建 `app/utils/content.ts` 或 composable 封装内容读取逻辑。
+- [x] 统一处理日期格式。
+- [x] 统一处理标签颜色。
+- [x] 统一处理草稿过滤。
+- [x] 统一处理空结果。
+- [x] 统一处理内容加载错误。
 
 ### Markdown 样式
 
-- [ ] 创建 `app/assets/css/prose.css` 或在主 CSS 中定义文章样式。
-- [ ] 设置 h1、h2、h3、p、ul、ol、blockquote、code、pre、table 样式。
-- [ ] 代码块支持横向滚动。
-- [ ] 行内代码和代码块视觉区分清楚。
-- [ ] 表格在移动端可横向滚动。
-- [ ] 图片有最大宽度、圆角和说明文字样式。
-- [ ] 外链有清晰样式。
+- [x] 创建 `app/assets/css/prose.css` 或在主 CSS 中定义文章样式。
+- [x] 设置 h1、h2、h3、p、ul、ol、blockquote、code、pre、table 样式。
+- [x] 代码块支持横向滚动。
+- [x] 行内代码和代码块视觉区分清楚。
+- [x] 表格在移动端可横向滚动。
+- [x] 图片有最大宽度、圆角和说明文字样式。
+- [x] 外链有清晰样式。
 
 ### 阶段验收
 
-- [ ] 示例 Markdown 能被页面读取。
-- [ ] Markdown 长文阅读舒适。
-- [ ] 代码块不撑破页面。
-- [ ] 缺少内容时有空状态。
-- [ ] 页面没有出现 `新建文章`、`编辑文章`、`保存笔记`、`发布` 等写入型入口。
-- [ ] 文档中说明新增内容流程：本地编辑 `content/`、预览、提交、构建、部署。
-- [ ] 空状态文案引导回到本地 `content/` 添加文件，不引导网页端创建内容。
-- [ ] 所有内容读取失败只展示错误状态和返回入口，不提供在线修复或在线编辑入口。
+- [x] 示例 Markdown 能被页面读取。
+- [x] Markdown 长文阅读舒适。
+- [x] 代码块不撑破页面。
+- [x] 缺少内容时有空状态。
+- [x] 页面没有出现 `新建文章`、`编辑文章`、`保存笔记`、`发布` 等写入型入口。
+- [x] 文档中说明新增内容流程：本地编辑 `content/`、预览、提交、构建、部署。
+- [x] 空状态文案引导回到本地 `content/` 添加文件，不引导网页端创建内容。
+- [x] 所有内容读取失败只展示错误状态和返回入口，不提供在线修复或在线编辑入口。
+
+阶段 5 验收记录（2026-05-16）：
+- 已补齐 Blog、Wiki、Todo 示例 Markdown 的 frontmatter，示例正文覆盖标题、段落、列表、引用、代码块和表格。
+- 新增 `app/utils/content.ts`，统一从 `YYYY-MM-DD-笔记名.md` 文件名解析笔记日期，并处理日期格式、标签 tone、草稿过滤、空结果和错误结果结构。
+- 新增 `app/assets/css/prose.css` 并接入 Nuxt 全局 CSS，详情页 Markdown 具备代码块横向滚动、表格横向滚动、行内代码和外链样式。
+- Blog、Wiki、Todo 列表页已复用内容工具，并显式区分错误状态和空状态。
+- `content/README.md` 已说明本地编辑、预览、提交、构建、部署的内容维护流程。
+- `npm run generate` 已通过，静态生成包含 `/blog/2026-05-16-nuxt-notebook`、`/wiki/2026-05-16-content-workflow` 和 `/todo/2026-05-16-home-polish`。
 
 ## 阶段 6：博客模块
 
