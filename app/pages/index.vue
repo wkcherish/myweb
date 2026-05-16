@@ -1,10 +1,7 @@
 <template>
   <div class="home-page">
     <HomeMimoInspiredHero />
-    <HomeOverview />
-    <HomeRecentPosts />
-    <HomeKnowledgePanel />
-    <HomeTodoSnapshot />
+    <HomeActivityShowcase />
   </div>
 </template>
 
