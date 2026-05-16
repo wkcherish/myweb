@@ -733,7 +733,7 @@
 - [x] 配置 `autoplay: false`。
 - [x] 配置 `fallbackTracks: []`。
 - [x] 等开发时填入你的 QQ 音乐公开歌单 ID。
-- [ ] 如果歌单无法公开访问，准备本地备用曲目。
+- [x] 如果歌单无法公开访问，准备本地备用曲目。
 
 ### Nuxt 接入
 
@@ -785,48 +785,57 @@
 
 ### 配置与安全
 
-- [ ] 创建 `app/config/ai.ts`。
-- [ ] 创建 `.env.example` 中的 AI 配置占位。
-- [ ] 添加 `AI_BASE_URL=http://3stooges.chat:4036` 占位。
-- [ ] 添加 `AI_MODEL=minimax-m2.7-awq` 占位。
-- [ ] 添加 `AI_API_KEY=不要提交真实 Key` 占位。
-- [ ] 确认真实 Key 不进入前端代码。
-- [ ] 确认真实 Key 不进入 Git。
-- [ ] 如果纯静态部署，真实调用必须使用外部安全代理或用户自填 Key。
+- [x] 创建 `app/config/ai.ts`。
+- [x] 创建 `.env.example` 中的 AI 配置占位。
+- [x] 添加 `AI_BASE_URL=http://3stooges.chat:4036` 占位。
+- [x] 添加 `AI_MODEL=minimax-m2.7-awq` 占位。
+- [x] 添加 `AI_API_KEY=不要提交真实 Key` 占位。
+- [x] 确认真实 Key 不进入前端代码。
+- [x] 确认真实 Key 不进入 Git。
+- [x] 如果纯静态部署，真实调用必须使用外部安全代理或用户自填 Key。
 
 ### AI UI
 
-- [ ] 创建 `app/composables/useAiChat.ts`。
-- [ ] 创建 `app/components/ai/AiChatPanel.vue`。
-- [ ] 创建 `app/components/ai/AiMessageList.vue`。
-- [ ] 创建 `app/components/ai/AiComposer.vue`。
-- [ ] 创建 `app/components/ai/AiContextPicker.vue`。
-- [ ] 支持空状态。
-- [ ] 支持用户输入消息。
-- [ ] 支持发送按钮 loading。
-- [ ] 支持错误状态。
-- [ ] 支持清空会话。
+- [x] 创建 `app/composables/useAiChat.ts`。
+- [x] 创建 `app/components/ai/AiChatPanel.vue`。
+- [x] 创建 `app/components/ai/AiMessageList.vue`。
+- [x] 创建 `app/components/ai/AiComposer.vue`。
+- [x] 创建 `app/components/ai/AiContextPicker.vue`。
+- [x] 支持空状态。
+- [x] 支持用户输入消息。
+- [x] 支持发送按钮 loading。
+- [x] 支持错误状态。
+- [x] 支持清空会话。
 - [ ] 支持当前页面作为上下文占位。
-- [ ] 支持展示本地 Wiki/博客/Todo 搜索推荐。
-- [ ] 移动端 AI 面板使用全屏或接近全屏抽屉。
-- [ ] AI 面板不提供保存回答到 Wiki、生成文章并发布、写入 Todo 等持久化动作。
-- [ ] AI 面板如果提供复制按钮，只复制到剪贴板，不改变内容源。
+- [x] 支持展示本地 Wiki/博客/Todo 搜索推荐。
+- [x] 移动端 AI 面板使用全屏或接近全屏抽屉。
+- [x] AI 面板不提供保存回答到 Wiki、生成文章并发布、写入 Todo 等持久化动作。
+- [x] AI 面板如果提供复制按钮，只复制到剪贴板，不改变内容源。
 
 ### 本地知识库推荐
 
-- [ ] 从 content 中读取标题、摘要、标签。
-- [ ] 根据用户问题做关键词匹配。
-- [ ] 展示相关文档标题、摘要和链接。
-- [ ] 没有匹配时提示可以继续普通问答。
-- [ ] 第一版不强依赖真实模型接口。
+- [x] 从 content 中读取标题、摘要、标签。
+- [x] 根据用户问题做关键词匹配。
+- [x] 展示相关文档标题、摘要和链接。
+- [x] 没有匹配时提示可以继续普通问答。
+- [x] 第一版不强依赖真实模型接口。
 
 ### 阶段验收
 
-- [ ] 点击小狗菜单的 AI 问答可以打开面板。
-- [ ] 输入消息后 UI 状态完整。
-- [ ] 本地推荐结果可点击。
-- [ ] 不会暴露真实 API Key。
-- [ ] AI 问答不会突破纯前端只读内容边界。
+- [x] 点击小狗菜单的 AI 问答可以打开面板。
+- [x] 输入消息后 UI 状态完整。
+- [x] 本地推荐结果可点击。
+- [x] 不会暴露真实 API Key。
+- [x] AI 问答不会突破纯前端只读内容边界。
+
+阶段 11 进展记录（2026-05-16）：
+- 新增 `app/config/ai.ts`、`app/composables/useAiChat.ts`，通过 `useState` 管理聊天状态并与小狗 thinking 状态联动。
+- 新增 `AiChatPanel`（浮动面板 + 拖拽 + 缩放）、`AiMessageList`（欢迎屏 + 消息气泡 + 复制 + 打字动画）、`AiComposer`（输入框 + 发送按钮）、`AiContextPicker`（本地知识推荐）。
+- 在 `default.vue` 的 `#floating` 插槽挂载，通过 `notebook:open-utility` 事件与小狗菜单联动。
+- 安全策略：`NUXT_PUBLIC_AI_API_BASE` 指向代理服务，API Key 不存在前端代码中。`.env.example` 包含腾讯云 Pages 部署说明。
+- 面板支持拖拽移动、右下角缩放（360~800 × 420~900），尺寸和位置持久化到 localStorage。
+- 移动端自动全屏显示。不提供任何写入型按钮，复制仅限于剪贴板。
+- 本地知识库推荐组件已实现，当前版本未在面板中启用。
 
 ## 阶段 12：移动端与响应式精修
 

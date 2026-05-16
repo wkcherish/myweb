@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AiChatPanel from '~/components/ai/AiChatPanel.vue'
 import AppFooter from '~/components/layout/AppFooter.vue'
 import AppHeader from '~/components/layout/AppHeader.vue'
 import MusicPlayer from '~/components/music/MusicPlayer.vue'
@@ -20,6 +21,7 @@ import BlogPet from '~/components/pet/BlogPet.vue'
 
     <template #floating>
       <ClientOnly>
+        <AiChatPanel />
         <MusicPlayer />
         <BlogPet />
       </ClientOnly>
