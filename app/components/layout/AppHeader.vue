@@ -1,15 +1,22 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { Menu, MoonStar, SunMedium } from 'lucide-vue-next'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { ChevronDown, Menu, MoonStar, SunMedium } from 'lucide-vue-next'
 
-import { siteConfig } from '~/config/site'
+import { siteConfig, type SiteNavItem } from '~/config/site'
 import { useThemeMode } from '~/composables/useThemeMode'
 
 import IconButton from '../ui/IconButton.vue'
 import MobileNav from './MobileNav.vue'
 
 const isMobileNavOpen = ref(false)
+const isMoreMenuOpen = ref(false)
+const moreMenuButtonRef = ref<HTMLButtonElement | null>(null)
+const moreMenuPanelRef = ref<HTMLElement | null>(null)
+const route = useRoute()
+
 const { mode, cycleMode, syncFromStorage } = useThemeMode()
+const primaryNavItems = computed(() => siteConfig.nav)
+const moreNavItems = computed(() => siteConfig.moreNav ?? [])
 
 const themeIcon = computed(() => {
   if (mode.value === 'light') {
@@ -26,8 +33,61 @@ function toggleMobileNav() {
   isMobileNavOpen.value = !isMobileNavOpen.value
 }
 
+function closeMoreMenu() {
+  isMoreMenuOpen.value = false
+}
+
+function toggleMoreMenu() {
+  isMoreMenuOpen.value = !isMoreMenuOpen.value
+}
+
+function clearPointerFocus(event: PointerEvent) {
+  const target = event.currentTarget
+  if (!(target instanceof HTMLElement)) {
+    return
+  }
+
+  requestAnimationFrame(() => {
+    target.blur()
+  })
+}
+
+function handleMoreItemClick(_item: SiteNavItem) {
+  closeMoreMenu()
+}
+
+function handleDocumentPointerDown(event: PointerEvent) {
+  if (!isMoreMenuOpen.value) {
+    return
+  }
+
+  const target = event.target
+  if (!(target instanceof Node)) {
+    return
+  }
+
+  const clickedTrigger = moreMenuButtonRef.value?.contains(target)
+  const clickedPanel = moreMenuPanelRef.value?.contains(target)
+
+  if (!clickedTrigger && !clickedPanel) {
+    closeMoreMenu()
+  }
+}
+
+watch(
+  () => route.fullPath,
+  () => {
+    closeMoreMenu()
+  },
+)
+
 onMounted(() => {
   syncFromStorage()
+  document.addEventListener('pointerdown', handleDocumentPointerDown)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('pointerdown', handleDocumentPointerDown)
 })
 </script>
 
@@ -40,9 +100,47 @@ onMounted(() => {
       </NuxtLink>
 
       <nav class="app-header__desktop-nav" aria-label="Primary">
-        <NuxtLink v-for="item in siteConfig.nav" :key="item.to" :to="item.to" class="app-header__link">
+        <NuxtLink
+          v-for="item in primaryNavItems"
+          :key="item.to"
+          :to="item.to"
+          class="app-header__link"
+          @pointerup="clearPointerFocus"
+        >
           {{ item.label }}
         </NuxtLink>
+
+        <div class="app-header__more">
+          <button
+            ref="moreMenuButtonRef"
+            type="button"
+            class="app-header__more-trigger"
+            :aria-expanded="isMoreMenuOpen"
+            aria-haspopup="menu"
+            @click="toggleMoreMenu"
+            @pointerup="clearPointerFocus"
+          >
+            <span>更多页面</span>
+            <ChevronDown class="app-header__more-icon" :class="{ 'is-open': isMoreMenuOpen }" aria-hidden="true" />
+          </button>
+
+          <Transition name="app-header-menu">
+            <div v-if="isMoreMenuOpen" ref="moreMenuPanelRef" class="app-header__more-panel" role="menu" aria-label="更多页面">
+              <NuxtLink
+                v-for="item in moreNavItems"
+                :key="item.to"
+                :to="item.to"
+                class="app-header__more-link"
+                role="menuitem"
+                @click="handleMoreItemClick(item)"
+                @pointerup="clearPointerFocus"
+              >
+                <span>{{ item.label }}</span>
+                <span v-if="item.placeholder" class="app-header__placeholder-tag">占位</span>
+              </NuxtLink>
+            </div>
+          </Transition>
+        </div>
       </nav>
 
       <div class="app-header__actions">
@@ -69,7 +167,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <MobileNav v-model:open="isMobileNavOpen" :items="siteConfig.nav" />
+    <MobileNav v-model:open="isMobileNavOpen" :items="primaryNavItems" :more-items="moreNavItems" />
   </header>
 </template>
 
@@ -135,7 +233,109 @@ onMounted(() => {
 
 .app-header__link.router-link-active {
   color: var(--color-fg);
-  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+}
+
+.app-header__link:focus,
+.app-header__link:focus-visible,
+.app-header__more-trigger:focus,
+.app-header__more-trigger:focus-visible {
+  outline: none;
+}
+
+.app-header__more {
+  position: relative;
+}
+
+.app-header__more-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 var(--space-12);
+  border-radius: var(--radius-8);
+  color: var(--color-text-weak);
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition:
+    color var(--motion-180) ease,
+    background-color var(--motion-180) ease;
+}
+
+.app-header__more-trigger:hover,
+.app-header__more-trigger[aria-expanded='true'] {
+  color: var(--color-fg);
+  background: color-mix(in srgb, var(--color-surface-soft) 84%, transparent);
+}
+
+.app-header__more-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  transition: transform var(--motion-180) ease;
+}
+
+.app-header__more-icon.is-open {
+  transform: rotate(180deg);
+}
+
+.app-header__more-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 200px;
+  padding: var(--space-8);
+  border: 1px solid color-mix(in srgb, var(--color-border) 82%, transparent);
+  border-radius: var(--radius-12);
+  background: color-mix(in srgb, var(--color-surface) 94%, transparent);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(12px);
+}
+
+.app-header__more-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+  width: 100%;
+  min-height: 38px;
+  padding: 0 var(--space-12);
+  border-radius: var(--radius-8);
+  color: var(--color-text-weak);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition:
+    color var(--motion-180) ease,
+    background-color var(--motion-180) ease;
+}
+
+.app-header__more-link:hover,
+.app-header__more-link.router-link-active {
+  color: var(--color-fg);
+  background: color-mix(in srgb, var(--color-surface-soft) 84%, transparent);
+}
+
+.app-header__placeholder-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 0 8px;
+  border-radius: var(--radius-pill);
+  color: var(--color-primary);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  background: color-mix(in srgb, var(--color-primary) 14%, transparent);
+}
+
+.app-header-menu-enter-active,
+.app-header-menu-leave-active {
+  transition:
+    opacity var(--motion-180) ease,
+    transform var(--motion-180) ease;
+}
+
+.app-header-menu-enter-from,
+.app-header-menu-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
 }
 
 .app-header__actions {

@@ -6,6 +6,7 @@ import type { SiteNavItem } from '~/config/site'
 interface Props {
   open: boolean
   items: SiteNavItem[]
+  moreItems?: SiteNavItem[]
 }
 
 const props = defineProps<Props>()
@@ -18,6 +19,17 @@ const route = useRoute()
 
 function closeMenu() {
   emit('update:open', false)
+}
+
+function clearPointerFocus(event: PointerEvent) {
+  const target = event.currentTarget
+  if (!(target instanceof HTMLElement)) {
+    return
+  }
+
+  requestAnimationFrame(() => {
+    target.blur()
+  })
 }
 
 watch(
@@ -68,15 +80,32 @@ if (import.meta.client) {
 
       <aside class="mobile-nav__panel">
         <nav class="mobile-nav__links" aria-label="Mobile Primary">
+          <p class="mobile-nav__group-title">主导航</p>
           <NuxtLink
             v-for="item in items"
             :key="item.to"
             :to="item.to"
             class="mobile-nav__link"
             @click="closeMenu"
+            @pointerup="clearPointerFocus"
           >
             {{ item.label }}
           </NuxtLink>
+
+          <template v-if="moreItems?.length">
+            <p class="mobile-nav__group-title mobile-nav__group-title--more">更多页面</p>
+            <NuxtLink
+              v-for="item in moreItems"
+              :key="item.to"
+              :to="item.to"
+              class="mobile-nav__link mobile-nav__link--more"
+              @click="closeMenu"
+              @pointerup="clearPointerFocus"
+            >
+              <span>{{ item.label }}</span>
+              <span v-if="item.placeholder" class="mobile-nav__placeholder-tag">占位</span>
+            </NuxtLink>
+          </template>
         </nav>
       </aside>
     </div>
@@ -114,7 +143,25 @@ if (import.meta.client) {
   margin-top: var(--space-32);
 }
 
+.mobile-nav__group-title {
+  margin: 0;
+  padding: 0 var(--space-12);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--color-text-weak) 78%, var(--color-fg));
+}
+
+.mobile-nav__group-title--more {
+  margin-top: var(--space-16);
+}
+
 .mobile-nav__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
   padding: var(--space-12) var(--space-16);
   border-radius: var(--radius-8);
   color: var(--color-text-weak);
@@ -127,6 +174,27 @@ if (import.meta.client) {
 .mobile-nav__link.router-link-active {
   color: var(--color-fg);
   background: var(--color-surface-soft);
+}
+
+.mobile-nav__link:focus,
+.mobile-nav__link:focus-visible {
+  outline: none;
+}
+
+.mobile-nav__link--more {
+  background: color-mix(in srgb, var(--color-surface-soft) 42%, transparent);
+}
+
+.mobile-nav__placeholder-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 0 8px;
+  border-radius: var(--radius-pill);
+  color: var(--color-primary);
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  background: color-mix(in srgb, var(--color-primary) 14%, transparent);
 }
 
 .mobile-nav-fade-enter-active,
