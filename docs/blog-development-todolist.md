@@ -582,46 +582,53 @@
 
 ### Wiki 总览
 
-- [ ] 创建 `app/pages/wiki/index.vue`。
-- [ ] 创建 `app/components/wiki/WikiTree.vue`。
-- [ ] 创建 `app/components/wiki/WikiSearch.vue`。
-- [ ] 创建 `app/components/wiki/WikiDocList.vue`。
-- [ ] 按目录或 category 展示 Wiki 分类。
-- [ ] 展示文档标题、摘要、更新时间、标签。
-- [ ] 支持关键词搜索。
-- [ ] 支持分类筛选。
-- [ ] 搜索无结果时显示 EmptyState。
-- [ ] 不提供网页端新增 Wiki、编辑 Wiki、删除 Wiki 按钮。
+- [x] 创建 `app/pages/wiki/index.vue`。
+- [x] 创建 `app/components/wiki/WikiTree.vue`。
+- [x] 创建 `app/components/wiki/WikiSearch.vue`。
+- [x] 创建 `app/components/wiki/WikiDocList.vue`。
+- [x] 按目录或 category 展示 Wiki 分类。
+- [x] 展示文档标题、摘要、更新时间、标签。
+- [x] 支持关键词搜索。
+- [x] 支持分类筛选。
+- [x] 搜索无结果时显示 EmptyState。
+- [x] 不提供网页端新增 Wiki、编辑 Wiki、删除 Wiki 按钮。
 
 ### Wiki 详情
 
-- [ ] 创建 Wiki 文档动态路由。
-- [ ] 创建 `app/components/wiki/WikiBreadcrumb.vue`。
-- [ ] 创建 `app/components/wiki/WikiDocHeader.vue`。
-- [ ] 创建 `app/components/wiki/WikiSideToc.vue`。
-- [ ] 展示面包屑。
-- [ ] 展示文档更新时间。
-- [ ] 展示正文。
-- [ ] 支持侧边目录。
-- [ ] 移动端目录折叠为抽屉。
-- [ ] Wiki 详情不提供在线编辑入口。
+- [x] 创建 Wiki 文档动态路由。
+- [x] 创建 `app/components/wiki/WikiBreadcrumb.vue`。
+- [x] 创建 `app/components/wiki/WikiDocHeader.vue`。
+- [x] 创建 `app/components/wiki/WikiSideToc.vue`。
+- [x] 展示面包屑。
+- [x] 展示文档更新时间。
+- [x] 展示正文。
+- [x] 支持侧边目录。
+- [x] 移动端目录折叠为抽屉。
+- [x] Wiki 详情不提供在线编辑入口。
 
 ### 高级体验
 
-- [ ] Wiki 页面保持高密度但不拥挤。
-- [ ] 当前选中文档在目录树中高亮。
-- [ ] 目录树滚动区域不影响正文滚动。
-- [ ] 搜索框聚焦态清楚。
-- [ ] 文档标签与博客标签视觉统一。
+- [x] Wiki 页面保持高密度但不拥挤。
+- [x] 当前选中文档在目录树中高亮。
+- [x] 目录树滚动区域不影响正文滚动。
+- [x] 搜索框聚焦态清楚。
+- [x] 文档标签与博客标签视觉统一。
 
 ### 阶段验收
 
-- [ ] Wiki 像知识库，不像普通文章列表。
-- [ ] 搜索、分类、目录能快速定位文档。
-- [ ] 移动端可以顺畅阅读 Wiki。
-- [ ] Wiki 模块只读，内容修改必须回到本地 `content/wiki/`。
-- [ ] Wiki 没有在线 Markdown 编辑器、富文本工具栏、上传附件、保存页面等入口。
-- [ ] Wiki 空状态只说明本地文件维护流程，不提供网页端新增文档按钮。
+- [x] Wiki 像知识库，不像普通文章列表。
+- [x] 搜索、分类、目录能快速定位文档。
+- [x] 移动端可以顺畅阅读 Wiki。
+- [x] Wiki 模块只读，内容修改必须回到本地 `content/wiki/`。
+- [x] Wiki 没有在线 Markdown 编辑器、富文本工具栏、上传附件、保存页面等入口。
+- [x] Wiki 空状态只说明本地文件维护流程，不提供网页端新增文档按钮。
+
+阶段 7 验收记录（2026-05-16）：
+- Wiki 总览已拆为 `WikiTree`、`WikiSearch`、`WikiDocList`，页面只负责读取内容和维护搜索/分类浏览状态。
+- Wiki 日期继续遵循阶段 5 的约定，从 `YYYY-MM-DD-笔记名.md` 文件名解析。
+- 总览页支持按 category 展示目录树、关键词搜索、分类筛选和搜索空状态。
+- Wiki 详情已拆为 `WikiBreadcrumb`、`WikiDocHeader`、`WikiSideToc`，支持面包屑、正文、侧边目录和移动端折叠目录。
+- `npm run generate` 已通过，静态生成包含 `/wiki` 与 `/wiki/2026-05-16-content-workflow`。
 
 ## 阶段 8：Todo 规划模块
 

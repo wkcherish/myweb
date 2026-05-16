@@ -1,10 +1,20 @@
 <script setup lang="ts">
-import VisitCount from '~/components/content/VisitCount.vue'
+import WikiDocList from '~/components/wiki/WikiDocList.vue'
+import WikiSearch from '~/components/wiki/WikiSearch.vue'
+import WikiTree from '~/components/wiki/WikiTree.vue'
 import BasePanel from '~/components/ui/BasePanel.vue'
 import BaseTag from '~/components/ui/BaseTag.vue'
 import EmptyState from '~/components/ui/EmptyState.vue'
 import ErrorState from '~/components/ui/ErrorState.vue'
 import type { ContentEntry } from '~/utils/content'
+
+type WikiGroup = {
+  category: string
+  items: ContentEntry[]
+}
+
+const search = ref('')
+const activeCategory = ref('')
 
 const { data: docsResult } = await useAsyncData('wiki-list', async () => {
   try {
@@ -14,6 +24,37 @@ const { data: docsResult } = await useAsyncData('wiki-list', async () => {
   } catch (error) {
     return toContentResult<ContentEntry>([], error)
   }
+})
+
+const docs = computed(() => docsResult.value?.data || [])
+
+const groups = computed<WikiGroup[]>(() => {
+  const grouped = new Map<string, ContentEntry[]>()
+
+  for (const doc of docs.value) {
+    const category = readContentString(doc, 'category') || 'Wiki'
+    grouped.set(category, [...(grouped.get(category) || []), doc])
+  }
+
+  return [...grouped.entries()]
+    .map(([category, items]) => ({ category, items }))
+    .sort((a, b) => a.category.localeCompare(b.category))
+})
+
+const filteredDocs = computed(() => {
+  const keyword = search.value.trim().toLowerCase()
+
+  return docs.value.filter((doc) => {
+    const title = readContentString(doc, 'title').toLowerCase()
+    const description = readContentString(doc, 'description').toLowerCase()
+    const category = readContentString(doc, 'category') || 'Wiki'
+    const tags = readContentTags(doc).join(' ').toLowerCase()
+
+    return (
+      (!keyword || title.includes(keyword) || description.includes(keyword) || tags.includes(keyword)) &&
+      (!activeCategory.value || category === activeCategory.value)
+    )
+  })
 })
 </script>
 
@@ -31,16 +72,13 @@ const { data: docsResult } = await useAsyncData('wiki-list', async () => {
       <ErrorState title="Wiki 读取失败" :description="docsResult.error" />
     </BasePanel>
 
-    <div v-else-if="docsResult?.data.length" class="wiki-grid">
-      <NuxtLink v-for="doc in docsResult.data" :key="doc.path" class="wiki-card" :to="doc.path || '/wiki'">
-        <div class="wiki-card__meta">
-          <span>{{ readContentString(doc, 'category') || 'Wiki' }}</span>
-          <time>{{ formatContentDate(getContentDate(doc, ['updatedAt', 'date'])) }}</time>
-          <VisitCount :path="doc.path" />
-        </div>
-        <h2>{{ readContentString(doc, 'title') || '未命名 Wiki' }}</h2>
-        <p>{{ readContentString(doc, 'description') || '暂无摘要。' }}</p>
-      </NuxtLink>
+    <div v-else-if="docs.length" class="wiki-layout">
+      <WikiTree :groups="groups" :active-category="activeCategory" @select="activeCategory = $event" />
+
+      <div class="wiki-layout__main">
+        <WikiSearch v-model="search" />
+        <WikiDocList :docs="filteredDocs" />
+      </div>
     </div>
 
     <BasePanel v-else-if="docsResult?.isEmpty">
@@ -64,57 +102,21 @@ const { data: docsResult } = await useAsyncData('wiki-list', async () => {
   margin-top: var(--space-12);
 }
 
-.wiki-grid {
+.wiki-layout {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-12);
-}
-
-.wiki-card {
-  min-height: 178px;
-  padding: var(--space-24);
-  display: grid;
-  align-content: space-between;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
   gap: var(--space-16);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-8);
-  background: color-mix(in srgb, var(--color-surface) 88%, var(--color-bg));
-  color: var(--color-fg);
-  text-decoration: none;
-  transition:
-    background-color var(--motion-180) ease,
-    border-color var(--motion-180) ease,
-    transform var(--motion-180) ease;
+  align-items: start;
 }
 
-.wiki-card:hover {
-  border-color: color-mix(in srgb, var(--color-primary) 40%, var(--color-border));
-  background: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface));
-  transform: translateY(-2px);
-}
-
-.wiki-card__meta {
-  display: flex;
-  flex-wrap: wrap;
+.wiki-layout__main {
+  display: grid;
   gap: var(--space-12);
-  color: var(--color-text-weak);
-  font-size: 0.82rem;
-  font-weight: 800;
 }
 
-.wiki-card h2 {
-  font-size: 1.24rem;
-}
-
-@media (max-width: 700px) {
-  .wiki-grid {
+@media (max-width: 860px) {
+  .wiki-layout {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (min-width: 701px) and (max-width: 980px) {
-  .wiki-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 </style>

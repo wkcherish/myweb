@@ -1,0 +1,64 @@
+<script setup lang="ts">
+import VisitCount from '~/components/content/VisitCount.vue'
+import BaseTag from '~/components/ui/BaseTag.vue'
+import WikiBreadcrumb from '~/components/wiki/WikiBreadcrumb.vue'
+import type { ContentEntry } from '~/utils/content'
+
+defineProps<{
+  doc: ContentEntry
+  path: string
+}>()
+</script>
+
+<template>
+  <header class="wiki-doc-header">
+    <WikiBreadcrumb :category="readContentString(doc, 'category')" :title="readContentString(doc, 'title')" />
+
+    <div class="wiki-doc-header__meta">
+      <time>{{ formatContentDate(getContentDateFromPath(path)) }}</time>
+      <BaseTag tone="accent">{{ readContentString(doc, 'category') || 'Wiki' }}</BaseTag>
+      <VisitCount :path="path" increment />
+    </div>
+
+    <h1>{{ readContentString(doc, 'title') || '未命名 Wiki' }}</h1>
+    <p v-if="readContentString(doc, 'description')">
+      {{ readContentString(doc, 'description') }}
+    </p>
+
+    <div v-if="readContentTags(doc).length" class="wiki-doc-header__tags">
+      <BaseTag v-for="tag in readContentTags(doc)" :key="tag" tone="accent">
+        {{ tag }}
+      </BaseTag>
+    </div>
+  </header>
+</template>
+
+<style scoped>
+.wiki-doc-header {
+  display: grid;
+  gap: var(--space-12);
+}
+
+.wiki-doc-header__meta,
+.wiki-doc-header__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  align-items: center;
+}
+
+.wiki-doc-header__meta {
+  color: var(--color-text-weak);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.wiki-doc-header h1 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  overflow-wrap: anywhere;
+}
+
+.wiki-doc-header p {
+  max-width: 68ch;
+}
+</style>
