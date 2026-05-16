@@ -10,17 +10,24 @@ export interface HomeBackground {
 
 export const homeBackgrounds: HomeBackground[] = [
   {
-    id: 'home-day-default',
-    name: '主页白天默认背景',
-    path: '/backgrounds/home/day/placeholder-day.jpg',
-    appliesTo: 'light',
-    overlayOpacity: 0.2,
+    id: 'plain-white',
+    name: '纯白',
+    path: '',
+    appliesTo: 'shared',
+    overlayOpacity: 0,
   },
   {
-    id: 'home-night-default',
-    name: '主页黑夜默认背景',
-    path: '/backgrounds/home/night/placeholder-night.jpg',
+    id: 'school-girl-campus',
+    name: '校园背景',
+    path: '/backgrounds/home/day/school-girl-campus.jpg',
+    appliesTo: 'light',
+    overlayOpacity: 0,
+  },
+  {
+    id: 'dark-plain',
+    name: '深色纯色',
+    path: '',
     appliesTo: 'dark',
-    overlayOpacity: 0.4,
+    overlayOpacity: 0,
   },
 ]

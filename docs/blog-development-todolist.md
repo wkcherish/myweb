@@ -382,82 +382,96 @@
 
 ### 组件拆分
 
-- [ ] 创建 `app/components/home/HomeLetterField.vue`。
-- [ ] 创建 `app/components/home/MimoInspiredHero.vue`。
-- [ ] 创建 `app/components/home/HomeOverview.vue`。
-- [ ] 创建 `app/components/home/HomeRecentPosts.vue`。
-- [ ] 创建 `app/components/home/HomeKnowledgePanel.vue`。
-- [ ] 创建 `app/components/home/HomeTodoSnapshot.vue`。
-- [ ] 在 `app/pages/index.vue` 组合上述组件。
+- [x] 创建 `app/components/home/HomeLetterField.vue`。
+- [x] 创建 `app/components/home/MimoInspiredHero.vue`。
+- [x] 创建 `app/components/home/HomeOverview.vue`。
+- [x] 创建 `app/components/home/HomeRecentPosts.vue`。
+- [x] 创建 `app/components/home/HomeKnowledgePanel.vue`。
+- [x] 创建 `app/components/home/HomeTodoSnapshot.vue`。
+- [x] 在 `app/pages/index.vue` 组合上述组件。
 
 ### MiMo 官网首页参考落实
 
-- [ ] 以 Xiaomi MiMo 官网作为首页首屏主要视觉参考。
-- [ ] 确认首页不是文章列表页或导航页，而是有完整首屏、下一屏内容和个人博客识别度的首页。
-- [ ] 拆解 MiMo 官网的浅色背景、重复字母矩阵、中央圆形、大标题穿插和滚动动效。
-- [ ] 只学习 MiMo 官网的构图、层级和动效节奏，不使用 Xiaomi 或 MiMo 的 Logo、品牌文案和素材。
-- [ ] 把 MiMo 构图替换为个人博客身份，例如站点名、个人简介、最近内容入口和知识库入口。
-- [ ] 明确博客模板或文章列表不能作为首页首屏视觉参考。
-- [ ] 记录 MiMo 风格中哪些元素需要降级，例如过强动效、过大标题遮挡、移动端圆形裁切或文字溢出。
+- [x] 以 Xiaomi MiMo 官网作为首页首屏主要视觉参考。
+- [x] 确认首页不是文章列表页或导航页，而是有完整首屏、下一屏内容和个人博客识别度的首页。
+- [x] 拆解 MiMo 官网的浅色背景、重复字母矩阵、中央圆形、大标题穿插和滚动动效。
+- [x] 只学习 MiMo 官网的构图、层级和动效节奏，不使用 Xiaomi 或 MiMo 的 Logo、品牌文案和素材。
+- [x] 把 MiMo 构图替换为个人博客身份，例如站点名、个人简介、最近内容入口和知识库入口。
+- [x] 明确博客模板或文章列表不能作为首页首屏视觉参考。
+- [x] 记录 MiMo 风格中哪些元素需要降级，例如过强动效、过大标题遮挡、移动端圆形裁切或文字溢出。
 
 ### HomeLetterField
 
-- [ ] 接收字符源，例如 `NOTEBOOK`、`BLOG` 或站点英文名。
-- [ ] 生成多行重复字母矩阵。
-- [ ] 设置 `aria-hidden="true"`。
-- [ ] 字母使用低透明度和大字距。
-- [ ] 白天模式下字母矩阵使用低透明度深色。
-- [ ] 黑夜模式下字母矩阵使用低透明度浅色。
-- [ ] 支持根据容器宽度调整行数和字号。
-- [ ] 深色模式下调整透明度，避免背景过亮。
-- [ ] 减少动效模式下保持静态。
+- [x] 接收字符源，例如 `NOTEBOOK`、`BLOG` 或站点英文名。
+- [x] 生成多行重复字母矩阵。
+- [x] 设置 `aria-hidden="true"`。
+- [x] 字母使用低透明度和大字距。
+- [x] 白天模式下字母矩阵使用低透明度深色。
+- [x] 黑夜模式下字母矩阵使用低透明度浅色。
+- [x] 支持根据容器宽度调整行数和字号。
+- [x] 深色模式下调整透明度，避免背景过亮。
+- [x] 减少动效模式下保持静态。
 
 ### MimoInspiredHero
 
-- [ ] 首屏高度使用 `min-height: min(760px, 100svh)` 或等价方案。
-- [ ] 支持读取 `app/config/backgrounds.ts` 中的主页背景配置。
-- [ ] 白天模式优先使用 `public/backgrounds/home/day/` 背景。
-- [ ] 黑夜模式优先使用 `public/backgrounds/home/night/` 背景。
-- [ ] 没有背景图片时使用高级纯色或轻纹理兜底。
-- [ ] 背景图使用 `background-size: cover` 或等价实现，并检查移动端裁切。
-- [ ] 背景上方叠加可读性遮罩，遮罩强度随主题变化。
-- [ ] 中央圆形尺寸使用 `clamp(220px, 42vw, 520px)`。
-- [ ] 移动端圆形尺寸使用 `clamp(220px, 72vw, 520px)`。
-- [ ] 大标题使用语义化 `h1`。
-- [ ] 标题桌面端横向穿过圆形。
-- [ ] 标题移动端拆成两行或三行。
-- [ ] 实现圆形内文字反相效果。
-- [ ] 优先尝试双文本叠层或 `mix-blend-mode`，保证兼容性。
-- [ ] 鼠标移动时圆形轻微位移。
-- [ ] 鼠标移动时背景字母有轻微视差。
-- [ ] 滚动时圆形轻微缩放或淡出。
-- [ ] 减少动效模式下禁用鼠标跟随和滚动视差。
-- [ ] 首屏底部露出下一屏内容。
-- [ ] 首页首屏不使用 Xiaomi Logo 或 Xiaomi 文案。
+- [x] 首屏高度使用 `min-height: min(760px, 100svh)` 或等价方案。
+- [x] 支持读取 `app/config/backgrounds.ts` 中的主页背景配置。
+- [x] 白天模式优先使用 `public/backgrounds/home/day/` 背景。
+- [x] 黑夜模式优先使用 `public/backgrounds/home/night/` 背景。
+- [x] 没有背景图片时使用高级纯色或轻纹理兜底。
+- [x] 背景图使用 `background-size: cover` 或等价实现，并检查移动端裁切。
+- [x] 背景上方叠加可读性遮罩，遮罩强度随主题变化。
+- [x] 中央圆形尺寸使用 `clamp(220px, 42vw, 520px)`。
+- [x] 移动端圆形尺寸使用 `clamp(220px, 72vw, 520px)`。
+- [x] 大标题使用语义化 `h1`。
+- [x] 标题桌面端横向穿过圆形。
+- [x] 标题移动端拆成两行或三行。
+- [x] 实现圆形内文字反相效果。
+- [x] 优先尝试双文本叠层或 `mix-blend-mode`，保证兼容性。
+- [x] 鼠标移动时圆形轻微位移。
+- [x] 鼠标移动时背景字母有轻微视差。
+- [x] 滚动时圆形轻微缩放或淡出。
+- [x] 减少动效模式下禁用鼠标跟随和滚动视差。
+- [x] 首屏底部露出下一屏内容。
+- [x] 首页首屏不使用 Xiaomi Logo 或 Xiaomi 文案。
 
 ### 首页内容区
 
-- [ ] HomeOverview 展示站点一句话定位。
-- [ ] HomeOverview 承接 MiMo 首屏，展示个人信息摘要和站点定位。
-- [ ] HomeRecentPosts 展示最近博客文章。
-- [ ] HomeRecentPosts 展示日期、分类、标签和简短摘要，但不抢首页首屏视觉。
-- [ ] HomeKnowledgePanel 展示 Wiki 入口和最近更新。
-- [ ] HomeTodoSnapshot 展示当前计划、进行中、已完成数量。
-- [ ] 首页内容区预留博客、Wiki、Todo 的清晰入口，方便从首屏继续浏览。
-- [ ] 内容区避免卡片堆满，优先使用清楚的分区和列表。
-- [ ] 首页 CTA 使用图标按钮或文本按钮，风格统一。
+- [x] HomeOverview 展示站点一句话定位。
+- [x] HomeOverview 承接 MiMo 首屏，展示个人信息摘要和站点定位。
+- [x] HomeRecentPosts 展示最近博客文章。
+- [x] HomeRecentPosts 展示日期、分类、标签和简短摘要，但不抢首页首屏视觉。
+- [x] HomeKnowledgePanel 展示 Wiki 入口和最近更新。
+- [x] HomeTodoSnapshot 展示当前计划、进行中、已完成数量。
+- [x] 首页内容区预留博客、Wiki、Todo 的清晰入口，方便从首屏继续浏览。
+- [x] 内容区避免卡片堆满，优先使用清楚的分区和列表。
+- [x] 首页 CTA 使用图标按钮或文本按钮，风格统一。
 
 ### 阶段验收
 
-- [ ] 首页桌面端第一屏有强识别度。
-- [ ] 首页明确参考 MiMo 官网构图，但已经替换成个人博客表达，不像仿站。
-- [ ] 首页移动端不溢出、不遮挡导航。
-- [ ] 大标题、黑圆、背景字母层级清晰。
-- [ ] 白天模式首页背景、标题和圆形对比度清晰。
-- [ ] 黑夜模式首页背景、标题和圆形对比度清晰。
-- [ ] 背景目录为空时首页仍有高级兜底视觉。
-- [ ] 减少动效模式可以正常浏览。
-- [ ] 下一屏内容在首屏底部可见。
+- [x] 首页桌面端第一屏有强识别度。
+- [x] 首页明确参考 MiMo 官网构图，但已经替换成个人博客表达，不像仿站。
+- [x] 首页移动端不溢出、不遮挡导航。
+- [x] 大标题、黑圆、背景字母层级清晰。
+- [x] 白天模式首页背景、标题和圆形对比度清晰。
+- [x] 黑夜模式首页背景、标题和圆形对比度清晰。
+- [x] 背景目录为空时首页仍有高级兜底视觉。
+- [x] 减少动效模式可以正常浏览。
+- [x] 下一屏内容在首屏底部可见。
+
+阶段 4 验收记录（2026-05-16）：
+- 首页已拆成 `HomeLetterField`、`MimoInspiredHero`、`HomeOverview`、`HomeRecentPosts`、`HomeKnowledgePanel`、`HomeTodoSnapshot`，`app/pages/index.vue` 只负责组合。
+- 首屏保留系统鼠标，圆形只作为跟随视觉层，避免鼠标消失；鼠标跟随、滚动视差均使用轻量状态和 `requestAnimationFrame`。
+- 背景配置会读取 `app/config/backgrounds.ts`，但 placeholder 图片不存在时不发起图片请求，直接使用主题遮罩、径向光和纯色兜底。
+- 修正首页标题为 `你好,我是Cherish`，并将页面中的首屏组件标签改为 Nuxt 自动注册名 `HomeMimoInspiredHero`，避免匿名组件渲染警告。
+- 根据反馈暂时将首页背景改为纯白，取消首屏方框线；标题改为单行 `你好,我是cherish`；首页鼠标改为跟随屏幕坐标的小灰圈，悬停标题时放大为放大镜效果，中央文案和按钮随鼠标中幅度摆动。
+- 根据反馈删除首屏 `CHERISH NOTEBOOK` 小字；首页首屏改为占满导航栏下方的整屏，下一屏内容需要下滑才出现；将新增背景图移动到 `public/backgrounds/home/day/school-girl-campus.png`，设置面板支持在纯白背景和该图片之间切换，并用 `localStorage` 保存偏好。
+- 根据反馈将首页鼠标圈改为更大的黑色波纹圈；默认保留系统箭头并让箭头位于圈中心，悬停标题时隐藏箭头并在圈内显示放大的局部标题文字；背景图改为正确的 `.jpg` 扩展名并去掉图片模式下的白色遮罩，避免水印文件名和清晰度损失。
+- 根据反馈将首页主标题改为英文 `hello,I'm cherish`；取消标题整体 hover 放大，只保留黑色圈圈遮挡区域内的局部放大；纯白背景下不再渲染 `NOTEBOOK`、`BLOG`、`WIKI`、`TODO` 字母水印。
+- 根据反馈彻底移除首页首屏 `HomeLetterField` 调用，所有背景下都不再渲染 `NOTEBOOK`、`BLOG`、`WIKI`、`TODO` 字母层；执行 `npm run cleanup` 修复 `.nuxt/dev/index.mjs` worker entry 缺失后，dev 首页访问返回 `200`。
+- 根据反馈继续放大首页放大镜，标题字号轻微下调；悬停标题时用圆形遮罩盖住原文字区域，只在黑圈内显示白色放大的局部标题文字；鼠标静止时黑圈保持稳定圆形，移动时才播放波纹动效。
+- 修复放大镜悬停标题时右下方额外显示异常内容的问题：移除额外 `title-mask` 节点，改为直接在原标题文字上使用圆形 CSS mask 挖空。
+- `npm run generate` 已通过，首页和现有路由均可静态生成。
 
 ## 阶段 5：内容目录与 Nuxt Content
 

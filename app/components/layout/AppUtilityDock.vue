@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import type { Component } from 'vue'
 
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { Bot, Dog, Music2, Settings2 } from 'lucide-vue-next'
+
+import { useHomeBackground } from '~/composables/useHomeBackground'
 
 import BasePanel from '../ui/BasePanel.vue'
 import IconButton from '../ui/IconButton.vue'
@@ -16,6 +18,8 @@ interface UtilityItem {
 }
 
 const activeKey = ref<UtilityKey | null>(null)
+const { availableBackgrounds, selectedBackgroundId, setHomeBackground, syncHomeBackgroundFromStorage } =
+  useHomeBackground()
 
 const utilityItems: UtilityItem[] = [
   { key: 'pet', label: '小狗助手', icon: Dog },
@@ -29,13 +33,37 @@ const activeLabel = computed(() => utilityItems.find((item) => item.key === acti
 function togglePanel(key: UtilityKey) {
   activeKey.value = activeKey.value === key ? null : key
 }
+
+onMounted(() => {
+  syncHomeBackgroundFromStorage()
+})
 </script>
 
 <template>
   <aside class="utility-dock" aria-label="全站快捷入口">
     <BasePanel v-if="activeKey" class="utility-dock__panel" tone="floating">
       <p class="utility-dock__title">{{ activeLabel }}</p>
-      <p class="utility-dock__description">阶段占位：该模块将在后续阶段接入真实功能。</p>
+      <div v-if="activeKey === 'settings'" class="utility-dock__settings">
+        <p class="utility-dock__description">首页背景</p>
+        <div class="utility-dock__backgrounds">
+          <button
+            v-for="background in availableBackgrounds"
+            :key="background.id"
+            class="utility-dock__background"
+            :class="{ 'is-active': selectedBackgroundId === background.id }"
+            type="button"
+            @click="setHomeBackground(background.id)"
+          >
+            <span
+              class="utility-dock__swatch"
+              :style="{ backgroundImage: background.path ? `url(${background.path})` : 'none' }"
+              aria-hidden="true"
+            />
+            <span>{{ background.name }}</span>
+          </button>
+        </div>
+      </div>
+      <p v-else class="utility-dock__description">阶段占位：该模块将在后续阶段接入真实功能。</p>
     </BasePanel>
 
     <div class="utility-dock__actions">
@@ -77,6 +105,47 @@ function togglePanel(key: UtilityKey) {
   margin-top: var(--space-8);
   font-size: 0.82rem;
   line-height: 1.5;
+}
+
+.utility-dock__settings {
+  display: grid;
+  gap: var(--space-12);
+}
+
+.utility-dock__backgrounds {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.utility-dock__background {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  align-items: center;
+  gap: var(--space-12);
+  width: 100%;
+  min-height: 48px;
+  padding: var(--space-8);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-8);
+  background: color-mix(in srgb, var(--color-surface) 84%, transparent);
+  color: var(--color-fg);
+  text-align: left;
+  cursor: pointer;
+}
+
+.utility-dock__background.is-active {
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 10%, var(--color-surface));
+}
+
+.utility-dock__swatch {
+  width: 42px;
+  height: 30px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-4);
+  background-color: #ffffff;
+  background-position: center;
+  background-size: cover;
 }
 
 .utility-dock__actions {
