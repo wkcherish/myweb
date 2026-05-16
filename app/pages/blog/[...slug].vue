@@ -1,61 +1,153 @@
 <script setup lang="ts">
+import ArticleHeader from '~/components/blog/ArticleHeader.vue'
+import ArticleToc from '~/components/blog/ArticleToc.vue'
+import ReadingProgress from '~/components/blog/ReadingProgress.vue'
+import type { ArticleTocLink } from '~/components/blog/ArticleToc.vue'
+import type { ContentEntry } from '~/utils/content'
+
+type BlogArticle = ContentEntry & {
+  body?: {
+    toc?: {
+      links?: ArticleTocLink[]
+    }
+  }
+}
+
 const route = useRoute()
 const slug = Array.isArray(route.params.slug) ? route.params.slug.join('/') : route.params.slug
 const path = `/blog/${slug}`
-const noteDate = computed(() => formatContentDate(getContentDateFromPath(path)))
 
 const { data: page } = await useAsyncData(`blog-${path}`, () => {
-  return queryCollection('blog').path(path).first()
+  return queryCollection('blog').path(path).first() as Promise<BlogArticle | null>
+})
+
+const { data: posts } = await useAsyncData('blog-detail-surroundings', async () => {
+  const entries = (await queryCollection('blog').all()) as ContentEntry[]
+
+  return sortEntriesByDate(filterPublishedEntries(entries), ['date', 'publishedAt'])
 })
 
 if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: 'Blog not found' })
 }
+
+const tocLinks = computed(() => page.value?.body?.toc?.links || [])
+
+const currentIndex = computed(() => posts.value?.findIndex((post) => post.path === path) ?? -1)
+const newerPost = computed(() => (currentIndex.value > 0 ? posts.value?.[currentIndex.value - 1] : null))
+const olderPost = computed(() =>
+  posts.value && currentIndex.value >= 0 && currentIndex.value < posts.value.length - 1
+    ? posts.value[currentIndex.value + 1]
+    : null,
+)
 </script>
 
 <template>
-  <article class="content-detail">
-    <header class="content-detail__head">
-      <NuxtLink to="/blog">Blog</NuxtLink>
-      <h1>{{ page?.title }}</h1>
-      <div class="content-detail__meta">
-        <time>{{ noteDate }}</time>
-        <p v-if="page?.description">{{ page.description }}</p>
-        <ContentVisitCount :path="path" increment />
-      </div>
-    </header>
-    <ContentRenderer v-if="page" :value="page" class="content-detail__body" />
-  </article>
+  <ClientOnly>
+    <ReadingProgress />
+  </ClientOnly>
+
+  <div v-if="page" class="article-layout">
+    <article class="content-detail">
+      <ArticleHeader :article="page" :path="path" />
+      <ContentRenderer :value="page" class="content-detail__body" />
+
+      <nav class="article-nav" aria-label="相邻文章">
+        <NuxtLink v-if="newerPost" :to="newerPost.path || '/blog'" class="article-nav__item">
+          <span>上一篇</span>
+          <strong>{{ readContentString(newerPost, 'title') || '未命名文章' }}</strong>
+        </NuxtLink>
+        <span v-else class="article-nav__item is-empty">已经是最新一篇</span>
+
+        <NuxtLink v-if="olderPost" :to="olderPost.path || '/blog'" class="article-nav__item is-next">
+          <span>下一篇</span>
+          <strong>{{ readContentString(olderPost, 'title') || '未命名文章' }}</strong>
+        </NuxtLink>
+        <span v-else class="article-nav__item is-empty is-next">已经是最后一篇</span>
+      </nav>
+    </article>
+
+    <aside class="article-layout__toc">
+      <ArticleToc :links="tocLinks" />
+    </aside>
+  </div>
 </template>
 
 <style scoped>
-.content-detail {
-  width: min(820px, 100%);
+.article-layout {
+  width: min(1180px, 100%);
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 820px) minmax(220px, 280px);
+  gap: var(--space-32);
+  align-items: start;
+}
+
+.content-detail {
   display: grid;
   gap: var(--space-32);
 }
 
-.content-detail__head {
-  display: grid;
-  gap: var(--space-12);
-}
-
-.content-detail__head a {
-  width: fit-content;
-  font-weight: 800;
-}
-
-.content-detail__head h1 {
-  font-size: clamp(2rem, 5vw, 3.2rem);
-}
-
-.content-detail__meta {
-  display: grid;
-  gap: var(--space-8);
-}
-
 .content-detail__body {
   color: var(--color-fg);
+}
+
+.article-nav {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-12);
+  padding-top: var(--space-16);
+  border-top: 1px solid var(--color-border);
+}
+
+.article-nav__item {
+  min-height: 96px;
+  display: grid;
+  align-content: center;
+  gap: var(--space-4);
+  padding: var(--space-16);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-8);
+  background: var(--color-surface);
+  color: var(--color-fg);
+  text-decoration: none;
+}
+
+.article-nav__item span {
+  color: var(--color-text-weak);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.article-nav__item strong {
+  overflow-wrap: anywhere;
+}
+
+.article-nav__item.is-next {
+  text-align: right;
+}
+
+.article-nav__item.is-empty {
+  color: var(--color-text-weak);
+}
+
+@media (max-width: 980px) {
+  .article-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .article-layout__toc {
+    order: -1;
+  }
+}
+
+@media (max-width: 700px) {
+  .article-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .article-nav__item.is-next {
+    text-align: left;
+  }
 }
 </style>

@@ -530,46 +530,53 @@
 
 ### 博客列表
 
-- [ ] 创建 `app/pages/blog/index.vue`。
-- [ ] 创建 `app/components/blog/BlogList.vue`。
-- [ ] 创建 `app/components/blog/BlogListItem.vue`。
-- [ ] 创建 `app/components/blog/BlogFilterBar.vue`。
-- [ ] 展示文章标题、摘要、日期、标签、分类。
-- [ ] 支持按分类筛选。
-- [ ] 支持按标签筛选。
-- [ ] 支持搜索标题和摘要。
-- [ ] 支持归档入口或按年月分组的浏览方式。
-- [ ] 预留标签云或热门标签入口，保持克制，不做满屏装饰。
-- [ ] 支持草稿过滤。
-- [ ] 列表项 hover 状态高级克制，不做大幅位移。
-- [ ] 空列表显示 EmptyState。
-- [ ] 不提供网页端新建、编辑、删除、发布文章按钮。
+- [x] 创建 `app/pages/blog/index.vue`。
+- [x] 创建 `app/components/blog/BlogList.vue`。
+- [x] 创建 `app/components/blog/BlogListItem.vue`。
+- [x] 创建 `app/components/blog/BlogFilterBar.vue`。
+- [x] 展示文章标题、摘要、日期、标签、分类。
+- [x] 支持按分类筛选。
+- [x] 支持按标签筛选。
+- [x] 支持搜索标题和摘要。
+- [x] 支持归档入口或按年月分组的浏览方式。
+- [x] 预留标签云或热门标签入口，保持克制，不做满屏装饰。
+- [x] 支持草稿过滤。
+- [x] 列表项 hover 状态高级克制，不做大幅位移。
+- [x] 空列表显示 EmptyState。
+- [x] 不提供网页端新建、编辑、删除、发布文章按钮。
 
 ### 博客详情
 
-- [ ] 创建博客详情动态路由。
-- [ ] 创建 `app/components/blog/ArticleHeader.vue`。
-- [ ] 创建 `app/components/blog/ArticleToc.vue`。
-- [ ] 创建 `app/components/blog/ReadingProgress.vue`。
-- [ ] 展示标题、描述、日期、标签、分类。
-- [ ] 展示 Markdown 正文。
-- [ ] 生成目录导航。
-- [ ] 支持目录当前标题高亮。
-- [ ] 支持阅读进度条。
-- [ ] 支持上一篇、下一篇。
-- [ ] 移动端目录默认折叠。
-- [ ] 文章详情不提供在线编辑入口。
+- [x] 创建博客详情动态路由。
+- [x] 创建 `app/components/blog/ArticleHeader.vue`。
+- [x] 创建 `app/components/blog/ArticleToc.vue`。
+- [x] 创建 `app/components/blog/ReadingProgress.vue`。
+- [x] 展示标题、描述、日期、标签、分类。
+- [x] 展示 Markdown 正文。
+- [x] 生成目录导航。
+- [x] 支持目录当前标题高亮。
+- [x] 支持阅读进度条。
+- [x] 支持上一篇、下一篇。
+- [x] 移动端目录默认折叠。
+- [x] 文章详情不提供在线编辑入口。
 
 ### 阶段验收
 
-- [ ] 博客列表可扫描，信息密度适中。
-- [ ] 博客列表服务阅读和筛选，不承担首页首屏视觉任务。
-- [ ] 文章详情正文宽度舒适。
-- [ ] 目录不遮挡正文。
-- [ ] 移动端长标题不溢出。
-- [ ] 博客模块是只读发布系统，内容修改必须回到本地文件。
-- [ ] 博客模块没有 `写文章`、`保存草稿`、`发布文章`、`编辑本页` 等按钮。
-- [ ] 博客搜索和筛选只改变浏览结果，不改变内容源。
+- [x] 博客列表可扫描，信息密度适中。
+- [x] 博客列表服务阅读和筛选，不承担首页首屏视觉任务。
+- [x] 文章详情正文宽度舒适。
+- [x] 目录不遮挡正文。
+- [x] 移动端长标题不溢出。
+- [x] 博客模块是只读发布系统，内容修改必须回到本地文件。
+- [x] 博客模块没有 `写文章`、`保存草稿`、`发布文章`、`编辑本页` 等按钮。
+- [x] 博客搜索和筛选只改变浏览结果，不改变内容源。
+
+阶段 6 验收记录（2026-05-16）：
+- 博客列表已拆为 `BlogFilterBar`、`BlogList`、`BlogListItem`，页面只负责读取内容和维护浏览筛选状态。
+- 博客日期继续遵循阶段 5 的约定，从 `YYYY-MM-DD-笔记名.md` 文件名解析；筛选、排序、详情页展示均复用该规则。
+- 列表支持标题/摘要搜索、分类筛选、标签筛选和按年月归档筛选，全部只影响当前浏览结果。
+- 博客详情已拆为 `ArticleHeader`、`ArticleToc`、`ReadingProgress`，支持目录高亮、阅读进度和上一篇/下一篇导航。
+- `npm run generate` 已通过，静态生成包含 `/blog` 与 `/blog/2026-05-16-nuxt-notebook`。
 
 ## 阶段 7：Wiki 知识库模块
 

@@ -1,9 +1,16 @@
 <script setup lang="ts">
+import BlogFilterBar from '~/components/blog/BlogFilterBar.vue'
+import BlogList from '~/components/blog/BlogList.vue'
 import BasePanel from '~/components/ui/BasePanel.vue'
 import BaseTag from '~/components/ui/BaseTag.vue'
 import EmptyState from '~/components/ui/EmptyState.vue'
 import ErrorState from '~/components/ui/ErrorState.vue'
 import type { ContentEntry } from '~/utils/content'
+
+const search = ref('')
+const activeCategory = ref('')
+const activeTag = ref('')
+const activeArchive = ref('')
 
 const { data: postsResult } = await useAsyncData('blog-list', async () => {
   try {
@@ -14,6 +21,50 @@ const { data: postsResult } = await useAsyncData('blog-list', async () => {
     return toContentResult<ContentEntry>([], error)
   }
 })
+
+const posts = computed(() => postsResult.value?.data || [])
+
+const categories = computed(() =>
+  [...new Set(posts.value.map((post) => readContentString(post, 'category')).filter(Boolean))].sort(),
+)
+
+const tags = computed(() => [...new Set(posts.value.flatMap((post) => readContentTags(post)))].sort())
+
+const archives = computed(() =>
+  [
+    ...new Set(
+      posts.value
+        .map((post) => getContentDate(post, ['date', 'publishedAt']).slice(0, 7))
+        .filter(Boolean),
+    ),
+  ].sort((a, b) => b.localeCompare(a)),
+)
+
+const filteredPosts = computed(() => {
+  const keyword = search.value.trim().toLowerCase()
+
+  return posts.value.filter((post) => {
+    const title = readContentString(post, 'title').toLowerCase()
+    const description = readContentString(post, 'description').toLowerCase()
+    const category = readContentString(post, 'category')
+    const postTags = readContentTags(post)
+    const archive = getContentDate(post, ['date', 'publishedAt']).slice(0, 7)
+
+    return (
+      (!keyword || title.includes(keyword) || description.includes(keyword)) &&
+      (!activeCategory.value || category === activeCategory.value) &&
+      (!activeTag.value || postTags.includes(activeTag.value)) &&
+      (!activeArchive.value || archive === activeArchive.value)
+    )
+  })
+})
+
+const resetFilters = () => {
+  search.value = ''
+  activeCategory.value = ''
+  activeTag.value = ''
+  activeArchive.value = ''
+}
 </script>
 
 <template>
@@ -30,17 +81,24 @@ const { data: postsResult } = await useAsyncData('blog-list', async () => {
       <ErrorState title="文章读取失败" :description="postsResult.error" />
     </BasePanel>
 
-    <div v-else-if="postsResult?.data.length" class="blog-list">
-      <NuxtLink v-for="post in postsResult.data" :key="post.path" class="blog-card" :to="post.path || '/blog'">
-        <div class="doc-card__meta">
-          <time>{{ formatContentDate(getContentDate(post, ['date', 'publishedAt'])) }}</time>
-          <span>{{ readContentString(post, 'category') || '未分类' }}</span>
-          <ContentVisitCount :path="post.path" />
-        </div>
-        <h2>{{ readContentString(post, 'title') || '未命名文章' }}</h2>
-        <p>{{ readContentString(post, 'description') || '暂无摘要。' }}</p>
-      </NuxtLink>
-    </div>
+    <template v-else-if="posts.length">
+      <BlogFilterBar
+        :search="search"
+        :category="activeCategory"
+        :tag="activeTag"
+        :categories="categories"
+        :tags="tags"
+        :archives="archives"
+        :active-archive="activeArchive"
+        @update:search="search = $event"
+        @update:category="activeCategory = $event"
+        @update:tag="activeTag = $event"
+        @update:archive="activeArchive = $event"
+        @reset="resetFilters"
+      />
+
+      <BlogList :posts="filteredPosts" />
+    </template>
 
     <BasePanel v-else-if="postsResult?.isEmpty">
       <EmptyState title="还没有文章" description="请在本地 content/blog/ 添加 Markdown 后重新预览。" />
@@ -63,60 +121,4 @@ const { data: postsResult } = await useAsyncData('blog-list', async () => {
   margin-top: var(--space-12);
 }
 
-.blog-list {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-12);
-}
-
-.blog-card {
-  min-height: 178px;
-  padding: var(--space-24);
-  display: grid;
-  align-content: space-between;
-  gap: var(--space-8);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-8);
-  background: color-mix(in srgb, var(--color-surface) 88%, var(--color-bg));
-  color: var(--color-fg);
-  text-decoration: none;
-  box-shadow: var(--shadow-soft);
-  transition:
-    border-color var(--motion-180) ease,
-    transform var(--motion-180) ease;
-}
-
-.blog-card:hover {
-  border-color: color-mix(in srgb, var(--color-accent) 42%, var(--color-border));
-  transform: translateY(-2px);
-}
-
-.doc-card__meta {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: var(--space-8);
-}
-
-.blog-card time {
-  color: var(--color-accent);
-  font-size: 0.84rem;
-  font-weight: 800;
-}
-
-.blog-card h2 {
-  font-size: 1.22rem;
-}
-
-@media (max-width: 700px) {
-  .blog-list {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (min-width: 701px) and (max-width: 980px) {
-  .blog-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
 </style>

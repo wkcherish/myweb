@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import VisitCount from '~/components/content/VisitCount.vue'
+
 const route = useRoute()
 const slug = Array.isArray(route.params.slug) ? route.params.slug.join('/') : route.params.slug
 const path = `/wiki/${slug}`
@@ -21,7 +23,7 @@ if (!page.value) {
       <div class="content-detail__meta">
         <time>{{ noteDate }}</time>
         <p v-if="page?.description">{{ page.description }}</p>
-        <ContentVisitCount :path="path" increment />
+        <VisitCount :path="path" increment />
       </div>
     </header>
     <ContentRenderer v-if="page" :value="page" class="content-detail__body" />

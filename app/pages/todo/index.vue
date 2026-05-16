@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import VisitCount from '~/components/content/VisitCount.vue'
 import BasePanel from '~/components/ui/BasePanel.vue'
 import BaseTag from '~/components/ui/BaseTag.vue'
 import EmptyState from '~/components/ui/EmptyState.vue'
@@ -47,7 +48,7 @@ const { data: todosResult } = await useAsyncData('todo-list', async () => {
           <span>{{ readContentString(todo, 'status') || 'planned' }}</span>
           <span>{{ readContentString(todo, 'priority') || 'medium' }}</span>
           <time>{{ formatContentDate(getContentDate(todo, ['targetDate', 'startDate', 'date'])) }}</time>
-          <ContentVisitCount :path="todo.path" />
+          <VisitCount :path="todo.path" />
         </div>
         <h2>{{ readContentString(todo, 'title') || '未命名 Todo' }}</h2>
         <p>{{ readContentString(todo, 'description') || '暂无摘要。' }}</p>

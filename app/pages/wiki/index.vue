@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import VisitCount from '~/components/content/VisitCount.vue'
 import BasePanel from '~/components/ui/BasePanel.vue'
 import BaseTag from '~/components/ui/BaseTag.vue'
 import EmptyState from '~/components/ui/EmptyState.vue'
@@ -35,7 +36,7 @@ const { data: docsResult } = await useAsyncData('wiki-list', async () => {
         <div class="wiki-card__meta">
           <span>{{ readContentString(doc, 'category') || 'Wiki' }}</span>
           <time>{{ formatContentDate(getContentDate(doc, ['updatedAt', 'date'])) }}</time>
-          <ContentVisitCount :path="doc.path" />
+          <VisitCount :path="doc.path" />
         </div>
         <h2>{{ readContentString(doc, 'title') || '未命名 Wiki' }}</h2>
         <p>{{ readContentString(doc, 'description') || '暂无摘要。' }}</p>
