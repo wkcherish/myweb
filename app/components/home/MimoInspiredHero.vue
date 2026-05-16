@@ -149,17 +149,17 @@ onBeforeUnmount(() => {
     @pointerleave="handlePointerLeave"
   >
     <div class="mimo-hero__cursor" aria-hidden="true">
-      <span class="mimo-hero__cursor-text">hello,I'm cherish</span>
+      <span class="mimo-hero__cursor-text">你好, 我是 cherish</span>
     </div>
     <div class="mimo-hero__copy">
       <h1
         ref="titleEl"
         class="mimo-hero__title"
-        aria-label="hello,I'm cherish"
+        aria-label="hello, I'm cherish"
         @pointerenter="handleTitlePointerEnter"
         @pointerleave="handleTitlePointerLeave"
       >
-        <span class="mimo-hero__title-text">hello,I'm cherish</span>
+        <span class="mimo-hero__title-text">hello, I'm cherish</span>
       </h1>
       <p class="mimo-hero__desc">记录学习、开发和生活，把每天的小进展放进同一个地方。</p>
       <nav class="mimo-hero__actions" aria-label="首页入口">
@@ -258,9 +258,9 @@ onBeforeUnmount(() => {
 }
 
 .mimo-hero.is-magnifying .mimo-hero__cursor {
-  --cursor-radius: 92px;
-  width: 184px;
-  height: 184px;
+  --cursor-radius: 124px;
+  width: 248px;
+  height: 248px;
   border-color: rgba(0, 0, 0, 0.74);
   background: rgba(0, 0, 0, 0.72);
   backdrop-filter: contrast(1.12) saturate(1.12);
@@ -324,13 +324,13 @@ onBeforeUnmount(() => {
 .mimo-hero.is-magnifying .mimo-hero__title-text {
   -webkit-mask-image:
     radial-gradient(
-      circle 92px at calc(var(--cursor-x, 0px) - var(--title-left, 0px)) calc(var(--cursor-y, 0px) - var(--title-top, 0px)),
+      circle 124px at calc(var(--cursor-x, 0px) - var(--title-left, 0px)) calc(var(--cursor-y, 0px) - var(--title-top, 0px)),
       transparent 0 99%,
       #000 100%
     );
   mask-image:
     radial-gradient(
-      circle 92px at calc(var(--cursor-x, 0px) - var(--title-left, 0px)) calc(var(--cursor-y, 0px) - var(--title-top, 0px)),
+      circle 124px at calc(var(--cursor-x, 0px) - var(--title-left, 0px)) calc(var(--cursor-y, 0px) - var(--title-top, 0px)),
       transparent 0 99%,
       #000 100%
     );
