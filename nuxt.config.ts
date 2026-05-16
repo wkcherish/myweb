@@ -17,17 +17,27 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/css/main.css'],
   modules: ['@nuxt/content', '@pinia/nuxt', '@nuxtjs/tailwindcss'],
+  vite: {
+    build: {
+      modulePreload: {
+        polyfill: false,
+      },
+    },
+    optimizeDeps: {
+      include: ['@vue/devtools-core', '@vue/devtools-kit', 'lucide-vue-next'],
+    },
+  },
   app: {
     head: {
       title: 'Cherish Notebook',
       htmlAttrs: {
-        class: 'theme-system',
-        'data-theme': 'system',
+        class: 'theme-light',
+        'data-theme': 'light',
       },
       meta: [
         {
           name: 'description',
-          content: '高级、克制、文件驱动的个人知识展示站。',
+          content: '这是我的主页，用于记录自己的学习、开发以及生活分享。',
         },
         {
           name: 'viewport',
@@ -37,11 +47,23 @@ export default defineNuxtConfig({
       link: [
         {
           rel: 'icon',
+          sizes: 'any',
+          href: '/icons/favicon.ico',
+        },
+        {
+          rel: 'icon',
           type: 'image/svg+xml',
-          href: '/icons/favicon-placeholder.svg',
+          href: '/icons/site-icon.svg',
+        },
+        {
+          rel: 'icon',
+          type: 'image/png',
+          sizes: '32x32',
+          href: '/icons/icon-32.png',
         },
         {
           rel: 'apple-touch-icon',
+          sizes: '180x180',
           href: '/icons/apple-touch-icon.png',
         },
         {
@@ -71,7 +93,7 @@ export default defineNuxtConfig({
       aiApiBase: '',
       aiModel: '',
       qqPlaylistId: '',
-      defaultTheme: 'system',
+      defaultTheme: 'light',
     },
   },
   nitro: {

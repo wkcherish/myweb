@@ -5,9 +5,17 @@ export interface SiteNavItem {
 
 export const siteConfig = {
   name: 'Cherish Notebook',
+  shortName: 'Notebook',
   author: 'Cherish',
-  description: '高级、克制、文件驱动的个人知识展示站。',
-  iconPath: '/icons/favicon-placeholder.svg',
+  description: '这是我的主页，用于记录自己的学习、开发以及生活分享。',
+  iconPath: '/icons/site-icon.svg',
+  icons: {
+    favicon: '/icons/favicon.ico',
+    faviconPng: '/icons/icon-32.png',
+    appleTouch: '/icons/apple-touch-icon.png',
+    pwa192: '/icons/icon-192.png',
+    pwa512: '/icons/icon-512.png',
+  },
   socialLinks: [],
   nav: [
     { label: 'Blog', to: '/blog' },

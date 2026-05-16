@@ -1,26 +1,21 @@
 import { computed } from 'vue'
 
-export type ThemeMode = 'system' | 'light' | 'dark'
+export type ThemeMode = 'light' | 'dark'
 
 const STORAGE_KEY = 'notebook:theme-mode'
-const THEME_ORDER: ThemeMode[] = ['system', 'light', 'dark']
+const THEME_ORDER: ThemeMode[] = ['light', 'dark']
 
-function resolveMode(mode: ThemeMode): 'light' | 'dark' {
-  if (mode !== 'system') {
-    return mode
-  }
-
+function getSystemMode(): ThemeMode {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
 function applyTheme(mode: ThemeMode) {
   const root = document.documentElement
-  const resolvedMode = resolveMode(mode)
 
-  root.dataset.theme = resolvedMode
+  root.dataset.theme = mode
   root.classList.remove('theme-system', 'theme-light', 'theme-dark')
   root.classList.add(`theme-${mode}`)
-  root.style.colorScheme = resolvedMode
+  root.style.colorScheme = mode
 }
 
 function parseMode(input: string | null): ThemeMode {
@@ -28,11 +23,15 @@ function parseMode(input: string | null): ThemeMode {
     return input as ThemeMode
   }
 
-  return 'system'
+  if (input === 'system' && import.meta.client) {
+    return getSystemMode()
+  }
+
+  return 'light'
 }
 
 export function useThemeMode() {
-  const mode = useState<ThemeMode>('theme-mode', () => 'system')
+  const mode = useState<ThemeMode>('theme-mode', () => 'light')
   const initialized = useState<boolean>('theme-mode-initialized', () => false)
 
   function syncFromStorage() {
@@ -58,7 +57,7 @@ export function useThemeMode() {
   function cycleMode() {
     const currentIndex = THEME_ORDER.indexOf(mode.value)
     const nextIndex = (currentIndex + 1) % THEME_ORDER.length
-    const nextMode = THEME_ORDER[nextIndex] ?? 'system'
+    const nextMode = THEME_ORDER[nextIndex] ?? 'light'
     setMode(nextMode)
   }
 
@@ -67,11 +66,7 @@ export function useThemeMode() {
       return '浅色模式'
     }
 
-    if (mode.value === 'dark') {
-      return '深色模式'
-    }
-
-    return '跟随系统'
+    return '深色模式'
   })
 
   return {

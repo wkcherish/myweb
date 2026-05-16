@@ -1,24 +1,20 @@
-type ThemeMode = 'system' | 'light' | 'dark'
+type ThemeMode = 'light' | 'dark'
+type StoredThemeMode = ThemeMode | 'system'
 
 const STORAGE_KEY = 'notebook:theme-mode'
-const THEME_OPTIONS: ThemeMode[] = ['system', 'light', 'dark']
+const THEME_OPTIONS: ThemeMode[] = ['light', 'dark']
 
-function resolveMode(mode: ThemeMode): 'light' | 'dark' {
-  if (mode !== 'system') {
-    return mode
-  }
-
+function getSystemMode(): ThemeMode {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
 function applyTheme(mode: ThemeMode) {
   const root = document.documentElement
-  const resolvedMode = resolveMode(mode)
 
-  root.dataset.theme = resolvedMode
+  root.dataset.theme = mode
   root.classList.remove('theme-system', 'theme-light', 'theme-dark')
   root.classList.add(`theme-${mode}`)
-  root.style.colorScheme = resolvedMode
+  root.style.colorScheme = mode
 }
 
 function parseTheme(input: string | null): ThemeMode {
@@ -26,7 +22,11 @@ function parseTheme(input: string | null): ThemeMode {
     return input as ThemeMode
   }
 
-  return 'system'
+  if (input === 'system') {
+    return getSystemMode()
+  }
+
+  return 'light'
 }
 
 export default defineNuxtPlugin(() => {
@@ -35,8 +35,8 @@ export default defineNuxtPlugin(() => {
 
   const media = window.matchMedia('(prefers-color-scheme: dark)')
   media.addEventListener('change', () => {
-    if (parseTheme(localStorage.getItem(STORAGE_KEY)) === 'system') {
-      applyTheme('system')
+    if ((localStorage.getItem(STORAGE_KEY) as StoredThemeMode | null) === 'system') {
+      applyTheme(getSystemMode())
     }
   })
 })

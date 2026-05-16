@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-
 import BasePanel from '~/components/ui/BasePanel.vue'
-import BaseTag from '~/components/ui/BaseTag.vue'
 import EmptyState from '~/components/ui/EmptyState.vue'
 
 interface QuickLink {
@@ -36,17 +33,6 @@ const contentBlocks: ContentBlock[] = [
   },
 ]
 
-const runtimeConfig = useRuntimeConfig()
-
-const nuxtVersionLabel = computed(() => {
-  const value = runtimeConfig.public.nuxtVersion
-  if (typeof value === 'string' && value.length > 0) {
-    return `Nuxt ${value}`
-  }
-
-  return 'Nuxt 4'
-})
-
 const letterRows = [
   'CHERISH NOTEBOOK CHERISH NOTEBOOK CHERISH NOTEBOOK',
   'FILE DRIVEN KNOWLEDGE FILE DRIVEN KNOWLEDGE FILE DRIVEN',
@@ -61,21 +47,11 @@ const letterRows = [
       <div class="hero__letter-field" aria-hidden="true">
         <span v-for="(row, index) in letterRows" :key="`${row}-${index}`">{{ row }}</span>
       </div>
-      <div class="hero__orb" aria-hidden="true">
-        <span class="hero__orb-ring" />
-        <span class="hero__orb-core">CN</span>
-      </div>
 
       <div class="hero__content">
         <p class="hero__eyebrow">CHERISH NOTEBOOK</p>
         <h1 class="hero__title">你好，我是 Cherish</h1>
-        <p class="hero__desc">这是一个高级、克制、文件驱动的个人知识展示站。</p>
-
-        <div class="hero__tags">
-          <BaseTag>{{ nuxtVersionLabel }}</BaseTag>
-          <BaseTag tone="accent">TypeScript</BaseTag>
-          <BaseTag>File Driven</BaseTag>
-        </div>
+        <p class="hero__desc">这是我的主页，用于记录自己的学习、开发以及生活分享。</p>
 
         <div class="hero__actions">
           <NuxtLink v-for="item in quickLinks" :key="item.to" :to="item.to" class="hero__link">
@@ -108,7 +84,7 @@ const letterRows = [
 .hero {
   position: relative;
   overflow: hidden;
-  min-height: 320px;
+  min-height: 280px;
 }
 
 .hero::after {
@@ -128,7 +104,7 @@ const letterRows = [
 .hero__title {
   margin-top: var(--space-8);
   font-size: clamp(2rem, 5vw, 3rem);
-  max-width: 15ch;
+  max-width: 100%;
 }
 
 .hero__desc {
@@ -139,13 +115,7 @@ const letterRows = [
 .hero__content {
   position: relative;
   z-index: 2;
-}
-
-.hero__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-8);
-  margin-top: var(--space-16);
+  max-width: 680px;
 }
 
 .hero__actions {
@@ -200,39 +170,6 @@ const letterRows = [
   opacity: 0.22;
 }
 
-.hero__orb {
-  position: absolute;
-  top: 50%;
-  right: clamp(12px, 4vw, 64px);
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  width: clamp(180px, 26vw, 280px);
-  aspect-ratio: 1 / 1;
-  transform: translateY(-50%);
-}
-
-.hero__orb-ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 1px solid color-mix(in srgb, var(--color-border) 78%, white 10%);
-  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0));
-}
-
-.hero__orb-core {
-  display: grid;
-  place-items: center;
-  width: 58%;
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--color-surface) 86%, transparent);
-  color: color-mix(in srgb, var(--color-fg) 82%, var(--color-primary));
-  font-size: clamp(1.4rem, 3.4vw, 2.2rem);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-}
-
 :global(html[data-theme='dark']) .hero::after {
   background: var(--home-bg-overlay-dark);
 }
@@ -240,15 +177,6 @@ const letterRows = [
 :global(html[data-theme='dark']) .hero__letter-field span {
   color: color-mix(in srgb, var(--color-fg) 34%, transparent);
   opacity: 0.3;
-}
-
-:global(html[data-theme='dark']) .hero__orb-ring {
-  border-color: color-mix(in srgb, var(--color-border) 70%, var(--color-primary) 12%);
-  background: radial-gradient(circle at 35% 30%, rgba(127, 156, 255, 0.2), rgba(127, 156, 255, 0));
-}
-
-:global(html[data-theme='dark']) .hero__orb-core {
-  background: color-mix(in srgb, var(--color-surface) 78%, transparent);
 }
 
 .home__grid {
@@ -267,15 +195,7 @@ const letterRows = [
 
 @media (max-width: 900px) {
   .hero {
-    min-height: 360px;
-  }
-
-  .hero__orb {
-    width: clamp(136px, 40vw, 200px);
-    top: auto;
-    bottom: var(--space-12);
-    right: var(--space-12);
-    transform: none;
+    min-height: 320px;
   }
 
   .hero__title {

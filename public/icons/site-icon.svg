@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Cherish Notebook site icon">
+  <defs>
+    <linearGradient id="paper" x1="150" x2="330" y1="124" y2="356" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ead6bc"/>
+      <stop offset="0.55" stop-color="#fbf0e2"/>
+      <stop offset="1" stop-color="#caaa86"/>
+    </linearGradient>
+    <linearGradient id="ink" x1="236" x2="420" y1="140" y2="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3b4358"/>
+      <stop offset="0.46" stop-color="#151b2c"/>
+      <stop offset="1" stop-color="#293247"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="195" x2="250" y1="334" y2="418" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffd38f"/>
+      <stop offset="1" stop-color="#efa247"/>
+    </linearGradient>
+  </defs>
+
+  <path
+    d="M148 382c20-41 13-88-4-132-18-47 2-86 56-113 39-19 83-29 126-40 7-2 10 2 4 7-32 27-52 65-51 107 1 32 11 61 28 87-42-17-84-10-113 16-28 25-38 57-46 68Z"
+    fill="url(#paper)"
+    opacity="0.76"
+  />
+  <path
+    d="M145 382c20-41 14-89-3-133-17-46 0-84 51-111"
+    fill="none"
+    stroke="#c4a987"
+    stroke-linecap="round"
+    stroke-width="8"
+    opacity="0.45"
+  />
+  <path d="M170 212l80-22" stroke="#d2b18d" stroke-linecap="round" stroke-width="8" opacity="0.86"/>
+  <path d="M170 240l81-22" stroke="#d2b18d" stroke-linecap="round" stroke-width="8" opacity="0.86"/>
+  <path d="M170 268l58-16" stroke="#d2b18d" stroke-linecap="round" stroke-width="8" opacity="0.86"/>
+
+  <text
+    x="222"
+    y="397"
+    fill="url(#ink)"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="286"
+    font-style="italic"
+    font-weight="700"
+    letter-spacing="-12"
+    transform="rotate(-2 320 270)"
+  >B</text>
+
+  <path d="M285 166l-60 174" stroke="#151b2c" stroke-linecap="round" stroke-width="41"/>
+  <path d="M298 158l-60 181" stroke="#f8f0e5" stroke-linecap="round" stroke-width="10" opacity="0.78"/>
+  <path d="M224 335 202 414l55-58-6-21c-9-7-18-7-27 0Z" fill="url(#gold)"/>
+  <path d="M224 335c10-8 22-8 32 0" fill="none" stroke="#fff5e8" stroke-linecap="round" stroke-width="7"/>
+  <path d="M218 350c12-8 24-7 34 1" fill="none" stroke="#151b2c" stroke-linecap="round" stroke-width="7"/>
+  <circle cx="219" cy="366" r="8" fill="#293247"/>
+  <path d="M219 366 202 414" stroke="#293247" stroke-linecap="round" stroke-width="4"/>
+
+  <path
+    d="M190 415c44-27 111-35 177-45 42-6 82-19 111-42"
+    fill="none"
+    stroke="#c5a17c"
+    stroke-linecap="round"
+    stroke-width="6"
+    opacity="0.9"
+  />
+  <path
+    d="M189 414c49-27 117-37 172-46"
+    fill="none"
+    stroke="#151b2c"
+    stroke-linecap="round"
+    stroke-width="8"
+  />
+</svg>

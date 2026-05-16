@@ -15,6 +15,7 @@
 
 <style scoped>
 .page-shell {
+  width: 100%;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -26,14 +27,13 @@
 }
 
 .page-shell__content {
-  width: min(var(--layout-content-width), calc(100% - 2 * var(--space-16)));
-  margin: 0 auto;
-  padding: var(--space-32) 0 var(--space-48);
+  width: 100%;
+  padding: var(--space-32) var(--space-16) var(--space-48);
 }
 
 @media (max-width: 768px) {
   .page-shell__content {
-    padding: var(--space-24) 0 calc(var(--space-64) + 96px);
+    padding: var(--space-24) var(--space-16) calc(var(--space-64) + 96px);
   }
 }
 </style>

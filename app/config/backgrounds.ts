@@ -1,4 +1,4 @@
-export type ThemeMode = 'system' | 'light' | 'dark'
+export type ThemeMode = 'light' | 'dark'
 
 export interface HomeBackground {
   id: string

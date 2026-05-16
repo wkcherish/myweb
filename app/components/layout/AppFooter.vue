@@ -27,9 +27,8 @@ const currentYear = computed(() => new Date().getFullYear())
 }
 
 .app-footer__inner {
-  width: min(var(--layout-content-width), calc(100% - 2 * var(--space-16)));
-  margin: 0 auto;
-  padding: var(--space-24) 0;
+  width: 100%;
+  padding: var(--space-24) var(--space-16);
   display: grid;
   gap: var(--space-8);
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { Menu, Monitor, MoonStar, SunMedium } from 'lucide-vue-next'
+import { Menu, MoonStar, SunMedium } from 'lucide-vue-next'
 
 import { siteConfig } from '~/config/site'
 import { useThemeMode } from '~/composables/useThemeMode'
@@ -16,11 +16,7 @@ const themeIcon = computed(() => {
     return SunMedium
   }
 
-  if (mode.value === 'dark') {
-    return MoonStar
-  }
-
-  return Monitor
+  return MoonStar
 })
 
 const themeTooltip = computed(() => `主题：${modeLabel.value}（点击切换）`)
@@ -83,9 +79,9 @@ onMounted(() => {
 }
 
 .app-header__inner {
-  width: min(var(--layout-wide-width), calc(100% - 2 * var(--space-16)));
-  height: 68px;
-  margin: 0 auto;
+  width: 100%;
+  min-height: 68px;
+  padding: 0 var(--space-16);
   display: flex;
   align-items: center;
   justify-content: space-between;

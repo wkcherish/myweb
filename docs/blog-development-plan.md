@@ -52,26 +52,26 @@
 - 服务器只托管静态资源，不运行 Node 服务。
 - Nginx 指向生成后的静态目录，例如 `.output/public`。
 
-### 外部博客与静态站调研结论
+### 首页 MiMo 官网参考结论
 
-本项目学习的是成熟博客的设计原则和内容工作流，不照搬任何站点的品牌、素材和代码。
+本项目必须有完整首页，不能把文章列表或导航页当作首页。首页视觉主参考 Xiaomi MiMo 官网，只学习它的构图、动效节奏和视觉层级，不使用 Xiaomi 或 MiMo 的 Logo、品牌文案、模型介绍、图片素材和代码。
 
-参考对象与可借鉴点：
+首页核心参考点：
 
-- [Josh W. Comeau](https://www.joshwcomeau.com/)：文章列表、分类、热门内容和互动教学组件很完整；他在博客构建文章中提到使用 MDX、frontmatter、在 VS Code 中编辑并提交，适合作为“内容在文件中，网站负责渲染”的参考。
-- [Lee Robinson](https://leerob.com/)：首页极简，先讲清楚身份和代表内容，再进入写作链接；可借鉴“短介绍 + 精选文章”的信息组织。
-- [Rauno Freiberg](https://rauno.me/)：极少元素也能形成高级感，关键在速度、美感、一致性、细节和长期主义；可作为界面克制程度的参考。
-- [Steph Ango](https://stephango.com/)：文章、主题、归档非常清楚；他的 “File over app” 与 “Style is consistent constraint” 思路适合作为本项目的内容哲学：文件优先、风格来自一致约束。
-- [Everything I Know by Owen](https://wiki.owenyoung.com/)：个人知识库以最近更新、标签、Wiki、图谱等方式组织内容；可借鉴 Wiki 的索引、标签和最近更新，而不是做网页端编辑器。
-- [Anthony Fu](https://antfu.me/)：个人主页把身份、项目、博客、演讲和链接组织在一个轻量体系中；适合参考开源开发者个人站的信息密度。
-- [Vercel Blog Templates](https://vercel.com/templates/blog)：大量模板采用 Markdown、静态生成、无数据库或轻 CMS；说明静态博客的核心价值是发布和阅读，而不是浏览器内编辑。
-- [AS Notes 静态发布流程](https://blog.asnotes.io/as-notes-a-static-site-generator-in-your-markdown-knowledgebase)：强调在 VS Code 写 Markdown、通过 Git 推送触发静态发布；适合本项目的维护流程。
-- [Maggie Appleton 的 Digital Garden 文章](https://maggieappleton.com/garden-history)：数字花园强调长期生长、链接和持续修订；适合 Wiki 模块的内容组织气质。
+- 浅色或低干扰背景作为第一视觉基底，保证标题和导航清楚。
+- 重复字母或关键词矩阵铺满首屏，作为低透明度背景纹理。
+- 中央圆形视觉锚点承担记忆点，和大标题形成前后穿插关系。
+- 超大标题横向穿过圆形区域，圆形内部文字做反相或遮罩效果。
+- 鼠标移动、滚动、主题切换只做轻微反馈，不让动效压过内容。
+- 首屏底部必须露出下一屏内容，明确这是一个可继续浏览的个人博客首页。
 
 转化为本站原则：
 
-- 首页可以有强记忆点，但内容页必须像高质量阅读产品。
-- 高级感来自约束、留白、排版、细节和一致性，不来自堆卡片、堆阴影、堆特效。
+- 首页第一屏是网站的核心识别区，必须先建立个人博客气质，再承接文章、Wiki 和 Todo。
+- 首页不是博客模板拼装页，也不是后台仪表盘；它要像一个有明确视觉语言的个人知识入口。
+- 下一屏快速进入最近文章、Wiki 更新、Todo 状态和个人信息摘要，避免只有纯视觉封面。
+- 博客列表、Wiki、Todo 是内容承载区，不作为首页首屏视觉参考。
+- 内容页必须回到阅读效率：排版、目录、标签、日期和搜索优先，不沿用首页的大视觉动效。
 - 博客和 Wiki 都是从 Markdown 生成的只读页面；Todo 从 Markdown 或 JSON 生成；页面只提供筛选、搜索、导航、播放、问答和设置，不提供内容写入。
 - Todo 页面是规划展示，不是可持久化任务应用；不要做点击完成、拖拽改状态、网页新增任务等会误导用户的交互。
 - Wiki 页面是知识库阅读和检索，不是在线 Notion、Obsidian 或 CMS。
