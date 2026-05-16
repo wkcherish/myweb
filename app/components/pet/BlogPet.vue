@@ -1408,4 +1408,89 @@ onBeforeUnmount(() => {
     transition: none;
   }
 }
+
+@media (max-width: 768px) {
+  .blog-pet {
+    right: 12px;
+    bottom: calc(max(12px, env(safe-area-inset-bottom)) + 72px);
+    width: 80px;
+    height: 80px;
+  }
+
+  .blog-pet__button {
+    width: 80px;
+    height: 80px;
+  }
+
+  .blog-pet__menu {
+    inset: -64px 0 auto auto;
+    width: 108px;
+    height: 84px;
+  }
+
+  .blog-pet__action {
+    width: 36px;
+    height: 36px;
+  }
+
+  .blog-pet__action svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .blog-pet__action-label {
+    font-size: 0.68rem;
+    padding: 4px 7px;
+  }
+
+  .blog-pet__action--ai {
+    left: 2px;
+    bottom: 2px;
+  }
+
+  .blog-pet__action--background {
+    left: 40px;
+    top: 0;
+  }
+
+  .blog-pet__action--music {
+    right: 2px;
+    bottom: 2px;
+  }
+
+  .blog-pet__background-panel {
+    right: -8px;
+    bottom: 92px;
+    width: 164px;
+  }
+
+  .blog-pet__speech {
+    right: 0;
+    bottom: 88px;
+    padding: 4px 10px;
+    font-size: 0.72rem;
+  }
+
+  .blog-pet-restore {
+    width: 36px;
+    height: 36px;
+  }
+
+  .blog-pet-restore svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  .blog-pet-restore.is-right {
+    right: 0;
+  }
+
+  .blog-pet-restore.is-left {
+    left: 0;
+  }
+
+  .blog-pet-restore.is-bottom {
+    bottom: 0;
+  }
+}
 </style>

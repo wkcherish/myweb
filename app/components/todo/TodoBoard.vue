@@ -49,7 +49,7 @@ const columns: Array<{ status: TodoStatus; label: string }> = [
 }
 
 .todo-board__head {
-  min-height: 42px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: space-between;

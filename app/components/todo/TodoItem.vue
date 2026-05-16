@@ -55,7 +55,7 @@ const priorityLabels: Record<TodoPriority, string> = {
 
 <style scoped>
 .todo-item {
-  min-height: 0;
+  min-height: 72px;
   display: grid;
   gap: var(--space-12);
   padding: var(--space-16);

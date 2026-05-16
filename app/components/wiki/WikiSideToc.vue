@@ -39,7 +39,7 @@ onBeforeUnmount(() => {
 
 <template>
   <aside class="wiki-side-toc">
-    <button type="button" class="wiki-side-toc__toggle" @click="isOpen = !isOpen">
+    <button type="button" class="wiki-side-toc__toggle" :aria-expanded="isOpen" @click="isOpen = !isOpen">
       <ListTree :size="18" aria-hidden="true" />
       目录
     </button>
@@ -68,7 +68,7 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   gap: var(--space-8);
-  min-height: 36px;
+  min-height: 44px;
   color: var(--color-fg);
   font-weight: 800;
 }

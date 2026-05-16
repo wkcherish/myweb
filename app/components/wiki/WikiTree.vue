@@ -19,7 +19,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <aside class="wiki-tree">
+  <aside class="wiki-tree" aria-label="Wiki 分类">
     <div class="wiki-tree__head">
       <FolderTree :size="18" aria-hidden="true" />
       <strong>目录树</strong>
@@ -69,7 +69,7 @@ const emit = defineEmits<{
 }
 
 .wiki-tree__item {
-  min-height: 42px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: space-between;

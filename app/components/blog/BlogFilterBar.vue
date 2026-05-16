@@ -35,6 +35,7 @@ const hasActiveFilter = computed(() =>
         type="button"
         class="blog-filter__toggle"
         :aria-expanded="isOpen"
+        aria-controls="blog-filter-body"
         @click="isOpen = !isOpen"
       >
         <SlidersHorizontal :size="17" aria-hidden="true" />
@@ -64,7 +65,7 @@ const hasActiveFilter = computed(() =>
       </button>
     </div>
 
-    <div v-if="isOpen" class="blog-filter__body">
+    <div v-if="isOpen" id="blog-filter-body" class="blog-filter__body">
       <label class="blog-filter__search">
         <Search :size="17" aria-hidden="true" />
         <span class="sr-only">搜索文章</span>
@@ -135,7 +136,7 @@ const hasActiveFilter = computed(() =>
 
 .blog-filter__toggle,
 .blog-filter__clear {
-  min-height: 36px;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   gap: var(--space-6, 6px);
@@ -230,7 +231,7 @@ const hasActiveFilter = computed(() =>
 }
 
 .blog-filter__tag {
-  min-height: 32px;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   padding: 0 var(--space-10, 10px);

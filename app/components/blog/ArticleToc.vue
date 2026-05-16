@@ -47,7 +47,7 @@ onBeforeUnmount(() => {
 
 <template>
   <nav v-if="links.length" class="article-toc" aria-label="文章目录">
-    <button type="button" class="article-toc__toggle" @click="isOpen = !isOpen">
+    <button type="button" class="article-toc__toggle" :aria-expanded="isOpen" @click="isOpen = !isOpen">
       <ListTree :size="18" aria-hidden="true" />
       目录
     </button>
@@ -76,7 +76,7 @@ onBeforeUnmount(() => {
 }
 
 .article-toc__toggle {
-  min-height: 36px;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   gap: var(--space-8);
