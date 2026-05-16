@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "cleanup": "nuxi cleanup",
-    "dev": "nuxt dev --port 5176",
+    "dev": "nuxt dev --clear --port 5176",
     "build": "nuxt build",
     "generate": "nuxt generate",
     "preview": "nuxt preview --port 5176",

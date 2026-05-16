@@ -678,42 +678,47 @@
 
 ### 状态管理
 
-- [ ] 创建 `app/composables/usePetAssistant.ts`。
-- [ ] 定义状态：idle、hover、open、music、thinking、hidden。
-- [ ] 保存隐藏状态到 `localStorage`。
-- [ ] 暴露 openMenu、closeMenu、toggleMenu、hide、show 方法。
-- [ ] 和音乐播放状态联动。
-- [ ] 和 AI thinking 状态联动。
+- [x] 创建 `app/composables/usePetAssistant.ts`。
+- [x] 定义状态：idle、hover、open、music、thinking、hidden。
+- [x] 保存隐藏状态到 `localStorage`。
+- [x] 暴露 openMenu、closeMenu、toggleMenu、hide、show 方法。
+- [x] 和音乐播放状态联动。
+- [x] 和 AI thinking 状态联动。
 
 ### 组件实现
 
-- [ ] 创建 `app/components/pet/PetDogAssistant.vue`。
-- [ ] 创建 `app/components/pet/PetActionMenu.vue`。
-- [ ] 小狗固定在右下角或左下角。
-- [ ] 桌面端点击后菜单向上展开。
-- [ ] 移动端点击后菜单使用紧凑浮层或底部弹层。
-- [ ] 菜单项包括 AI 问答、音乐播放、换个背景、设置、回到顶部。
-- [ ] 菜单项不包括写笔记、新建 Wiki、新增 Todo、发布文章等写入动作。
-- [ ] 每个菜单项使用 lucide 图标。
-- [ ] 小狗 hover 有轻微反馈。
-- [ ] 音乐播放中小狗有轻微律动。
-- [ ] AI 思考中小狗显示思考状态。
-- [ ] 减少动效模式下关闭律动和弹跳。
+- [x] 创建 `app/components/pet/PetDogAssistant.vue`。
+- [x] 创建 `app/components/pet/PetActionMenu.vue`。
+- [x] 小狗固定在右下角或左下角。
+- [x] 桌面端点击后菜单向上展开。
+- [x] 移动端点击后菜单使用紧凑浮层或底部弹层。
+- [x] 菜单项包括 AI 问答、音乐播放、换个背景、设置、回到顶部。
+- [x] 菜单项不包括写笔记、新建 Wiki、新增 Todo、发布文章等写入动作。
+- [x] 每个菜单项使用 lucide 图标。
+- [x] 小狗 hover 有轻微反馈。
+- [x] 音乐播放中小狗有轻微律动。
+- [x] AI 思考中小狗显示思考状态。
+- [x] 减少动效模式下关闭律动和弹跳。
 
 ### 遮挡与可访问性
 
-- [ ] 小狗不遮挡正文滚动条。
-- [ ] 小狗不遮挡文章目录。
-- [ ] 小狗不遮挡移动端底部按钮。
-- [ ] 菜单支持键盘访问。
-- [ ] 菜单打开后点击外部关闭。
-- [ ] Escape 可以关闭菜单。
+- [x] 小狗不遮挡正文滚动条。
+- [x] 小狗不遮挡文章目录。
+- [x] 小狗不遮挡移动端底部按钮。
+- [x] 菜单支持键盘访问。
+- [x] 菜单打开后点击外部关闭。
+- [x] Escape 可以关闭菜单。
 
 ### 阶段验收
 
-- [ ] 小狗全站可见且不干扰阅读。
-- [ ] 快捷菜单可用。
-- [ ] 小狗状态能反映音乐和 AI。
+- [x] 小狗全站可见且不干扰阅读。
+- [x] 快捷菜单可用。
+- [x] 小狗状态能反映音乐和 AI。
+
+阶段 9 验收记录（2026-05-16）：
+- 新增 `usePetAssistant` 管理小狗菜单、隐藏、拖动位置和 idle/hover/open/music/thinking/hidden 状态。
+- 新增 `PetDogAssistant` 与 `PetActionMenu`，小狗默认右下角偏上显示，支持拖动、隐藏、复位、点击外部关闭和 Escape 关闭。
+- 小狗菜单接入 AI、音乐、设置占位面板，支持换背景和回到顶部；没有加入任何正式内容写入入口。
 
 ## 阶段 10：设置与背景系统
 

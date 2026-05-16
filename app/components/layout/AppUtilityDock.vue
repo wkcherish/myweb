@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import type { Component } from 'vue'
 
-import { computed, onMounted, ref } from 'vue'
-import { Bot, Dog, Music2, Settings2 } from 'lucide-vue-next'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { Bot, Music2, Settings2 } from 'lucide-vue-next'
 
 import { useHomeBackground } from '~/composables/useHomeBackground'
 
 import BasePanel from '../ui/BasePanel.vue'
 import IconButton from '../ui/IconButton.vue'
 
-type UtilityKey = 'pet' | 'music' | 'settings' | 'ai'
+type UtilityKey = 'music' | 'settings' | 'ai'
 
 interface UtilityItem {
   key: UtilityKey
@@ -18,11 +18,10 @@ interface UtilityItem {
 }
 
 const activeKey = ref<UtilityKey | null>(null)
-const { availableBackgrounds, selectedBackgroundId, setHomeBackground, syncHomeBackgroundFromStorage } =
+const { availableBackgrounds, selectedBackgroundId, setHomeBackground, refreshHomeBackgrounds, syncHomeBackgroundFromStorage } =
   useHomeBackground()
 
 const utilityItems: UtilityItem[] = [
-  { key: 'pet', label: '小狗助手', icon: Dog },
   { key: 'music', label: '音乐面板', icon: Music2 },
   { key: 'settings', label: '站点设置', icon: Settings2 },
   { key: 'ai', label: 'AI 问答', icon: Bot },
@@ -32,10 +31,27 @@ const activeLabel = computed(() => utilityItems.find((item) => item.key === acti
 
 function togglePanel(key: UtilityKey) {
   activeKey.value = activeKey.value === key ? null : key
+
+  if (activeKey.value === 'settings') {
+    void refreshHomeBackgrounds()
+  }
+}
+
+function handleOpenUtility(event: Event) {
+  const key = (event as CustomEvent<UtilityKey>).detail
+
+  if (utilityItems.some((item) => item.key === key)) {
+    activeKey.value = key
+  }
 }
 
 onMounted(() => {
   syncHomeBackgroundFromStorage()
+  window.addEventListener('notebook:open-utility', handleOpenUtility)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('notebook:open-utility', handleOpenUtility)
 })
 </script>
 

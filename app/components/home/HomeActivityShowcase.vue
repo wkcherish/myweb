@@ -307,7 +307,7 @@ const groups = computed<Record<CollectionName, ActivityItem[]>>(
   border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
   border-radius: var(--radius-4);
   background:
-    linear-gradient(180deg, color-mix(in srgb, #fff 72%, transparent), transparent),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 94%, transparent), transparent),
     color-mix(in srgb, var(--color-surface) 92%, var(--color-bg));
   box-shadow: 0 24px 50px rgba(18, 24, 38, 0.06);
   backface-visibility: hidden;
@@ -336,10 +336,10 @@ const groups = computed<Record<CollectionName, ActivityItem[]>>(
 
 .activity-module--flip .activity-item__back,
 .activity-module--wide .activity-item__back {
-  color: #384153;
+  color: color-mix(in srgb, var(--color-fg) 82%, var(--color-text-weak));
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--activity-accent) 10%, transparent), transparent 48%),
-    color-mix(in srgb, #ffffff 94%, var(--activity-accent));
+    color-mix(in srgb, var(--color-surface) 94%, var(--activity-accent));
 }
 
 .activity-module--static .activity-module__items {
@@ -379,7 +379,7 @@ const groups = computed<Record<CollectionName, ActivityItem[]>>(
 .activity-module--flip .activity-item__front {
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--activity-accent) 8%, transparent), transparent 46%),
-    color-mix(in srgb, #ffffff 96%, var(--activity-accent));
+    color-mix(in srgb, var(--color-surface) 96%, var(--activity-accent));
 }
 
 .activity-module--flip .activity-item__inner {
@@ -414,7 +414,7 @@ const groups = computed<Record<CollectionName, ActivityItem[]>>(
   text-align: left;
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--activity-accent) 8%, transparent), transparent 46%),
-    color-mix(in srgb, #ffffff 96%, var(--activity-accent));
+    color-mix(in srgb, var(--color-surface) 96%, var(--activity-accent));
 }
 
 .activity-module--wide .activity-item:hover .activity-item__inner,
@@ -501,5 +501,14 @@ const groups = computed<Record<CollectionName, ActivityItem[]>>(
   .activity-item:focus-visible .activity-item__inner {
     transform: none;
   }
+}
+
+:global(html[data-theme='dark']) .activity-item__face {
+  box-shadow: 0 18px 36px rgba(6, 10, 19, 0.32);
+}
+
+:global(html[data-theme='dark']) .activity-item__meta,
+:global(html[data-theme='dark']) .activity-item__back {
+  color: color-mix(in srgb, var(--color-fg) 76%, var(--color-text-weak));
 }
 </style>

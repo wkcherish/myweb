@@ -304,6 +304,15 @@ onBeforeUnmount(() => {
   will-change: transform;
 }
 
+.mimo-hero__copy,
+.mimo-hero__title,
+.mimo-hero__desc,
+.mimo-hero__actions,
+.mimo-hero__link {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 .mimo-hero__title {
   position: relative;
   display: block;
@@ -397,6 +406,7 @@ onBeforeUnmount(() => {
   color: var(--color-fg);
   background: color-mix(in srgb, var(--color-surface) 76%, transparent);
   text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
   backdrop-filter: blur(16px);
   transition:
     background-color var(--motion-180) ease,
@@ -410,6 +420,18 @@ onBeforeUnmount(() => {
   color: var(--color-bg);
   background: var(--color-fg);
   transform: translateY(-2px);
+}
+
+.mimo-hero__link:focus {
+  outline: none;
+}
+
+.mimo-hero__link:focus:not(:focus-visible) {
+  box-shadow: none;
+}
+
+.mimo-hero__link:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 68%, white 10%);
 }
 
 @media (prefers-reduced-motion: reduce) {

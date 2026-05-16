@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { onMounted, watch } from 'vue'
+
 import BaseTag from '~/components/ui/BaseTag.vue'
 
 type TodoStatus = 'planned' | 'in-progress' | 'done' | 'paused'
 
-defineProps<{
+const props = defineProps<{
   counts: Record<TodoStatus, number>
   total: number
 }>()
@@ -14,6 +16,37 @@ const labels: Record<TodoStatus, string> = {
   done: '已完成',
   paused: '搁置',
 }
+
+function celebrateCompletedTodos(doneCount: number) {
+  if (!import.meta.client || doneCount <= 0) {
+    return
+  }
+
+  window.dispatchEvent(
+    new CustomEvent('notebook:pet-celebrate', {
+      detail: {
+        message: doneCount > 1 ? `完成 ${doneCount} 项` : '完成啦',
+      },
+    }),
+  )
+}
+
+onMounted(() => {
+  if (props.counts.done > 0) {
+    window.setTimeout(() => {
+      celebrateCompletedTodos(props.counts.done)
+    }, 720)
+  }
+})
+
+watch(
+  () => props.counts.done,
+  (nextDoneCount, previousDoneCount) => {
+    if (nextDoneCount > previousDoneCount) {
+      celebrateCompletedTodos(nextDoneCount)
+    }
+  },
+)
 </script>
 
 <template>

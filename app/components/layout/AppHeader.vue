@@ -9,7 +9,7 @@ import IconButton from '../ui/IconButton.vue'
 import MobileNav from './MobileNav.vue'
 
 const isMobileNavOpen = ref(false)
-const { mode, modeLabel, cycleMode, syncFromStorage } = useThemeMode()
+const { mode, cycleMode, syncFromStorage } = useThemeMode()
 
 const themeIcon = computed(() => {
   if (mode.value === 'light') {
@@ -19,7 +19,8 @@ const themeIcon = computed(() => {
   return MoonStar
 })
 
-const themeTooltip = computed(() => `主题：${modeLabel.value}（点击切换）`)
+const nextModeLabel = computed(() => (mode.value === 'light' ? '深色模式' : '浅色模式'))
+const themeTooltip = computed(() => `切换到${nextModeLabel.value}`)
 
 function toggleMobileNav() {
   isMobileNavOpen.value = !isMobileNavOpen.value
@@ -47,8 +48,10 @@ onMounted(() => {
       <div class="app-header__actions">
         <IconButton
           :icon="themeIcon"
-          :label="themeTooltip"
+          label="切换主题"
           :tooltip="themeTooltip"
+          tooltip-placement="bottom"
+          tooltip-align="end"
           variant="secondary"
           @click="cycleMode"
         />
@@ -58,6 +61,8 @@ onMounted(() => {
           :icon="Menu"
           label="打开移动端菜单"
           tooltip="菜单"
+          tooltip-placement="bottom"
+          tooltip-align="end"
           variant="secondary"
           @click="toggleMobileNav"
         />

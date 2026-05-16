@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import AppFooter from '~/components/layout/AppFooter.vue'
 import AppHeader from '~/components/layout/AppHeader.vue'
-import AppUtilityDock from '~/components/layout/AppUtilityDock.vue'
 import PageShell from '~/components/layout/PageShell.vue'
+import BlogPet from '~/components/pet/BlogPet.vue'
 </script>
 
 <template>
@@ -19,7 +19,7 @@ import PageShell from '~/components/layout/PageShell.vue'
 
     <template #floating>
       <ClientOnly>
-        <AppUtilityDock />
+        <BlogPet />
       </ClientOnly>
     </template>
   </PageShell>

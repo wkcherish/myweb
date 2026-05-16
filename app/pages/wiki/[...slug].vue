@@ -36,18 +36,20 @@ const tocLinks = computed(() => {
 
   return flatten(page.value?.body?.toc?.links || [])
 })
+
+const hasToc = computed(() => tocLinks.value.length > 0)
 </script>
 
 <template>
-  <div v-if="page" class="wiki-detail-layout">
+  <div v-if="page" class="wiki-detail-layout" :class="{ 'wiki-detail-layout--no-toc': !hasToc }">
+    <aside v-if="hasToc" class="wiki-detail-layout__toc">
+      <WikiSideToc :links="tocLinks" />
+    </aside>
+
     <article class="content-detail">
       <WikiDocHeader :doc="page" :path="path" />
       <ContentRenderer :value="page" class="content-detail__body" />
     </article>
-
-    <aside class="wiki-detail-layout__toc">
-      <WikiSideToc :links="tocLinks" />
-    </aside>
   </div>
 </template>
 
@@ -56,9 +58,13 @@ const tocLinks = computed(() => {
   width: min(1180px, 100%);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(0, 860px) minmax(220px, 280px);
+  grid-template-columns: minmax(220px, 280px) minmax(0, 860px);
   gap: var(--space-32);
   align-items: start;
+}
+
+.wiki-detail-layout--no-toc {
+  grid-template-columns: minmax(0, 860px);
 }
 
 .content-detail {
@@ -73,10 +79,6 @@ const tocLinks = computed(() => {
 @media (max-width: 980px) {
   .wiki-detail-layout {
     grid-template-columns: 1fr;
-  }
-
-  .wiki-detail-layout__toc {
-    order: -1;
   }
 }
 </style>

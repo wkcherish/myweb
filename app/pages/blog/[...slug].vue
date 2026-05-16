@@ -32,6 +32,7 @@ if (!page.value) {
 }
 
 const tocLinks = computed(() => page.value?.body?.toc?.links || [])
+const hasToc = computed(() => tocLinks.value.length > 0)
 
 const currentIndex = computed(() => posts.value?.findIndex((post) => post.path === path) ?? -1)
 const newerPost = computed(() => (currentIndex.value > 0 ? posts.value?.[currentIndex.value - 1] : null))
@@ -47,7 +48,11 @@ const olderPost = computed(() =>
     <ReadingProgress />
   </ClientOnly>
 
-  <div v-if="page" class="article-layout">
+  <div v-if="page" class="article-layout" :class="{ 'article-layout--no-toc': !hasToc }">
+    <aside v-if="hasToc" class="article-layout__toc">
+      <ArticleToc :links="tocLinks" />
+    </aside>
+
     <article class="content-detail">
       <ArticleHeader :article="page" :path="path" />
       <ContentRenderer :value="page" class="content-detail__body" />
@@ -66,10 +71,6 @@ const olderPost = computed(() =>
         <span v-else class="article-nav__item is-empty is-next">已经是最后一篇</span>
       </nav>
     </article>
-
-    <aside class="article-layout__toc">
-      <ArticleToc :links="tocLinks" />
-    </aside>
   </div>
 </template>
 
@@ -78,9 +79,13 @@ const olderPost = computed(() =>
   width: min(1180px, 100%);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(0, 820px) minmax(220px, 280px);
+  grid-template-columns: minmax(220px, 280px) minmax(0, 820px);
   gap: var(--space-32);
   align-items: start;
+}
+
+.article-layout--no-toc {
+  grid-template-columns: minmax(0, 820px);
 }
 
 .content-detail {
@@ -134,10 +139,6 @@ const olderPost = computed(() =>
 @media (max-width: 980px) {
   .article-layout {
     grid-template-columns: 1fr;
-  }
-
-  .article-layout__toc {
-    order: -1;
   }
 }
 
