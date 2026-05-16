@@ -800,7 +800,7 @@ onBeforeUnmount(() => {
 
 .blog-pet__action {
   --action-color: #2563eb;
-  --action-bg: rgba(255, 255, 255, 0.94);
+  --action-bg: #ffffff;
   --action-hover-bg: #2563eb;
 
   position: absolute;
@@ -808,7 +808,7 @@ onBeforeUnmount(() => {
   place-items: center;
   width: 44px;
   height: 44px;
-  border: 1px solid rgba(148, 163, 184, 0.3);
+  border: 1px solid var(--color-border);
   border-radius: 50%;
   background: var(--action-bg);
   color: var(--action-color);
@@ -845,10 +845,10 @@ onBeforeUnmount(() => {
   bottom: calc(100% + 8px);
   min-width: max-content;
   padding: 6px 9px;
-  border: 1px solid color-mix(in srgb, var(--action-color) 28%, rgba(255, 255, 255, 0.82));
+  border: 1px solid color-mix(in srgb, var(--action-color) 28%, #ffffff);
   border-radius: 999px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.92)),
+    linear-gradient(180deg, #ffffff, #f8fafc),
     var(--action-bg);
   color: var(--action-color);
   font-size: 0.75rem;
@@ -871,9 +871,9 @@ onBeforeUnmount(() => {
   bottom: -5px;
   width: 9px;
   height: 9px;
-  border-right: 1px solid color-mix(in srgb, var(--action-color) 22%, rgba(255, 255, 255, 0.72));
-  border-bottom: 1px solid color-mix(in srgb, var(--action-color) 22%, rgba(255, 255, 255, 0.72));
-  background: rgba(248, 250, 252, 0.96);
+  border-right: 1px solid color-mix(in srgb, var(--action-color) 22%, #ffffff);
+  border-bottom: 1px solid color-mix(in srgb, var(--action-color) 22%, #ffffff);
+  background: #f8fafc;
   transform: translateX(-50%) rotate(45deg);
 }
 
@@ -885,7 +885,7 @@ onBeforeUnmount(() => {
 
 .blog-pet__action--ai {
   --action-color: #7c3aed;
-  --action-bg: rgba(245, 243, 255, 0.96);
+  --action-bg: #f5f3ff;
   --action-hover-bg: #7c3aed;
 
   left: 4px;
@@ -894,7 +894,7 @@ onBeforeUnmount(() => {
 
 .blog-pet__action--background {
   --action-color: #0284c7;
-  --action-bg: rgba(240, 249, 255, 0.96);
+  --action-bg: #f0f9ff;
   --action-hover-bg: #0284c7;
 
   left: 52px;
@@ -903,7 +903,7 @@ onBeforeUnmount(() => {
 
 .blog-pet__action--music {
   --action-color: #db2777;
-  --action-bg: rgba(253, 242, 248, 0.96);
+  --action-bg: #fdf2f8;
   --action-hover-bg: #db2777;
 
   right: 4px;
