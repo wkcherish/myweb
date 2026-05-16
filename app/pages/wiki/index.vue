@@ -63,9 +63,6 @@ const filteredDocs = computed(() => {
     <BasePanel tone="floating">
       <BaseTag tone="accent">Wiki</BaseTag>
       <h1 class="content-page__title">知识库</h1>
-      <p class="content-page__desc">
-        Wiki 内容从 <code>content/wiki/</code> 目录中的 Markdown 文件读取。
-      </p>
     </BasePanel>
 
     <BasePanel v-if="docsResult?.error">
@@ -96,10 +93,6 @@ const filteredDocs = computed(() => {
 .content-page__title {
   margin-top: var(--space-12);
   font-size: clamp(1.7rem, 4vw, 2.3rem);
-}
-
-.content-page__desc {
-  margin-top: var(--space-12);
 }
 
 .wiki-layout {

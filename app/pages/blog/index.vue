@@ -72,9 +72,6 @@ const resetFilters = () => {
     <BasePanel tone="floating">
       <BaseTag>Blog</BaseTag>
       <h1 class="content-page__title">博客文章</h1>
-      <p class="content-page__desc">
-        博客内容从 <code>content/blog/</code> 目录中的 Markdown 文件读取。
-      </p>
     </BasePanel>
 
     <BasePanel v-if="postsResult?.error">
@@ -115,10 +112,6 @@ const resetFilters = () => {
 .content-page__title {
   margin-top: var(--space-12);
   font-size: clamp(1.7rem, 4vw, 2.3rem);
-}
-
-.content-page__desc {
-  margin-top: var(--space-12);
 }
 
 </style>

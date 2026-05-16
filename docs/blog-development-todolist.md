@@ -634,38 +634,45 @@
 
 ### Todo 数据
 
-- [ ] 决定第一版 Todo 使用 Markdown frontmatter 还是 `tasks.json`。
-- [ ] 如果使用 Markdown，创建 `content/todo/roadmap.md`。
-- [ ] 如果使用 JSON，创建 `content/todo/tasks.json`。
-- [ ] 定义任务字段：title、description、status、priority、startDate、targetDate、tags。
-- [ ] 定义 status：planned、in-progress、done、paused。
-- [ ] 定义 priority：high、medium、low。
+- [x] 决定第一版 Todo 使用 Markdown frontmatter 还是 `tasks.json`。
+- [x] 如果使用 Markdown，按 `YYYY-MM-DD-笔记名.md` 形式创建 Roadmap 文档。
+- [x] 如果使用 JSON，创建 `content/todo/tasks.json`；第一版已选择 Markdown，因此不创建 JSON 数据文件。
+- [x] 定义任务字段：title、description、status、priority、targetDate、tags，startDate 由文件名日期解析。
+- [x] 定义 status：planned、in-progress、done、paused。
+- [x] 定义 priority：high、medium、low。
 
 ### Todo 页面
 
-- [ ] 创建 `app/pages/todo/index.vue`。
-- [ ] 创建 `app/components/todo/TodoOverview.vue`。
-- [ ] 创建 `app/components/todo/TodoBoard.vue`。
-- [ ] 创建 `app/components/todo/TodoItem.vue`。
-- [ ] 创建 `app/components/todo/TodoTimeline.vue`。
-- [ ] 展示计划中、进行中、已完成、搁置数量。
-- [ ] 支持按状态分组。
-- [ ] 支持按优先级筛选。
-- [ ] 支持按时间范围展示。
-- [ ] 任务卡片展示标题、描述、状态、优先级、目标日期。
-- [ ] Todo 状态使用只读标签、徽标或图标展示，不使用可勾选保存的 checkbox。
-- [ ] Todo 列表不支持拖拽改状态、行内编辑、网页新增任务或删除任务。
-- [ ] Todo 页面可提供折叠、筛选、搜索，但这些都只作为浏览状态。
-- [ ] Todo 空状态提示回到本地 `content/todo/` 添加 Markdown 或 JSON。
+- [x] 创建 `app/pages/todo/index.vue`。
+- [x] 创建 `app/components/todo/TodoOverview.vue`。
+- [x] 创建 `app/components/todo/TodoBoard.vue`。
+- [x] 创建 `app/components/todo/TodoItem.vue`。
+- [x] 创建 `app/components/todo/TodoTimeline.vue`。
+- [x] 展示计划中、进行中、已完成、搁置数量。
+- [x] 支持按状态分组。
+- [x] 支持按优先级筛选。
+- [x] 支持按时间范围展示。
+- [x] 任务卡片展示标题、描述、状态、优先级、目标日期。
+- [x] Todo 状态使用只读标签、徽标或图标展示，不使用可勾选保存的 checkbox。
+- [x] Todo 列表不支持拖拽改状态、行内编辑、网页新增任务或删除任务。
+- [x] Todo 页面可提供折叠、筛选、搜索，但这些都只作为浏览状态。
+- [x] Todo 空状态提示回到本地 `content/todo/` 添加 Markdown 或 JSON。
 
 ### 阶段验收
 
-- [ ] Todo 状态一眼可辨。
-- [ ] 页面不是玩具化看板，要像个人规划仪表盘。
-- [ ] 移动端单列布局可读。
-- [ ] 无任务时有空状态。
-- [ ] Todo 模块不会误导用户以为网页端修改可以持久保存。
-- [ ] Todo 页面没有 `新增任务`、`保存任务`、`提交计划`、`拖到完成` 等写入型交互。
+- [x] Todo 状态一眼可辨。
+- [x] 页面不是玩具化看板，要像个人规划仪表盘。
+- [x] 移动端单列布局可读。
+- [x] 无任务时有空状态。
+- [x] Todo 模块不会误导用户以为网页端修改可以持久保存。
+- [x] Todo 页面没有 `新增任务`、`保存任务`、`提交计划`、`拖到完成` 等写入型交互。
+
+阶段 8 验收记录（2026-05-16）：
+- 第一版 Todo 确定继续使用 Markdown frontmatter，不引入 `tasks.json`。
+- Todo 日期继续遵循阶段 5 的约定，从 `YYYY-MM-DD-笔记名.md` 文件名解析；`targetDate` 仅作为目标日期字段。
+- Todo 页面已拆为 `TodoOverview`、`TodoBoard`、`TodoItem`、`TodoTimeline`，展示状态统计、只读看板和目标时间线。
+- 页面支持按优先级和时间范围筛选，筛选只影响当前浏览结果，不改变内容源。
+- `npm run generate` 已通过，静态生成包含 `/todo` 与 `/todo/2026-05-16-home-polish`。
 
 ## 阶段 9：小狗宠物助手
 

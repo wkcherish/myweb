@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import VisitCount from '~/components/content/VisitCount.vue'
+import BaseTag from '~/components/ui/BaseTag.vue'
 
 const route = useRoute()
 const slug = Array.isArray(route.params.slug) ? route.params.slug.join('/') : route.params.slug
@@ -13,6 +14,10 @@ const { data: page } = await useAsyncData(`todo-${path}`, () => {
 if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: 'Todo not found' })
 }
+
+const status = computed(() => (readContentString(page.value || {}, 'status') || 'planned') as 'planned' | 'in-progress' | 'done' | 'paused')
+const priority = computed(() => (readContentString(page.value || {}, 'priority') || 'medium') as 'high' | 'medium' | 'low')
+const targetDate = computed(() => readContentString(page.value || {}, 'targetDate'))
 </script>
 
 <template>
@@ -22,6 +27,9 @@ if (!page.value) {
       <h1>{{ page?.title }}</h1>
       <div class="content-detail__meta">
         <time>{{ noteDate }}</time>
+        <BaseTag kind="status" :tone="status">{{ status }}</BaseTag>
+        <BaseTag kind="priority" :tone="priority">{{ priority }}</BaseTag>
+        <span v-if="targetDate">目标 {{ formatContentDate(targetDate) }}</span>
         <p v-if="page?.description">{{ page.description }}</p>
         <VisitCount :path="path" increment />
       </div>
