@@ -339,18 +339,40 @@ onBeforeUnmount(() => {
 .mimo-hero__desc {
   width: min(560px, 100%);
   margin: var(--space-24) auto 0;
-  color: color-mix(in srgb, var(--color-fg) 78%, var(--color-text-weak));
+  color: transparent;
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-fg) 94%, black 4%),
+      color-mix(in srgb, var(--color-primary) 82%, var(--color-fg)),
+      color-mix(in srgb, var(--color-accent) 78%, var(--color-fg)),
+      color-mix(in srgb, var(--color-fg) 94%, black 4%)
+    );
+  background-size: 220% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
   font-size: clamp(1rem, 2vw, 1.18rem);
-  font-weight: 560;
+  font-weight: 700;
   line-height: 1.7;
   text-wrap: balance;
+  text-shadow: none;
+  animation: desc-gradient-flow 6200ms linear infinite;
 }
 
 .mimo-hero.has-background-image .mimo-hero__desc {
-  color: color-mix(in srgb, var(--color-fg) 88%, white 6%);
-  text-shadow:
-    0 1px 2px rgba(255, 255, 255, 0.72),
-    0 10px 28px rgba(255, 255, 255, 0.32);
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-fg) 96%, black 6%),
+      #243fb8,
+      #08786b,
+      color-mix(in srgb, var(--color-fg) 96%, black 6%)
+    );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow: none;
 }
 
 .mimo-hero__actions {
@@ -396,6 +418,11 @@ onBeforeUnmount(() => {
   .mimo-hero__actions {
     transform: none;
   }
+
+  .mimo-hero__desc {
+    animation: none;
+    background-position: 50% 50%;
+  }
 }
 
 @keyframes cursor-wave {
@@ -423,6 +450,16 @@ onBeforeUnmount(() => {
       0 0 0 1px rgba(255, 255, 255, 0.45) inset,
       0 10px 28px rgba(0, 0, 0, 0.14),
       0 0 0 22px rgba(0, 0, 0, 0);
+  }
+}
+
+@keyframes desc-gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 220% 50%;
   }
 }
 

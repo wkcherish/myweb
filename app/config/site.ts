@@ -4,7 +4,7 @@ export interface SiteNavItem {
 }
 
 export const siteConfig = {
-  name: 'Cherish Notebook',
+  name: "Cherish's Notebook",
   shortName: 'Notebook',
   author: 'Cherish',
   description: '这是我的主页，用于记录自己的学习、开发以及生活分享。',
