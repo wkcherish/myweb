@@ -90,11 +90,16 @@ const olderPost = computed(() =>
 
 .content-detail {
   display: grid;
-  gap: var(--space-32);
+  gap: var(--space-24);
 }
 
 .content-detail__body {
+  padding: clamp(1rem, 2vw, 1.4rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-12);
+  background: var(--color-surface);
   color: var(--color-fg);
+  box-shadow: var(--shadow-soft);
 }
 
 .article-nav {
@@ -112,10 +117,19 @@ const olderPost = computed(() =>
   gap: var(--space-4);
   padding: var(--space-16);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-8);
+  border-radius: var(--radius-12);
   background: var(--color-surface);
   color: var(--color-fg);
   text-decoration: none;
+  box-shadow: var(--shadow-soft);
+  transition:
+    border-color var(--motion-180) ease,
+    transform var(--motion-180) ease;
+}
+
+.article-nav__item:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 36%, var(--color-border));
+  transform: translateY(-2px);
 }
 
 .article-nav__item span {

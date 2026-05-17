@@ -47,15 +47,26 @@ onBeforeUnmount(() => {
 
 <template>
   <nav v-if="links.length" class="article-toc" aria-label="文章目录">
-    <button type="button" class="article-toc__toggle" :aria-expanded="isOpen" @click="isOpen = !isOpen">
-      <ListTree :size="18" aria-hidden="true" />
-      目录
-    </button>
+    <div class="article-toc__head">
+      <span class="article-toc__label">
+        <ListTree :size="18" aria-hidden="true" />
+        目录
+      </span>
+      <button type="button" class="article-toc__toggle" :aria-expanded="isOpen" @click="isOpen = !isOpen">
+        收起
+      </button>
+    </div>
 
     <ol class="article-toc__list" :class="{ 'is-open': isOpen }">
-      <li v-for="link in flatLinks" :key="link.id" :style="{ '--toc-indent': `${Math.max((link.depth || 2) - 2, 0) * 12}px` }">
+      <li
+        v-for="(link, index) in flatLinks"
+        :key="link.id"
+        class="article-toc__item"
+        :style="{ '--toc-indent': `${Math.max((link.depth || 2) - 2, 0) * 14}px` }"
+      >
         <a :href="`#${link.id}`" :class="{ 'is-active': activeId === link.id }">
-          {{ link.text }}
+          <span class="article-toc__number">{{ String(index + 1).padStart(2, '0') }}</span>
+          <span class="article-toc__text">{{ link.text }}</span>
         </a>
       </li>
     </ol>
@@ -65,18 +76,28 @@ onBeforeUnmount(() => {
 <style scoped>
 .article-toc {
   position: sticky;
-  top: 96px;
+  top: 24px;
   align-self: start;
   display: grid;
-  gap: var(--space-8);
-  padding: var(--space-16);
+  gap: 12px;
+  padding: 14px;
+  max-height: calc(100vh - 48px);
+  overflow: auto;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-8);
-  background: color-mix(in srgb, var(--color-surface) 92%, var(--color-bg));
+  border-radius: 8px;
+  background: var(--color-surface);
 }
 
-.article-toc__toggle {
-  min-height: 44px;
+.article-toc__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.article-toc__label {
   display: inline-flex;
   align-items: center;
   gap: var(--space-8);
@@ -84,27 +105,57 @@ onBeforeUnmount(() => {
   font-weight: 800;
 }
 
+.article-toc__toggle {
+  display: none;
+  color: var(--color-text-weak);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
 .article-toc__list {
   display: grid;
-  gap: var(--space-4);
+  gap: 2px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
+.article-toc__item {
+  --toc-indent: 0px;
+}
+
 .article-toc__list a {
-  display: block;
-  padding: var(--space-4) var(--space-8) var(--space-4) calc(var(--space-8) + var(--toc-indent));
-  border-radius: var(--radius-4);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--space-8);
+  padding: 8px 10px 8px calc(10px + var(--toc-indent));
+  border: 1px solid transparent;
+  border-radius: var(--radius-6);
   color: var(--color-text-weak);
   text-decoration: none;
   font-size: 0.9rem;
+  line-height: 1.35;
+  transition: all 0.18s ease;
 }
 
 .article-toc__list a:hover,
 .article-toc__list a.is-active {
-  color: var(--color-fg);
+  color: var(--color-primary);
   background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  border-color: color-mix(in srgb, var(--color-primary) 26%, transparent);
+}
+
+.article-toc__text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.article-toc__number {
+  color: var(--color-primary);
+  font-size: 0.82rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
 }
 
 @media (max-width: 980px) {
@@ -119,11 +170,8 @@ onBeforeUnmount(() => {
   .article-toc__list.is-open {
     display: grid;
   }
-}
-
-@media (min-width: 981px) {
   .article-toc__toggle {
-    pointer-events: none;
+    display: inline-flex;
   }
 }
 </style>

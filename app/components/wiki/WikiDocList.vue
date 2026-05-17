@@ -3,26 +3,35 @@ import BaseTag from '~/components/ui/BaseTag.vue'
 import EmptyState from '~/components/ui/EmptyState.vue'
 import type { ContentEntry } from '~/utils/content'
 
+type WikiGroup = {
+  path: string
+  title: string
+  items: ContentEntry[]
+  primary: ContentEntry
+}
+
 defineProps<{
-  docs: ContentEntry[]
+  groups: WikiGroup[]
 }>()
 </script>
 
 <template>
-  <div v-if="docs.length" class="wiki-doc-list">
-    <NuxtLink v-for="doc in docs" :key="doc.path" class="wiki-doc-list__item" :to="doc.path || '/wiki'">
-      <div class="wiki-doc-list__meta">
-        <BaseTag tone="accent">{{ readContentString(doc, 'category') || 'Wiki' }}</BaseTag>
-        <time>{{ formatContentDate(getContentDate(doc, ['date', 'updatedAt'])) }}</time>
-      </div>
-      <h2>{{ readContentString(doc, 'title') || '未命名 Wiki' }}</h2>
-      <p>{{ readContentString(doc, 'description') || '暂无摘要。' }}</p>
-      <div v-if="readContentTags(doc).length" class="wiki-doc-list__tags">
-        <BaseTag v-for="tag in readContentTags(doc)" :key="tag" tone="accent">
+  <div v-if="groups.length" class="wiki-doc-list">
+    <article v-for="group in groups" :key="group.path || group.primary.path" class="wiki-doc-list__item">
+      <NuxtLink class="wiki-doc-list__main" :to="getWikiRoutePath(group.primary)">
+        <div class="wiki-doc-list__meta">
+          <time>{{ formatContentDate(getContentDate(group.primary, ['date', 'updatedAt'])) }}</time>
+        </div>
+        <h2>{{ group.title }}</h2>
+        <p>{{ readContentString(group.primary, 'description') || '暂无摘要。' }}</p>
+      </NuxtLink>
+
+      <div v-if="readContentTags(group.primary).length" class="wiki-doc-list__tags">
+        <BaseTag v-for="tag in readContentTags(group.primary)" :key="tag" tone="accent">
           {{ tag }}
         </BaseTag>
       </div>
-    </NuxtLink>
+    </article>
   </div>
 
   <EmptyState
@@ -35,13 +44,13 @@ defineProps<{
 <style scoped>
 .wiki-doc-list {
   display: grid;
-  gap: var(--space-12);
+  gap: var(--space-10, 10px);
 }
 
 .wiki-doc-list__item {
   display: grid;
-  gap: var(--space-10, 10px);
-  padding: var(--space-20, 20px);
+  gap: var(--space-8);
+  padding: 16px 20px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-8);
   background: color-mix(in srgb, var(--color-surface) 92%, var(--color-bg));
@@ -51,6 +60,13 @@ defineProps<{
 
 .wiki-doc-list__item:hover {
   border-color: color-mix(in srgb, var(--color-primary) 36%, var(--color-border));
+}
+
+.wiki-doc-list__main {
+  display: grid;
+  gap: var(--space-8);
+  color: inherit;
+  text-decoration: none;
 }
 
 .wiki-doc-list__meta,
@@ -63,6 +79,9 @@ defineProps<{
 
 .wiki-doc-list__meta {
   justify-content: space-between;
+  color: var(--color-text-weak);
+  font-size: 0.86rem;
+  font-weight: 700;
 }
 
 .wiki-doc-list__item h2 {

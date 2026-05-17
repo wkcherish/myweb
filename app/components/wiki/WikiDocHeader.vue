@@ -36,14 +36,21 @@ defineProps<{
 <style scoped>
 .wiki-doc-header {
   display: grid;
-  gap: var(--space-12);
+  gap: var(--space-10, 10px);
+  padding: clamp(1rem, 1.6vw, 1.25rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-12);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--color-accent) 8%, transparent), transparent 46%),
+    var(--color-surface);
+  box-shadow: var(--shadow-soft);
 }
 
 .wiki-doc-header__meta,
 .wiki-doc-header__tags {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-8);
+  gap: 6px;
   align-items: center;
 }
 
@@ -54,7 +61,8 @@ defineProps<{
 }
 
 .wiki-doc-header h1 {
-  font-size: clamp(2rem, 5vw, 3.2rem);
+  max-width: 18ch;
+  font-size: clamp(1.9rem, 3.6vw, 3rem);
   overflow-wrap: anywhere;
 }
 

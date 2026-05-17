@@ -1,5 +1,6 @@
 export type ContentEntry = {
   path?: string
+  stem?: string
   title?: string
   description?: string
   date?: string
@@ -89,6 +90,37 @@ export const getTagTone = (tag: string) => {
 }
 
 export const isReadmeEntry = (entry: ContentEntry) => (entry.path || '').toLowerCase().endsWith('/readme')
+
+export const isIndexEntry = (entry: ContentEntry) => (entry.path || '').toLowerCase().endsWith('/index')
+
+export const getContentParentPath = (path?: string) => {
+  if (!path) return ''
+
+  const segments = path.split('/').filter(Boolean)
+  if (segments.length <= 2) return ''
+
+  return `/${segments.slice(0, -1).join('/')}`
+}
+
+export const getContentGroupPath = (entry: ContentEntry) => {
+  const path = entry.path || ''
+
+  if (!path) return ''
+  if (isIndexEntry(entry)) return getContentParentPath(path) || path.replace(/\/index$/i, '')
+
+  const parentPath = getContentParentPath(path)
+  return parentPath || path
+}
+
+export const sortWikiChapterEntries = <T extends ContentEntry>(entries: T[]) =>
+  [...entries].sort((a, b) => {
+    const aIndex = isIndexEntry(a) ? 0 : 1
+    const bIndex = isIndexEntry(b) ? 0 : 1
+
+    if (aIndex !== bIndex) return aIndex - bIndex
+
+    return (a.path || '').localeCompare(b.path || '', 'zh-Hans-CN')
+  })
 
 export const filterPublishedEntries = <T extends ContentEntry>(entries: T[]) =>
   entries.filter((entry) => !isReadmeEntry(entry) && !readContentBoolean(entry, 'draft'))

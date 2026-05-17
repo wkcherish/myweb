@@ -9,8 +9,10 @@ import ErrorState from '~/components/ui/ErrorState.vue'
 import type { ContentEntry } from '~/utils/content'
 
 type WikiGroup = {
-  category: string
+  path: string
+  title: string
   items: ContentEntry[]
+  primary: ContentEntry
 }
 
 const search = ref('')
@@ -32,29 +34,68 @@ const groups = computed<WikiGroup[]>(() => {
   const grouped = new Map<string, ContentEntry[]>()
 
   for (const doc of docs.value) {
-    const category = readContentString(doc, 'category') || 'Wiki'
-    grouped.set(category, [...(grouped.get(category) || []), doc])
+    const groupPath = getContentGroupPath(doc)
+    grouped.set(groupPath, [...(grouped.get(groupPath) || []), doc])
   }
 
   return [...grouped.entries()]
-    .map(([category, items]) => ({ category, items }))
-    .sort((a, b) => a.category.localeCompare(b.category))
+    .map(([path, items]) => {
+      const sortedItems = sortWikiChapterEntries(items)
+      const primary = sortedItems.find((item) => isIndexEntry(item)) || sortedItems[0]
+      if (!primary) {
+        throw new Error(`Wiki group has no primary entry: ${path}`)
+      }
+
+      return {
+        path,
+        title: readContentString(primary, 'title') || '未命名 Wiki',
+        items: sortedItems,
+        primary,
+      }
+    })
+    .sort((a, b) => a.title.localeCompare(b.title, 'zh-Hans-CN'))
 })
 
-const filteredDocs = computed(() => {
+const categories = computed(() => {
+  const grouped = new Map<string, WikiGroup[]>()
+
+  for (const group of groups.value) {
+    const category = readContentString(group.primary, 'category') || '未分类'
+    grouped.set(category, [...(grouped.get(category) || []), group])
+  }
+
+  return [...grouped.entries()]
+    .map(([title, items]) => ({ title, items }))
+    .sort((a, b) => {
+      if (a.title === '未分类') return 1
+      if (b.title === '未分类') return -1
+
+      return a.title.localeCompare(b.title, 'zh-Hans-CN')
+    })
+})
+
+const filteredGroups = computed(() => {
   const keyword = search.value.trim().toLowerCase()
 
-  return docs.value.filter((doc) => {
-    const title = readContentString(doc, 'title').toLowerCase()
-    const description = readContentString(doc, 'description').toLowerCase()
-    const category = readContentString(doc, 'category') || 'Wiki'
-    const tags = readContentTags(doc).join(' ').toLowerCase()
+  return groups.value
+    .filter((group) => {
+      const searchable = group.items
+        .map((doc) => {
+          return [
+            readContentString(doc, 'title'),
+            readContentString(doc, 'description'),
+            readContentString(doc, 'category'),
+            readContentTags(doc).join(' '),
+          ].join(' ')
+        })
+        .join(' ')
+        .toLowerCase()
 
-    return (
-      (!keyword || title.includes(keyword) || description.includes(keyword) || tags.includes(keyword)) &&
-      (!activeCategory.value || category === activeCategory.value)
-    )
-  })
+      const category = readContentString(group.primary, 'category') || '未分类'
+
+      return (!keyword || searchable.includes(keyword)) && (!activeCategory.value || category === activeCategory.value)
+    })
+    .map((group) => group)
 })
 </script>
 
@@ -70,11 +111,11 @@ const filteredDocs = computed(() => {
     </BasePanel>
 
     <div v-else-if="docs.length" class="wiki-layout">
-      <WikiTree :groups="groups" :active-category="activeCategory" @select="activeCategory = $event" />
+      <WikiTree :groups="categories" :active-category="activeCategory" @select="activeCategory = $event" />
 
       <div class="wiki-layout__main">
         <WikiSearch v-model="search" />
-        <WikiDocList :docs="filteredDocs" />
+        <WikiDocList :groups="filteredGroups" />
       </div>
     </div>
 

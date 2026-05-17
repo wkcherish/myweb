@@ -51,16 +51,18 @@ const hasToc = computed(() => tocLinks.value.length > 0)
     </aside>
 
     <article class="content-detail">
-      <header class="content-detail__head">
-        <NuxtLink to="/todo">Todo</NuxtLink>
+      <header class="todo-header">
+        <div class="todo-header__topline">
+          <NuxtLink to="/todo">Todo</NuxtLink>
+          <VisitCount :path="path" increment />
+        </div>
         <h1>{{ page?.title }}</h1>
-        <div class="content-detail__meta">
+        <p v-if="page?.description" class="todo-header__description">{{ page.description }}</p>
+        <div class="todo-header__meta">
           <time>{{ noteDate }}</time>
           <BaseTag kind="status" :tone="status">{{ status }}</BaseTag>
           <BaseTag kind="priority" :tone="priority">{{ priority }}</BaseTag>
           <span v-if="targetDate">目标 {{ formatContentDate(targetDate) }}</span>
-          <p v-if="page?.description">{{ page.description }}</p>
-          <VisitCount :path="path" increment />
         </div>
       </header>
       <ContentRenderer v-if="page" :value="page" class="content-detail__body" />
@@ -85,30 +87,60 @@ const hasToc = computed(() => tocLinks.value.length > 0)
 .content-detail {
   width: 100%;
   display: grid;
-  gap: var(--space-32);
+  gap: var(--space-24);
 }
 
-.content-detail__head {
+.todo-header {
   display: grid;
   gap: var(--space-12);
+  padding: clamp(1rem, 2vw, 1.4rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-12);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 7%, transparent), transparent 46%),
+    var(--color-surface);
+  box-shadow: var(--shadow-soft);
 }
 
-.content-detail__head a {
+.todo-header__topline {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-12);
+  align-items: center;
+}
+
+.todo-header a {
   width: fit-content;
   font-weight: 800;
 }
 
-.content-detail__head h1 {
-  font-size: clamp(2rem, 5vw, 3.2rem);
+.todo-header h1 {
+  max-width: 18ch;
+  font-size: clamp(2rem, 4.4vw, 3.3rem);
+  overflow-wrap: anywhere;
 }
 
-.content-detail__meta {
-  display: grid;
+.todo-header__description {
+  max-width: 68ch;
+}
+
+.todo-header__meta {
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--space-8);
+  align-items: center;
+  color: var(--color-text-weak);
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
 .content-detail__body {
+  padding: clamp(1rem, 2vw, 1.4rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-12);
+  background: var(--color-surface);
   color: var(--color-fg);
+  box-shadow: var(--shadow-soft);
 }
 
 @media (max-width: 980px) {

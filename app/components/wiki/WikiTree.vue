@@ -1,15 +1,21 @@
 <script setup lang="ts">
 import { FolderTree } from 'lucide-vue-next'
-import BaseTag from '~/components/ui/BaseTag.vue'
 import type { ContentEntry } from '~/utils/content'
 
 type WikiGroup = {
-  category: string
+  path: string
+  title: string
   items: ContentEntry[]
+  primary: ContentEntry
+}
+
+type WikiCategory = {
+  title: string
+  items: WikiGroup[]
 }
 
 defineProps<{
-  groups: WikiGroup[]
+  groups: WikiCategory[]
   activeCategory: string
 }>()
 
@@ -19,10 +25,10 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <aside class="wiki-tree" aria-label="Wiki 分类">
+  <aside class="wiki-tree" aria-label="Wiki 笔记目录">
     <div class="wiki-tree__head">
       <FolderTree :size="18" aria-hidden="true" />
-      <strong>目录树</strong>
+      <strong>笔记目录</strong>
     </div>
 
     <button
@@ -31,23 +37,21 @@ const emit = defineEmits<{
       :class="{ 'is-active': !activeCategory }"
       @click="emit('select', '')"
     >
-      <span>全部文档</span>
-      <BaseTag>{{ groups.reduce((sum, group) => sum + group.items.length, 0) }}</BaseTag>
+      <span>全部笔记</span>
     </button>
 
     <button
       v-for="group in groups"
-      :key="group.category"
+      :key="group.title"
       type="button"
       class="wiki-tree__item"
-      :class="{ 'is-active': activeCategory === group.category }"
-      @click="emit('select', group.category)"
+      :class="{ 'is-active': activeCategory === group.title }"
+      @click="emit('select', group.title)"
     >
-      <span>{{ group.category }}</span>
-      <BaseTag>{{ group.items.length }}</BaseTag>
+      <span>{{ group.title }}</span>
     </button>
 
-    <p class="wiki-tree__hint">点击分类可快速定位文档。</p>
+    <p class="wiki-tree__hint">点击分类可筛选笔记。</p>
   </aside>
 </template>
 

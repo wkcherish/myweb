@@ -49,42 +49,6 @@ interface OverviewSection {
 
 const pageDescription = '该页面聚合 Umami 共享统计数据并展示分析看板，支持实时刷新与明细排行查看。'
 const topLimit = 12
-const channelLabelMap: Record<string, string> = {
-  direct: '直接访问',
-  organic: '自然搜索',
-  organicsearch: '自然搜索',
-  paid: '付费流量',
-  paidsearch: '付费搜索',
-  paidsocial: '付费社交',
-  social: '社交流量',
-  email: '邮件',
-  display: '展示广告',
-  affiliate: '联盟推广',
-  referral: '外部引荐',
-  audio: '音频渠道',
-  video: '视频渠道',
-  sms: '短信渠道',
-  push: '推送渠道',
-  unknown: '未知渠道',
-}
-const searchReferrerHints = ['google.', 'bing.', 'baidu.', 'sogou.', 'so.com', 'yahoo.', 'duckduckgo.', 'yandex.']
-const socialReferrerHints = [
-  't.co',
-  'twitter.com',
-  'x.com',
-  'facebook.com',
-  'instagram.com',
-  'linkedin.com',
-  'reddit.com',
-  'discord.com',
-  'youtube.com',
-  'bilibili.com',
-  'weibo.com',
-  'xiaohongshu.com',
-  'douyin.com',
-  'tiktok.com',
-  'weixin.',
-]
 
 useHead({
   title: '数据统计分析',
@@ -123,25 +87,6 @@ function normalizeLabel(value: string | undefined) {
   return String(value || '').trim()
 }
 
-function normalizeChannelKey(value: string | undefined) {
-  return normalizeLabel(value).replace(/[\s_-]+/g, '').toLowerCase()
-}
-
-function normalizeReferrerHost(value: string | undefined) {
-  const raw = normalizeLabel(value).toLowerCase()
-  if (!raw) return ''
-
-  const candidate = raw.includes('://') ? raw : `https://${raw}`
-  try {
-    return new URL(candidate).hostname.replace(/^www\./, '')
-  } catch {
-    return raw
-      .replace(/^https?:\/\//, '')
-      .split('/')[0] || ''
-      .replace(/^www\./, '')
-  }
-}
-
 function getFallbackLabel(type: OverviewSection['title']) {
   if (type === '来源 Referrer' || type === '访问渠道') return '直接访问'
   if (type === '国家 / 地区') return '未知国家/地区'
@@ -152,46 +97,6 @@ function getFallbackLabel(type: OverviewSection['title']) {
   if (type === '设备类型') return '未知设备'
   if (type === '自定义事件') return '未命名事件'
   return '未知'
-}
-
-function resolveChannelLabel(name: string | undefined): string {
-  const key = normalizeChannelKey(name)
-  if (!key) return channelLabelMap.direct ?? getFallbackLabel('访问渠道')
-  return channelLabelMap[key] ?? normalizeLabel(name) ?? getFallbackLabel('访问渠道')
-}
-
-function inferChannelFromReferrer(name: string | undefined): string {
-  const host = normalizeReferrerHost(name)
-  if (!host) return 'direct'
-  if (searchReferrerHints.some((hint) => host.includes(hint))) return 'organicSearch'
-  if (socialReferrerHints.some((hint) => host.includes(hint))) return 'social'
-  return 'referral'
-}
-
-function buildChannelFallback(referrers: UmamiMetricRow[]): UmamiMetricRow[] {
-  const buckets = new Map<string, UmamiMetricRow>()
-
-  for (const row of referrers) {
-    const key = inferChannelFromReferrer(row.name)
-    const current = buckets.get(key) || {
-      name: key,
-      pageviews: 0,
-      visitors: 0,
-      visits: 0,
-      bounces: 0,
-      totaltime: 0,
-    }
-
-    current.pageviews += row.pageviews
-    current.visitors += row.visitors
-    current.visits += row.visits
-    current.bounces += row.bounces
-    current.totaltime += row.totaltime
-
-    buckets.set(key, current)
-  }
-
-  return Array.from(buckets.values()).sort((left, right) => right.visits - left.visits)
 }
 
 const isUmamiConfigured = computed(() => hasUmamiPublicConfig())
@@ -238,9 +143,6 @@ async function loadOverviewData(): Promise<OverviewResponse | null> {
 
   const visits = Math.max(summary.visits || 0, 1)
   const bounces = Math.min(summary.bounces || 0, visits)
-  const normalizedChannels = channels.some((row) => normalizeLabel(row.name))
-    ? channels
-    : buildChannelFallback(referrers)
 
   return {
     summary: {
@@ -252,7 +154,7 @@ async function loadOverviewData(): Promise<OverviewResponse | null> {
     top: {
       paths: paths.slice(0, topLimit),
       referrers: referrers.slice(0, topLimit),
-      channels: normalizedChannels.slice(0, topLimit),
+      channels: channels.slice(0, topLimit),
       countries: countries.slice(0, topLimit),
       regions: regions.slice(0, topLimit),
       cities: cities.slice(0, topLimit),
@@ -298,7 +200,7 @@ const sections = computed(() => {
   const top = data.value?.top
   if (!top) return []
 
-  const result: OverviewSection[] = [
+  return [
     {
       title: '热门页面',
       rows: top.paths,
@@ -315,7 +217,7 @@ const sections = computed(() => {
       title: '访问渠道',
       rows: top.channels,
       value: (row: UmamiMetricRow) => `${formatNumber(row.visits)} 次访问`,
-      label: (row: UmamiMetricRow) => resolveChannelLabel(row.name),
+      label: (row: UmamiMetricRow) => normalizeLabel(row.name) || getFallbackLabel('访问渠道'),
     },
     {
       title: '国家 / 地区',
@@ -360,8 +262,6 @@ const sections = computed(() => {
       label: (row: UmamiMetricRow) => normalizeLabel(row.name) || getFallbackLabel('自定义事件'),
     },
   ]
-
-  return result
 })
 </script>
 

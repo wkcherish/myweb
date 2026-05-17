@@ -13,18 +13,20 @@ defineProps<{
 
 <template>
   <header class="article-header">
-    <NuxtLink class="article-header__back" to="/blog">
-      <ArrowLeft :size="18" aria-hidden="true" />
-      Blog
-    </NuxtLink>
+    <div class="article-header__topline">
+      <NuxtLink class="article-header__back" to="/blog">
+        <ArrowLeft :size="18" aria-hidden="true" />
+        Blog
+      </NuxtLink>
 
-    <div class="article-header__meta">
-      <span>
-        <CalendarDays :size="17" aria-hidden="true" />
-        <time>{{ formatContentDate(getContentDateFromPath(path)) }}</time>
-      </span>
-      <BaseTag>{{ readContentString(article, 'category') || '未分类' }}</BaseTag>
-      <VisitCount :path="path" increment />
+      <div class="article-header__meta">
+        <span>
+          <CalendarDays :size="17" aria-hidden="true" />
+          <time>{{ formatContentDate(getContentDateFromPath(path)) }}</time>
+        </span>
+        <BaseTag>{{ readContentString(article, 'category') || '未分类' }}</BaseTag>
+        <VisitCount :path="path" increment />
+      </div>
     </div>
 
     <h1>{{ readContentString(article, 'title') || '未命名文章' }}</h1>
@@ -43,7 +45,19 @@ defineProps<{
 <style scoped>
 .article-header {
   display: grid;
-  gap: var(--space-16);
+  gap: var(--space-12);
+  padding: clamp(1rem, 2vw, 1.4rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-12);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--color-primary) 8%, transparent), transparent 44%),
+    var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.article-header__topline {
+  display: grid;
+  gap: var(--space-8);
 }
 
 .article-header__back {
@@ -71,13 +85,13 @@ defineProps<{
 }
 
 .article-header h1 {
-  max-width: 14ch;
-  font-size: clamp(2.2rem, 7vw, 4.8rem);
+  max-width: 18ch;
+  font-size: clamp(2rem, 5vw, 3.8rem);
   overflow-wrap: anywhere;
 }
 
 .article-header p {
   max-width: 68ch;
-  font-size: 1.05rem;
+  font-size: 1rem;
 }
 </style>

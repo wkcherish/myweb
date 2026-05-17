@@ -42,26 +42,7 @@ export interface UmamiPublicConfig {
   pathLimit: number
 }
 
-export type UmamiMetricType =
-  | 'path'
-  | 'referrer'
-  | 'channel'
-  | 'country'
-  | 'region'
-  | 'city'
-  | 'browser'
-  | 'os'
-  | 'device'
-  | 'event'
-  | 'entry'
-  | 'exit'
-  | 'title'
-  | 'query'
-  | 'language'
-  | 'screen'
-  | 'hostname'
-  | 'tag'
-  | 'distinctId'
+export type UmamiMetricType = 'path' | 'referrer' | 'channel' | 'country' | 'region' | 'city' | 'browser' | 'os' | 'device' | 'event'
 
 const SHARE_TOKEN_HEADER = 'x-umami-share-token'
 const CACHE_TTL_MS = 60 * 1000
@@ -71,7 +52,6 @@ const shareTokenRequestCache = new Map<string, Promise<UmamiShareToken>>()
 const statsCache = new Map<string, UmamiStatsResponse>()
 const metricsCache = new Map<string, UmamiMetricRow[]>()
 const cacheTimeStore = new Map<string, number>()
-const PAGEVIEW_STYLE_METRIC_TYPES = new Set<UmamiMetricType>(['path', 'entry', 'exit', 'title', 'query', 'event'])
 
 function asNumber(value: unknown): number {
   const numeric = Number(value)
@@ -113,71 +93,12 @@ function isObjectRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
 }
 
-function normalizeMetricName(value: unknown): string {
-  if (value === null || value === undefined) return ''
-  const normalized = String(value).trim()
-  return normalized
-}
-
-function pickMetricName(row: Record<string, unknown>, type: UmamiMetricType): string {
-  const candidates = [
-    row.name,
-    row.x,
-    row[type],
-    row.path,
-    row.url,
-    row.referrer,
-    row.channel,
-    row.country,
-    row.region,
-    row.city,
-    row.browser,
-    row.os,
-    row.device,
-    row.event,
-    row.hostname,
-    row.label,
-    row.value,
-  ]
-
-  for (const candidate of candidates) {
-    const label = normalizeMetricName(candidate)
-    if (label) return label
-  }
-
-  return ''
-}
-
-function hasExpandedMetricFields(row: Record<string, unknown>): boolean {
-  return ['pageviews', 'visitors', 'visits', 'bounces', 'totaltime']
-    .some((fieldName) => Object.prototype.hasOwnProperty.call(row, fieldName))
-}
-
-function normalizeMetricRow(row: Record<string, unknown>, type: UmamiMetricType): UmamiMetricRow {
-  const name = pickMetricName(row, type)
-  const fallbackTotal = asNumber(row.y)
-
-  if (!hasExpandedMetricFields(row)) {
-    const total = fallbackTotal
-    return {
-      name,
-      pageviews: PAGEVIEW_STYLE_METRIC_TYPES.has(type) ? total : 0,
-      visitors: total,
-      visits: total,
-      bounces: 0,
-      totaltime: 0,
-    }
-  }
-
-  const pageviews = asNumber(row.pageviews)
-  const visitors = asNumber(row.visitors)
-  const visits = asNumber(row.visits)
-
+function toMetricRow(row: Record<string, unknown>): UmamiMetricRow {
   return {
-    name,
-    pageviews: pageviews || (PAGEVIEW_STYLE_METRIC_TYPES.has(type) ? fallbackTotal : 0),
-    visitors: visitors || fallbackTotal,
-    visits: visits || fallbackTotal,
+    name: String(row.name || ''),
+    pageviews: asNumber(row.pageviews),
+    visitors: asNumber(row.visitors),
+    visits: asNumber(row.visits),
     bounces: asNumber(row.bounces),
     totaltime: asNumber(row.totaltime),
   }
@@ -185,11 +106,6 @@ function normalizeMetricRow(row: Record<string, unknown>, type: UmamiMetricType)
 
 function getErrorStatus(error: unknown): number {
   return Number((error as { statusCode?: number; status?: number })?.statusCode || (error as { status?: number })?.status || 0)
-}
-
-function shouldFallbackToBasicMetrics(error: unknown): boolean {
-  const status = getErrorStatus(error)
-  return status === 400 || status === 404 || status === 405 || status === 422
 }
 
 function readCachedValue<T>(cacheKey: string, map: Map<string, T>): T | null {
@@ -347,37 +263,17 @@ export async function fetchUmamiExpandedMetrics(
   const cachedRows = readCachedValue(cacheKey, metricsCache)
   if (cachedRows) return cachedRows
 
-  const query = {
-    type,
-    startAt: range.startAt,
-    endAt: range.endAt,
-    ...extraQuery,
-  }
+  const rows = await umamiApiFetch<Record<string, unknown>[]>(
+    `/websites/${config.websiteId}/metrics/expanded`,
+    {
+      type,
+      startAt: range.startAt,
+      endAt: range.endAt,
+      ...extraQuery,
+    },
+  )
 
-  let expandedRows: unknown[] = []
-  try {
-    expandedRows = await umamiApiFetch<unknown[]>(
-      `/websites/${config.websiteId}/metrics/expanded`,
-      query,
-    )
-  } catch (error: unknown) {
-    if (!shouldFallbackToBasicMetrics(error)) {
-      throw error
-    }
-  }
-
-  let normalizedRows = (Array.isArray(expandedRows) ? expandedRows : [])
-    .map((row) => normalizeMetricRow(isObjectRecord(row) ? row : {}, type))
-
-  if (!normalizedRows.length) {
-    const basicRows = await umamiApiFetch<unknown[]>(
-      `/websites/${config.websiteId}/metrics`,
-      query,
-    )
-
-    normalizedRows = (Array.isArray(basicRows) ? basicRows : [])
-      .map((row) => normalizeMetricRow(isObjectRecord(row) ? row : {}, type))
-  }
+  const normalizedRows = (rows || []).map((row) => toMetricRow(row))
 
   saveCachedValue(cacheKey, normalizedRows, metricsCache)
   return normalizedRows
