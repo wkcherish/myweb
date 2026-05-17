@@ -349,6 +349,11 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 900px) {
+  .app-header {
+    background: var(--color-surface);
+    backdrop-filter: none;
+  }
+
   .app-header__desktop-nav {
     display: none;
   }
