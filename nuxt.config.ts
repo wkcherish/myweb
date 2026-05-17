@@ -208,6 +208,8 @@ export default defineNuxtConfig({
     public: {
       nuxtVersion: installedNuxtVersion,
       aiApiBase: '',
+      aiApiKey: '',
+      aiMode: '',
       aiModel: '',
       qqPlaylistId: '',
       defaultTheme: 'light',

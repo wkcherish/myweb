@@ -6,6 +6,26 @@ export interface AiMessage {
   timestamp: number
 }
 
+function resolveChatEndpoint(apiBase: string) {
+  const normalized = apiBase.trim().replace(/^http:\/(?!\/)/, 'http://').replace(/^https:\/(?!\/)/, 'https://')
+
+  if (!normalized) return ''
+
+  try {
+    const url = new URL(normalized)
+    const path = url.pathname.replace(/\/+$/, '')
+
+    if (!path || path === '/v1') {
+      url.pathname = `${path || '/v1'}/chat/completions`
+      return url.toString()
+    }
+
+    return url.toString()
+  } catch {
+    return normalized
+  }
+}
+
 export function useAiChat() {
   const isOpen = useState<boolean>('ai-chat-open', () => false)
   const messages = useState<AiMessage[]>('ai-chat-messages', () => [])
@@ -68,9 +88,11 @@ export function useAiChat() {
 
     const runtimeConfig = useRuntimeConfig().public
     const apiBase = (runtimeConfig.aiApiBase as string) || ''
-    const model = (runtimeConfig.aiModel as string) || ''
+    const apiEndpoint = resolveChatEndpoint(apiBase)
+    const apiKey = (runtimeConfig.aiApiKey as string) || ''
+    const model = (runtimeConfig.aiModel as string) || (runtimeConfig.aiMode as string) || ''
 
-    if (!apiBase) {
+    if (!apiEndpoint) {
       addMessage(
         'assistant',
         'AI 服务尚未配置。请在环境变量中设置 `NUXT_PUBLIC_AI_API_BASE` 指向安全代理地址，然后重新构建。\n\n当前为离线模式，你可以尝试以下本地功能：\n- 在博客中搜索相关文章\n- 浏览 Wiki 知识库\n- 查看项目规划',
@@ -81,12 +103,16 @@ export function useAiChat() {
     }
 
     try {
-      const response = await $fetch<{ choices?: Array<{ message?: { content?: string } }> }>(apiBase, {
+      const response = await $fetch<{ choices?: Array<{ message?: { content?: string } }> }>(apiEndpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
+        },
         body: {
           model,
           messages: messages.value.map((m) => ({ role: m.role, content: m.content })),
+          stream: false,
         },
         timeout: 30000,
       })
@@ -99,8 +125,10 @@ export function useAiChat() {
         setError('AI 返回了空响应，请稍后重试。')
         return
       }
-    } catch {
-      setError('请求失败，请检查网络连接或 API 配置后重试。')
+    } catch (error) {
+      const status = typeof error === 'object' && error && 'status' in error ? (error as { status?: number }).status : undefined
+      const statusText = typeof status === 'number' ? `（HTTP ${status}）` : ''
+      setError(`请求失败${statusText}，请检查网络连接或 API 配置后重试。`)
       return
     }
 
