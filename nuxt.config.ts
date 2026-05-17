@@ -155,7 +155,7 @@ export default defineNuxtConfig({
         {
           src: 'https://umami.tungchiahui.cn/script.js',
           defer: true,
-          'data-website-id': process.env.NUXT_PUBLIC_UMAMI_SHARE_ID || '183eae08-767c-4a1f-9e75-1b4081a2dda4',
+          'data-website-id': process.env.NUXT_PUBLIC_UMAMI_WEBSITE_ID || '183eae08-767c-4a1f-9e75-1b4081a2dda4',
         },
       ],
     },
@@ -170,6 +170,7 @@ export default defineNuxtConfig({
       umami: {
         baseUrl: process.env.NUXT_PUBLIC_UMAMI_BASE_URL || 'https://umami.tungchiahui.cn',
         shareId: process.env.NUXT_PUBLIC_UMAMI_SHARE_ID || 'PuRYIqggKwmqEx7e',
+        websiteId: process.env.NUXT_PUBLIC_UMAMI_WEBSITE_ID || '183eae08-767c-4a1f-9e75-1b4081a2dda4',
         startAt: process.env.NUXT_PUBLIC_UMAMI_START_AT || '2024-01-01T00:00:00.000Z',
         pathLimit: Number(process.env.NUXT_PUBLIC_UMAMI_PATH_LIMIT || 5000),
       },

@@ -37,9 +37,31 @@ export interface UmamiRange {
 export interface UmamiPublicConfig {
   baseUrl: string
   shareId: string
+  websiteId: string
   startAt: string | number
   pathLimit: number
 }
+
+export type UmamiMetricType =
+  | 'path'
+  | 'referrer'
+  | 'channel'
+  | 'country'
+  | 'region'
+  | 'city'
+  | 'browser'
+  | 'os'
+  | 'device'
+  | 'event'
+  | 'entry'
+  | 'exit'
+  | 'title'
+  | 'query'
+  | 'language'
+  | 'screen'
+  | 'hostname'
+  | 'tag'
+  | 'distinctId'
 
 const SHARE_TOKEN_HEADER = 'x-umami-share-token'
 const CACHE_TTL_MS = 60 * 1000
@@ -49,6 +71,7 @@ const shareTokenRequestCache = new Map<string, Promise<UmamiShareToken>>()
 const statsCache = new Map<string, UmamiStatsResponse>()
 const metricsCache = new Map<string, UmamiMetricRow[]>()
 const cacheTimeStore = new Map<string, number>()
+const PAGEVIEW_STYLE_METRIC_TYPES = new Set<UmamiMetricType>(['path', 'entry', 'exit', 'title', 'query', 'event'])
 
 function asNumber(value: unknown): number {
   const numeric = Number(value)
@@ -90,15 +113,83 @@ function isObjectRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
 }
 
-function normalizeMetricRow(row: Record<string, unknown>): UmamiMetricRow {
+function normalizeMetricName(value: unknown): string {
+  if (value === null || value === undefined) return ''
+  const normalized = String(value).trim()
+  return normalized
+}
+
+function pickMetricName(row: Record<string, unknown>, type: UmamiMetricType): string {
+  const candidates = [
+    row.name,
+    row.x,
+    row[type],
+    row.path,
+    row.url,
+    row.referrer,
+    row.channel,
+    row.country,
+    row.region,
+    row.city,
+    row.browser,
+    row.os,
+    row.device,
+    row.event,
+    row.hostname,
+    row.label,
+    row.value,
+  ]
+
+  for (const candidate of candidates) {
+    const label = normalizeMetricName(candidate)
+    if (label) return label
+  }
+
+  return ''
+}
+
+function hasExpandedMetricFields(row: Record<string, unknown>): boolean {
+  return ['pageviews', 'visitors', 'visits', 'bounces', 'totaltime']
+    .some((fieldName) => Object.prototype.hasOwnProperty.call(row, fieldName))
+}
+
+function normalizeMetricRow(row: Record<string, unknown>, type: UmamiMetricType): UmamiMetricRow {
+  const name = pickMetricName(row, type)
+  const fallbackTotal = asNumber(row.y)
+
+  if (!hasExpandedMetricFields(row)) {
+    const total = fallbackTotal
+    return {
+      name,
+      pageviews: PAGEVIEW_STYLE_METRIC_TYPES.has(type) ? total : 0,
+      visitors: total,
+      visits: total,
+      bounces: 0,
+      totaltime: 0,
+    }
+  }
+
+  const pageviews = asNumber(row.pageviews)
+  const visitors = asNumber(row.visitors)
+  const visits = asNumber(row.visits)
+
   return {
-    name: String(row.name || ''),
-    pageviews: asNumber(row.pageviews),
-    visitors: asNumber(row.visitors),
-    visits: asNumber(row.visits),
+    name,
+    pageviews: pageviews || (PAGEVIEW_STYLE_METRIC_TYPES.has(type) ? fallbackTotal : 0),
+    visitors: visitors || fallbackTotal,
+    visits: visits || fallbackTotal,
     bounces: asNumber(row.bounces),
     totaltime: asNumber(row.totaltime),
   }
+}
+
+function getErrorStatus(error: unknown): number {
+  return Number((error as { statusCode?: number; status?: number })?.statusCode || (error as { status?: number })?.status || 0)
+}
+
+function shouldFallbackToBasicMetrics(error: unknown): boolean {
+  const status = getErrorStatus(error)
+  return status === 400 || status === 404 || status === 405 || status === 422
 }
 
 function readCachedValue<T>(cacheKey: string, map: Map<string, T>): T | null {
@@ -129,6 +220,7 @@ export function getUmamiPublicConfig(): UmamiPublicConfig {
   return {
     baseUrl: normalizeBaseUrl(rawUmami.baseUrl || 'https://umami.tungchiahui.cn'),
     shareId: String(rawUmami.shareId || 'PuRYIqggKwmqEx7e').trim(),
+    websiteId: String(rawUmami.websiteId || '183eae08-767c-4a1f-9e75-1b4081a2dda4').trim(),
     startAt: typeof startAtValue === 'string' || typeof startAtValue === 'number'
       ? startAtValue
       : '2024-01-01T00:00:00.000Z',
@@ -138,7 +230,7 @@ export function getUmamiPublicConfig(): UmamiPublicConfig {
 
 export function hasUmamiPublicConfig(): boolean {
   const config = getUmamiPublicConfig()
-  return Boolean(config.baseUrl && config.shareId)
+  return Boolean(config.baseUrl && config.shareId && config.websiteId)
 }
 
 export function getUmamiShareFrameUrl(): string {
@@ -202,7 +294,7 @@ async function umamiApiFetch<T>(
       },
     })
   } catch (error: unknown) {
-    const status = Number((error as { statusCode?: number; status?: number })?.statusCode || (error as { status?: number })?.status || 0)
+    const status = getErrorStatus(error)
     if (status === 401 || status === 403) {
       const refreshedToken = await getShareToken(true)
       return await ofetch<T>(endpoint, {
@@ -226,13 +318,14 @@ export function clearUmamiClientCache() {
 }
 
 export async function fetchUmamiStats(range: UmamiRange): Promise<UmamiStatsResponse> {
-  const shareToken = await getShareToken()
-  const cacheKey = `${shareToken.websiteId}|stats|${range.startAt}|${range.endAt}`
+  const config = getUmamiPublicConfig()
+  await getShareToken()
+  const cacheKey = `${config.websiteId}|stats|${range.startAt}|${range.endAt}`
   const cachedStats = readCachedValue(cacheKey, statsCache)
   if (cachedStats) return cachedStats
 
   const stats = await umamiApiFetch<UmamiStatsResponse>(
-    `/websites/${shareToken.websiteId}/stats`,
+    `/websites/${config.websiteId}/stats`,
     {
       startAt: range.startAt,
       endAt: range.endAt,
@@ -244,26 +337,48 @@ export async function fetchUmamiStats(range: UmamiRange): Promise<UmamiStatsResp
 }
 
 export async function fetchUmamiExpandedMetrics(
-  type: string,
+  type: UmamiMetricType,
   range: UmamiRange,
   extraQuery: Record<string, string | number | undefined> = {},
 ): Promise<UmamiMetricRow[]> {
-  const shareToken = await getShareToken()
-  const cacheKey = `${shareToken.websiteId}|expanded|${type}|${range.startAt}|${range.endAt}|${JSON.stringify(extraQuery)}`
+  const config = getUmamiPublicConfig()
+  await getShareToken()
+  const cacheKey = `${config.websiteId}|expanded|${type}|${range.startAt}|${range.endAt}|${JSON.stringify(extraQuery)}`
   const cachedRows = readCachedValue(cacheKey, metricsCache)
   if (cachedRows) return cachedRows
 
-  const rows = await umamiApiFetch<unknown[]>(
-    `/websites/${shareToken.websiteId}/metrics/expanded`,
-    {
-      type,
-      startAt: range.startAt,
-      endAt: range.endAt,
-      ...extraQuery,
-    },
-  )
+  const query = {
+    type,
+    startAt: range.startAt,
+    endAt: range.endAt,
+    ...extraQuery,
+  }
 
-  const normalizedRows = (rows || []).map((row) => normalizeMetricRow(isObjectRecord(row) ? row : {}))
+  let expandedRows: unknown[] = []
+  try {
+    expandedRows = await umamiApiFetch<unknown[]>(
+      `/websites/${config.websiteId}/metrics/expanded`,
+      query,
+    )
+  } catch (error: unknown) {
+    if (!shouldFallbackToBasicMetrics(error)) {
+      throw error
+    }
+  }
+
+  let normalizedRows = (Array.isArray(expandedRows) ? expandedRows : [])
+    .map((row) => normalizeMetricRow(isObjectRecord(row) ? row : {}, type))
+
+  if (!normalizedRows.length) {
+    const basicRows = await umamiApiFetch<unknown[]>(
+      `/websites/${config.websiteId}/metrics`,
+      query,
+    )
+
+    normalizedRows = (Array.isArray(basicRows) ? basicRows : [])
+      .map((row) => normalizeMetricRow(isObjectRecord(row) ? row : {}, type))
+  }
+
   saveCachedValue(cacheKey, normalizedRows, metricsCache)
   return normalizedRows
 }

@@ -40,8 +40,51 @@ interface OverviewResponse {
   }
 }
 
+interface OverviewSection {
+  title: string
+  rows: UmamiMetricRow[]
+  value: (row: UmamiMetricRow) => string
+  label: (row: UmamiMetricRow) => string
+}
+
 const pageDescription = '该页面聚合 Umami 共享统计数据并展示分析看板，支持实时刷新与明细排行查看。'
 const topLimit = 12
+const channelLabelMap: Record<string, string> = {
+  direct: '直接访问',
+  organic: '自然搜索',
+  organicsearch: '自然搜索',
+  paid: '付费流量',
+  paidsearch: '付费搜索',
+  paidsocial: '付费社交',
+  social: '社交流量',
+  email: '邮件',
+  display: '展示广告',
+  affiliate: '联盟推广',
+  referral: '外部引荐',
+  audio: '音频渠道',
+  video: '视频渠道',
+  sms: '短信渠道',
+  push: '推送渠道',
+  unknown: '未知渠道',
+}
+const searchReferrerHints = ['google.', 'bing.', 'baidu.', 'sogou.', 'so.com', 'yahoo.', 'duckduckgo.', 'yandex.']
+const socialReferrerHints = [
+  't.co',
+  'twitter.com',
+  'x.com',
+  'facebook.com',
+  'instagram.com',
+  'linkedin.com',
+  'reddit.com',
+  'discord.com',
+  'youtube.com',
+  'bilibili.com',
+  'weibo.com',
+  'xiaohongshu.com',
+  'douyin.com',
+  'tiktok.com',
+  'weixin.',
+]
 
 useHead({
   title: '数据统计分析',
@@ -74,6 +117,81 @@ function formatDuration(seconds: number | undefined) {
   if (hours > 0) return `${hours}时 ${minutes}分 ${remainSeconds}秒`
   if (minutes > 0) return `${minutes}分 ${remainSeconds}秒`
   return `${remainSeconds}秒`
+}
+
+function normalizeLabel(value: string | undefined) {
+  return String(value || '').trim()
+}
+
+function normalizeChannelKey(value: string | undefined) {
+  return normalizeLabel(value).replace(/[\s_-]+/g, '').toLowerCase()
+}
+
+function normalizeReferrerHost(value: string | undefined) {
+  const raw = normalizeLabel(value).toLowerCase()
+  if (!raw) return ''
+
+  const candidate = raw.includes('://') ? raw : `https://${raw}`
+  try {
+    return new URL(candidate).hostname.replace(/^www\./, '')
+  } catch {
+    return raw
+      .replace(/^https?:\/\//, '')
+      .split('/')[0] || ''
+      .replace(/^www\./, '')
+  }
+}
+
+function getFallbackLabel(type: OverviewSection['title']) {
+  if (type === '来源 Referrer' || type === '访问渠道') return '直接访问'
+  if (type === '国家 / 地区') return '未知国家/地区'
+  if (type === '省份 / 州') return '未知省份/州'
+  if (type === '城市') return '未知城市'
+  if (type === '浏览器') return '未知浏览器'
+  if (type === '操作系统') return '未知系统'
+  if (type === '设备类型') return '未知设备'
+  if (type === '自定义事件') return '未命名事件'
+  return '未知'
+}
+
+function resolveChannelLabel(name: string | undefined): string {
+  const key = normalizeChannelKey(name)
+  if (!key) return channelLabelMap.direct ?? getFallbackLabel('访问渠道')
+  return channelLabelMap[key] ?? normalizeLabel(name) ?? getFallbackLabel('访问渠道')
+}
+
+function inferChannelFromReferrer(name: string | undefined): string {
+  const host = normalizeReferrerHost(name)
+  if (!host) return 'direct'
+  if (searchReferrerHints.some((hint) => host.includes(hint))) return 'organicSearch'
+  if (socialReferrerHints.some((hint) => host.includes(hint))) return 'social'
+  return 'referral'
+}
+
+function buildChannelFallback(referrers: UmamiMetricRow[]): UmamiMetricRow[] {
+  const buckets = new Map<string, UmamiMetricRow>()
+
+  for (const row of referrers) {
+    const key = inferChannelFromReferrer(row.name)
+    const current = buckets.get(key) || {
+      name: key,
+      pageviews: 0,
+      visitors: 0,
+      visits: 0,
+      bounces: 0,
+      totaltime: 0,
+    }
+
+    current.pageviews += row.pageviews
+    current.visitors += row.visitors
+    current.visits += row.visits
+    current.bounces += row.bounces
+    current.totaltime += row.totaltime
+
+    buckets.set(key, current)
+  }
+
+  return Array.from(buckets.values()).sort((left, right) => right.visits - left.visits)
 }
 
 const isUmamiConfigured = computed(() => hasUmamiPublicConfig())
@@ -120,6 +238,9 @@ async function loadOverviewData(): Promise<OverviewResponse | null> {
 
   const visits = Math.max(summary.visits || 0, 1)
   const bounces = Math.min(summary.bounces || 0, visits)
+  const normalizedChannels = channels.some((row) => normalizeLabel(row.name))
+    ? channels
+    : buildChannelFallback(referrers)
 
   return {
     summary: {
@@ -131,7 +252,7 @@ async function loadOverviewData(): Promise<OverviewResponse | null> {
     top: {
       paths: paths.slice(0, topLimit),
       referrers: referrers.slice(0, topLimit),
-      channels: channels.slice(0, topLimit),
+      channels: normalizedChannels.slice(0, topLimit),
       countries: countries.slice(0, topLimit),
       regions: regions.slice(0, topLimit),
       cities: cities.slice(0, topLimit),
@@ -177,58 +298,70 @@ const sections = computed(() => {
   const top = data.value?.top
   if (!top) return []
 
-  return [
+  const result: OverviewSection[] = [
     {
       title: '热门页面',
       rows: top.paths,
       value: (row: UmamiMetricRow) => `${formatNumber(row.pageviews)} PV / ${formatNumber(row.visits)} 次访问`,
+      label: (row: UmamiMetricRow) => normalizeLabel(row.name) || '/',
     },
     {
       title: '来源 Referrer',
       rows: top.referrers,
       value: (row: UmamiMetricRow) => `${formatNumber(row.visits)} 次访问`,
+      label: (row: UmamiMetricRow) => normalizeLabel(row.name) || getFallbackLabel('来源 Referrer'),
     },
     {
       title: '访问渠道',
       rows: top.channels,
       value: (row: UmamiMetricRow) => `${formatNumber(row.visits)} 次访问`,
+      label: (row: UmamiMetricRow) => resolveChannelLabel(row.name),
     },
     {
       title: '国家 / 地区',
       rows: top.countries,
       value: (row: UmamiMetricRow) => `${formatNumber(row.visitors)} 位访客`,
+      label: (row: UmamiMetricRow) => normalizeLabel(row.name) || getFallbackLabel('国家 / 地区'),
     },
     {
       title: '省份 / 州',
       rows: top.regions,
       value: (row: UmamiMetricRow) => `${formatNumber(row.visitors)} 位访客`,
+      label: (row: UmamiMetricRow) => normalizeLabel(row.name) || getFallbackLabel('省份 / 州'),
     },
     {
       title: '城市',
       rows: top.cities,
       value: (row: UmamiMetricRow) => `${formatNumber(row.visitors)} 位访客`,
+      label: (row: UmamiMetricRow) => normalizeLabel(row.name) || getFallbackLabel('城市'),
     },
     {
       title: '浏览器',
       rows: top.browsers,
       value: (row: UmamiMetricRow) => `${formatNumber(row.visits)} 次访问`,
+      label: (row: UmamiMetricRow) => normalizeLabel(row.name) || getFallbackLabel('浏览器'),
     },
     {
       title: '操作系统',
       rows: top.os,
       value: (row: UmamiMetricRow) => `${formatNumber(row.visits)} 次访问`,
+      label: (row: UmamiMetricRow) => normalizeLabel(row.name) || getFallbackLabel('操作系统'),
     },
     {
       title: '设备类型',
       rows: top.devices,
       value: (row: UmamiMetricRow) => `${formatNumber(row.visits)} 次访问`,
+      label: (row: UmamiMetricRow) => normalizeLabel(row.name) || getFallbackLabel('设备类型'),
     },
     {
       title: '自定义事件',
       rows: top.events,
       value: (row: UmamiMetricRow) => `${formatNumber(row.pageviews)} 次触发`,
+      label: (row: UmamiMetricRow) => normalizeLabel(row.name) || getFallbackLabel('自定义事件'),
     },
   ]
+
+  return result
 })
 </script>
 
@@ -248,7 +381,7 @@ const sections = computed(() => {
     </BasePanel>
 
     <BasePanel v-if="!isUmamiConfigured" tone="muted" class="analytics-notice">
-      <p>尚未配置 Umami 共享参数，请在 `runtimeConfig.public.umami` 中设置 `baseUrl` 与 `shareId`。</p>
+      <p>尚未配置 Umami 参数，请在 `runtimeConfig.public.umami` 中设置 `baseUrl`、`websiteId` 与 `shareId`。</p>
     </BasePanel>
 
     <BasePanel v-else-if="error" tone="muted" class="analytics-notice">
@@ -272,7 +405,7 @@ const sections = computed(() => {
         <ol v-if="section.rows.length" class="analytics-list">
           <li v-for="(row, index) in section.rows" :key="`${section.title}-${row.name}-${index}`" class="analytics-list__item">
             <span class="analytics-list__rank">{{ index + 1 }}</span>
-            <span class="analytics-list__name">{{ row.name || '直接访问' }}</span>
+            <span class="analytics-list__name">{{ section.label(row) }}</span>
             <span class="analytics-list__value">{{ section.value(row) }}</span>
           </li>
         </ol>
