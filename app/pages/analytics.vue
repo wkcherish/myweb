@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import BasePanel from '~/components/ui/BasePanel.vue'
 import BaseTag from '~/components/ui/BaseTag.vue'
@@ -40,7 +40,7 @@ interface OverviewResponse {
   }
 }
 
-const pageDescription = '该页面参考 tungchiahui.github.io 的实现方式，基于 Umami Share API 聚合统计并展示分析看板。'
+const pageDescription = '该页面聚合 Umami 共享统计数据并展示分析看板，支持实时刷新与明细排行查看。'
 const topLimit = 12
 
 useHead({
@@ -78,6 +78,13 @@ function formatDuration(seconds: number | undefined) {
 
 const isUmamiConfigured = computed(() => hasUmamiPublicConfig())
 const umamiShareFrameUrl = computed(() => getUmamiShareFrameUrl())
+const shouldRenderShareFrame = ref(false)
+
+onMounted(() => {
+  requestAnimationFrame(() => {
+    shouldRenderShareFrame.value = true
+  })
+})
 
 async function loadOverviewData(): Promise<OverviewResponse | null> {
   if (!isUmamiConfigured.value) {
@@ -136,7 +143,7 @@ async function loadOverviewData(): Promise<OverviewResponse | null> {
   }
 }
 
-const { data, pending, error, refresh } = await useAsyncData(
+const { data, pending, error, refresh } = await useLazyAsyncData(
   'analytics-overview',
   () => loadOverviewData(),
   {
@@ -273,7 +280,7 @@ const sections = computed(() => {
       </BasePanel>
     </section>
 
-    <BasePanel v-if="umamiShareFrameUrl" class="analytics-frame-wrap" :padded="false">
+    <BasePanel v-if="umamiShareFrameUrl && shouldRenderShareFrame" class="analytics-frame-wrap" :padded="false">
       <iframe
         class="analytics-frame"
         :src="umamiShareFrameUrl"

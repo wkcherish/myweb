@@ -45,6 +45,7 @@ const SHARE_TOKEN_HEADER = 'x-umami-share-token'
 const CACHE_TTL_MS = 60 * 1000
 
 const shareTokenCache = new Map<string, UmamiShareToken>()
+const shareTokenRequestCache = new Map<string, Promise<UmamiShareToken>>()
 const statsCache = new Map<string, UmamiStatsResponse>()
 const metricsCache = new Map<string, UmamiMetricRow[]>()
 const cacheTimeStore = new Map<string, number>()
@@ -127,7 +128,7 @@ export function getUmamiPublicConfig(): UmamiPublicConfig {
 
   return {
     baseUrl: normalizeBaseUrl(rawUmami.baseUrl || 'https://umami.tungchiahui.cn'),
-    shareId: String(rawUmami.shareId || 'rCG6EZoHmlCmNnWn').trim(),
+    shareId: String(rawUmami.shareId || 'PuRYIqggKwmqEx7e').trim(),
     startAt: typeof startAtValue === 'string' || typeof startAtValue === 'number'
       ? startAtValue
       : '2024-01-01T00:00:00.000Z',
@@ -165,11 +166,24 @@ async function getShareToken(forceRefresh = false): Promise<UmamiShareToken> {
   if (!forceRefresh) {
     const cachedToken = shareTokenCache.get(cacheKey)
     if (cachedToken) return cachedToken
+
+    const pendingRequest = shareTokenRequestCache.get(cacheKey)
+    if (pendingRequest) return pendingRequest
   }
 
-  const token = await ofetch<UmamiShareToken>(`${config.baseUrl}/api/share/${config.shareId}`)
-  shareTokenCache.set(cacheKey, token)
-  return token
+  shareTokenRequestCache.delete(cacheKey)
+
+  const tokenRequest = ofetch<UmamiShareToken>(`${config.baseUrl}/api/share/${config.shareId}`)
+    .then((token) => {
+      shareTokenCache.set(cacheKey, token)
+      return token
+    })
+    .finally(() => {
+      shareTokenRequestCache.delete(cacheKey)
+    })
+
+  shareTokenRequestCache.set(cacheKey, tokenRequest)
+  return tokenRequest
 }
 
 async function umamiApiFetch<T>(
@@ -205,6 +219,7 @@ async function umamiApiFetch<T>(
 
 export function clearUmamiClientCache() {
   shareTokenCache.clear()
+  shareTokenRequestCache.clear()
   statsCache.clear()
   metricsCache.clear()
   cacheTimeStore.clear()
