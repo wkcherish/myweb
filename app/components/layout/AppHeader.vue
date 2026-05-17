@@ -3,6 +3,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { ChevronDown, Menu, MoonStar, SunMedium } from 'lucide-vue-next'
 
 import { siteConfig, type SiteNavItem } from '~/config/site'
+import { useAiChat } from '~/composables/useAiChat'
 import { useThemeMode } from '~/composables/useThemeMode'
 
 import IconButton from '../ui/IconButton.vue'
@@ -15,6 +16,7 @@ const moreMenuPanelRef = ref<HTMLElement | null>(null)
 const route = useRoute()
 
 const { mode, cycleMode, syncFromStorage } = useThemeMode()
+const { close: closeAiChat } = useAiChat()
 const primaryNavItems = computed(() => siteConfig.nav)
 const moreNavItems = computed(() => siteConfig.moreNav ?? [])
 
@@ -30,7 +32,14 @@ const nextModeLabel = computed(() => (mode.value === 'light' ? '深色模式' : 
 const themeTooltip = computed(() => `切换到${nextModeLabel.value}`)
 
 function toggleMobileNav() {
+  closeAiChat()
   isMobileNavOpen.value = !isMobileNavOpen.value
+}
+
+function handleBrandClick() {
+  closeAiChat()
+  isMobileNavOpen.value = false
+  closeMoreMenu()
 }
 
 function closeMoreMenu() {
@@ -94,7 +103,7 @@ onBeforeUnmount(() => {
 <template>
   <header class="app-header">
     <div class="app-header__inner">
-      <NuxtLink class="app-header__brand" to="/">
+      <NuxtLink class="app-header__brand" to="/" @click="handleBrandClick">
         <img :src="siteConfig.iconPath" alt="" aria-hidden="true" class="app-header__brand-icon" />
         <span>{{ siteConfig.name }}</span>
       </NuxtLink>

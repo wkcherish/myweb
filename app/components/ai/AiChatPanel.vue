@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { MessageSquare, Trash2, X } from 'lucide-vue-next'
 
 import { useAiChat } from '~/composables/useAiChat'
@@ -35,6 +35,7 @@ const {
   setInput,
 } = useAiChat()
 
+const route = useRoute()
 const panelRef = ref<HTMLElement | null>(null)
 const headerRef = ref<HTMLElement | null>(null)
 const composerRef = ref<InstanceType<typeof AiComposer> | null>(null)
@@ -156,6 +157,13 @@ function saveState() {
 }
 
 function clamp(v: number, min: number, max: number) { return Math.min(Math.max(v, min), max) }
+
+watch(
+  () => route.fullPath,
+  () => {
+    close()
+  },
+)
 
 onMounted(() => {
   loadState()

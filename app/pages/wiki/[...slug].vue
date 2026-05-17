@@ -321,7 +321,28 @@ const resolvedPath = computed(() => page.value?.path || path)
   }
 
   .wiki-page-switcher {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .wiki-page-switcher__link {
+    min-height: 58px;
+    padding: 10px 11px;
+    gap: 8px;
+  }
+
+  .wiki-page-switcher__icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+  }
+
+  .wiki-page-switcher__label {
+    font-size: 0.72rem;
+  }
+
+  .wiki-page-switcher__title {
+    font-size: 0.9rem;
   }
 }
 </style>

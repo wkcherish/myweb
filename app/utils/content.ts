@@ -28,7 +28,7 @@ const dateFormatter = new Intl.DateTimeFormat('zh-CN', {
   day: '2-digit',
 })
 
-const fileDatePattern = /(?:^|\/)(\d{4}-\d{2}-\d{2})-[^/]+$/
+const pathDatePattern = /(?:^|\/)(\d{4}-\d{2}-\d{2})(?:-[^/]*)?(?:\/|$)/
 
 export const readContentString = (entry: ContentEntry, key: keyof ContentEntry) => {
   const directValue = entry[key]
@@ -71,7 +71,7 @@ export const getContentDate = (entry: ContentEntry, keys: (keyof ContentEntry)[]
 }
 
 export const getContentDateFromPath = (path?: string) => {
-  const match = path?.match(fileDatePattern)
+  const match = path?.match(pathDatePattern)
 
   return match?.[1] || ''
 }

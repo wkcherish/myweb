@@ -81,7 +81,7 @@ const formatDate = (date: Date | null) =>
       }).format(date)
     : '最近'
 
-const normalizeEntry = (entry: ContentEntry): ActivityItem | null => {
+const normalizeEntry = (entry: ContentEntry, collection: CollectionName): ActivityItem | null => {
   const path = entry.path || ''
 
   if (path.endsWith('/README') || path.endsWith('/readme')) {
@@ -90,7 +90,7 @@ const normalizeEntry = (entry: ContentEntry): ActivityItem | null => {
 
   const date = parseEntryDate(entry)
 
-  if (date && date < oneMonthAgo) {
+  if (collection !== 'wiki' && date && date < oneMonthAgo) {
     return null
   }
 
@@ -108,7 +108,7 @@ const fetchCollection = async (collection: CollectionName) => {
   const entries = (await queryCollection(collection).all()) as ContentEntry[]
 
   return entries
-    .map(normalizeEntry)
+    .map((entry) => normalizeEntry(entry, collection))
     .filter((entry): entry is ActivityItem => Boolean(entry))
     .sort((a, b) => b.sortTime - a.sortTime)
     .slice(0, 6)
