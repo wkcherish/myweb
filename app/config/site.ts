@@ -82,12 +82,12 @@ export const siteConfig = {
     { label: '关于', to: '/about' },
   ] as SiteNavItem[],
   moreNav: [
-    { label: '数据统计分析', to: '/analytics', placeholder: true },
+    { label: '数据统计分析', to: '/analytics' },
     { label: '个人简历', to: '/resume', placeholder: true },
   ] as SiteNavItem[],
   footerNav: [
     { label: '关于本站', to: '/about', icon: 'about' },
-    { label: '数据统计', to: '/analytics', icon: 'stats', placeholder: true },
+    { label: '数据统计', to: '/analytics', icon: 'stats' },
     { label: '博客', to: '/blog', icon: 'blog' },
     { label: 'Wiki', to: '/wiki', icon: 'wiki' },
     { label: '友情链接', to: '/links', icon: 'friends', placeholder: true },

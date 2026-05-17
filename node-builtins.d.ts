@@ -18,6 +18,12 @@ declare module 'node:path' {
   export function resolve(...paths: string[]): string
 }
 
+declare module 'node:process' {
+  export const env: Record<string, string | undefined>
+  export function cwd(): string
+}
+
 declare const process: {
   cwd(): string
+  env: Record<string, string | undefined>
 }
