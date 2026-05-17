@@ -21,6 +21,10 @@
   margin-top: 0;
 }
 
+.content-detail__body h1:first-child {
+  display: none;
+}
+
 .content-detail__body h1 {
   margin-bottom: 0.2rem;
   font-size: clamp(2.05rem, 4.6vw, 2.8rem);

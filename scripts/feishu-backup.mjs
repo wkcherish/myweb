@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { mkdir, readFile, stat, writeFile } from 'node:fs/promises'
-import { dirname, join, relative } from 'node:path'
+import { basename, dirname, extname, isAbsolute, join, relative, resolve } from 'node:path'
 
 const command = process.argv[2] || 'rewrite'
 const args = parseArgs(process.argv.slice(3))
@@ -9,9 +9,11 @@ const args = parseArgs(process.argv.slice(3))
 const options = {
   source: args.source || args.src || 'content/wiki',
   out: args.out || 'feishu-images/markdown',
-  manifest: args.manifest || 'feishu-images/manifest.json',
+  manifest: args.manifest || 'public/images/feishu/manifest.json',
   cloudMap: args.cloudMap || '',
   inPlace: Boolean(args.inPlace),
+  skipExisting: Boolean(args.skipExisting || args.skip),
+  files: normalizeArgList(args.file || args.files),
 }
 
 if (command !== 'rewrite') {
@@ -25,12 +27,23 @@ await rewriteMarkdown()
 async function rewriteMarkdown() {
   const manifest = JSON.parse(await readFile(options.manifest, 'utf8'))
   const cloudMap = options.cloudMap ? JSON.parse(await readFile(options.cloudMap, 'utf8')) : {}
-  const replacements = buildReplacements(manifest, cloudMap)
-  const markdownFiles = await listMarkdownFiles(options.source)
+  const markdownFiles = await listMarkdownFiles(options.source, options.files)
   let changedCount = 0
 
   for (const filePath of markdownFiles) {
+    const outputPath = options.inPlace
+      ? filePath
+      : join(options.out, relative(options.source, filePath))
+
+    if (options.skipExisting && !options.inPlace) {
+      try {
+        await stat(outputPath)
+        continue
+      } catch {}
+    }
+
     const original = await readFile(filePath, 'utf8')
+    const replacements = buildReplacements(manifest, cloudMap, filePath)
     let next = original
 
     for (const [from, to] of replacements) {
@@ -40,10 +53,6 @@ async function rewriteMarkdown() {
     if (next === original) {
       continue
     }
-
-    const outputPath = options.inPlace
-      ? filePath
-      : join(options.out, relative(options.source, filePath))
 
     await mkdir(dirname(outputPath), { recursive: true })
     await writeFile(outputPath, next)
@@ -55,16 +64,53 @@ async function rewriteMarkdown() {
   console.log(options.inPlace ? `写回目录：${options.source}` : `输出目录：${options.out}`)
 }
 
-function buildReplacements(manifest, cloudMap) {
-  return manifest.images
-    .filter((image) => image.originalUrl && image.publicPath)
-    .map((image) => {
-      const cloudUrl = cloudMap[image.publicPath] || cloudMap[image.filename] || cloudMap[image.originalUrl]
-      return [image.originalUrl, cloudUrl || image.publicPath]
-    })
+function buildReplacements(manifest, cloudMap, markdownPath) {
+  const markdownDir = dirname(markdownPath)
+  const pairs = []
+
+  for (const image of manifest.images) {
+    if (!image.localFile) {
+      continue
+    }
+
+    const cloudUrl = cloudMap[image.publicPath] || cloudMap[image.filename] || cloudMap[image.originalUrl]
+    const target = cloudUrl || normalizePath(relative(markdownDir, image.localFile))
+
+    if (image.originalUrl) {
+      pairs.push([image.originalUrl, target])
+    }
+
+    if (image.publicPath && image.publicPath !== target) {
+      pairs.push([image.publicPath, target])
+    }
+  }
+
+  return pairs
 }
 
-async function listMarkdownFiles(root) {
+async function listMarkdownFiles(root, selectedFiles = []) {
+  if (selectedFiles.length > 0) {
+    const files = selectedFiles.map((file) => resolveFilePath(root, file))
+    const output = []
+
+    for (const file of files) {
+      let currentStat
+      try {
+        currentStat = await stat(file)
+      } catch {
+        throw new Error(`文件不存在：${file}`)
+      }
+
+      if (!currentStat.isFile() || !file.endsWith('.md')) {
+        throw new Error(`只能选择 Markdown 文件：${file}`)
+      }
+
+      output.push(file)
+    }
+
+    return Array.from(new Set(output)).sort()
+  }
+
   const output = []
 
   async function walk(current) {
@@ -88,6 +134,31 @@ async function listMarkdownFiles(root) {
 
   await walk(root)
   return output.sort()
+}
+
+function resolveFilePath(root, file) {
+  if (isAbsolute(file)) {
+    return file
+  }
+
+  const fromCwd = resolve(file)
+  if (file.startsWith(`${root}/`) || file === root) {
+    return fromCwd
+  }
+
+  return resolve(root, file)
+}
+
+function normalizeArgList(value) {
+  if (value === undefined || value === false) {
+    return []
+  }
+
+  return Array.isArray(value) ? value.flatMap(normalizeArgList) : String(value).split(',').filter(Boolean)
+}
+
+function normalizePath(path) {
+  return path.replaceAll('\\', '/')
 }
 
 function parseArgs(argv) {

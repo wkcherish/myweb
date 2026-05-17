@@ -57,7 +57,6 @@ onBeforeUnmount(() => {
         :style="{ '--toc-indent': `${Math.max((link.depth || 2) - 2, 0) * 14}px` }"
       >
         <a :href="`#${link.id}`" :class="{ 'is-active': activeId === link.id }">
-          <span class="wiki-side-toc__number">{{ String(Math.max((link.depth || 2) - 1, 1)).padStart(2, '0') }}</span>
           <span class="wiki-side-toc__text">{{ link.text }}</span>
         </a>
       </li>
@@ -118,10 +117,7 @@ onBeforeUnmount(() => {
 }
 
 .wiki-side-toc__list a {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  gap: var(--space-8);
+  display: block;
   padding: 8px 10px 8px calc(10px + var(--toc-indent));
   border: 1px solid transparent;
   border-radius: var(--radius-8);
@@ -142,13 +138,6 @@ onBeforeUnmount(() => {
 .wiki-side-toc__text {
   min-width: 0;
   overflow-wrap: anywhere;
-}
-
-.wiki-side-toc__number {
-  color: var(--color-primary);
-  font-size: 0.82rem;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
 }
 
 @media (max-width: 980px) {

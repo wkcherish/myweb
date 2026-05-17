@@ -3,7 +3,7 @@
 import { createHash } from 'node:crypto'
 import { createWriteStream } from 'node:fs'
 import { mkdir, readFile, stat, writeFile } from 'node:fs/promises'
-import { basename, dirname, extname, join, relative } from 'node:path'
+import { basename, dirname, extname, isAbsolute, join, relative, resolve } from 'node:path'
 import { pipeline } from 'node:stream/promises'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
@@ -12,10 +12,11 @@ const execFileAsync = promisify(execFile)
 
 const defaultOptions = {
   source: 'content/wiki',
-  out: 'feishu-images',
-  publicPrefix: '/images/feishu',
+  out: 'public/images/feishu',
+  publicPrefix: '/images/feishu/assets',
   concurrency: 4,
   force: false,
+  skipExisting: false,
 }
 
 const imageMarkdownPattern = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g
@@ -30,19 +31,36 @@ const options = {
   publicPrefix: args.publicPrefix || defaultOptions.publicPrefix,
   concurrency: Number(args.concurrency || defaultOptions.concurrency),
   force: Boolean(args.force),
+  skipExisting: Boolean(args.skipExisting || args.skip),
+  files: normalizeArgList(args.file || args.files).concat(args._),
 }
 
 await main()
 
 async function main() {
   const startedAt = new Date()
-  const markdownFiles = await listMarkdownFiles(options.source)
+  const markdownFiles = await listMarkdownFiles(options.source, options.files)
+  const previousManifest = await readManifest(join(options.out, 'manifest.json'))
+  const previousByUrl = new Map(
+    previousManifest.images
+      .filter((image) => image.originalUrl)
+      .map((image) => [image.originalUrl, image]),
+  )
   const imageRecords = []
 
   for (const filePath of markdownFiles) {
     const markdown = await readFile(filePath, 'utf8')
     const doc = getDocumentInfo(filePath, markdown, options.source)
     const images = extractImages(markdown)
+    const remoteUrls = images.filter((image) => isRemoteImage(image.url)).map((image) => image.url)
+
+    if (options.skipExisting && remoteUrls.length > 0 &&
+        remoteUrls.every((url) => {
+          const prev = previousByUrl.get(url)
+          return prev && (prev.status === 'downloaded' || prev.status === 'exists')
+        })) {
+      continue
+    }
 
     images.forEach((image, index) => {
       if (!isRemoteImage(image.url)) {
@@ -51,10 +69,13 @@ async function main() {
 
       const ext = getExtensionFromUrl(image.url)
       const filename = `${doc.createdAt}-${doc.id}-${String(index + 1).padStart(3, '0')}${ext}`
-      const localFile = join(options.out, 'assets', filename)
-      const publicPath = `${options.publicPrefix}/${filename}`
+      const previous = previousByUrl.get(image.url)
+      const localFile = previous?.localFile || join(options.out, 'assets', filename)
+      const recordFilename = previous?.filename || filename
+      const publicPath = previous?.publicPath || `${options.publicPrefix}/${recordFilename}`
 
       imageRecords.push({
+        ...previous,
         docTitle: doc.title,
         docId: doc.id,
         docCreatedAt: doc.createdAt,
@@ -64,7 +85,7 @@ async function main() {
         originalUrl: image.url,
         localFile: normalizePath(localFile),
         publicPath,
-        filename,
+        filename: recordFilename,
       })
     })
   }
@@ -72,13 +93,16 @@ async function main() {
   await mkdir(join(options.out, 'assets'), { recursive: true })
   await downloadAll(imageRecords)
 
+  const mergedImages = mergeManifestImages(previousManifest.images, imageRecords)
+
   const manifest = {
     generatedAt: startedAt.toISOString(),
     source: normalizePath(options.source),
+    files: options.files.map(normalizePath),
     outputDir: normalizePath(options.out),
     publicPrefix: options.publicPrefix,
-    count: imageRecords.length,
-    images: imageRecords,
+    count: mergedImages.length,
+    images: mergedImages,
   }
 
   const manifestPath = join(options.out, 'manifest.json')
@@ -91,6 +115,22 @@ async function main() {
   console.log(`图片目录：${join(options.out, 'assets')}`)
   console.log(`图片清单：${manifestPath}`)
   console.log(zipPath ? `压缩包：${zipPath}` : '压缩包：未生成，当前系统没有 zip 命令')
+}
+
+function mergeManifestImages(previousImages, currentImages) {
+  const merged = new Map()
+
+  for (const image of previousImages) {
+    if (image.originalUrl) {
+      merged.set(image.originalUrl, image)
+    }
+  }
+
+  for (const image of currentImages) {
+    merged.set(image.originalUrl, image)
+  }
+
+  return Array.from(merged.values())
 }
 
 async function downloadAll(records) {
@@ -134,6 +174,18 @@ async function downloadImage(record) {
   }
 }
 
+async function readManifest(path) {
+  try {
+    const manifest = JSON.parse(await readFile(path, 'utf8'))
+    return {
+      ...manifest,
+      images: Array.isArray(manifest.images) ? manifest.images : [],
+    }
+  } catch {
+    return { images: [] }
+  }
+}
+
 async function createZip(outDir, startedAt) {
   const stamp = formatStamp(startedAt)
   const zipPath = join(outDir, `feishu-images-${stamp}.zip`)
@@ -146,7 +198,29 @@ async function createZip(outDir, startedAt) {
   }
 }
 
-async function listMarkdownFiles(root) {
+async function listMarkdownFiles(root, selectedFiles = []) {
+  if (selectedFiles.length > 0) {
+    const files = selectedFiles.map((file) => resolveFilePath(root, file))
+    const output = []
+
+    for (const file of files) {
+      let currentStat
+      try {
+        currentStat = await stat(file)
+      } catch {
+        throw new Error(`文件不存在：${file}`)
+      }
+
+      if (!currentStat.isFile() || !file.endsWith('.md')) {
+        throw new Error(`只能选择 Markdown 文件：${file}`)
+      }
+
+      output.push(file)
+    }
+
+    return Array.from(new Set(output)).sort()
+  }
+
   const output = []
 
   async function walk(current) {
@@ -170,6 +244,19 @@ async function listMarkdownFiles(root) {
 
   await walk(root)
   return output.sort()
+}
+
+function resolveFilePath(root, file) {
+  if (isAbsolute(file)) {
+    return file
+  }
+
+  const fromCwd = resolve(file)
+  if (file.startsWith(`${root}/`) || file === root) {
+    return fromCwd
+  }
+
+  return resolve(root, file)
 }
 
 function extractImages(markdown) {
@@ -287,11 +374,12 @@ function normalizePath(path) {
 }
 
 function parseArgs(argv) {
-  const parsed = {}
+  const parsed = { _: [] }
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index]
     if (!arg.startsWith('--')) {
+      parsed._.push(arg)
       continue
     }
 
@@ -299,16 +387,33 @@ function parseArgs(argv) {
     const next = argv[index + 1]
 
     if (inlineValue !== undefined) {
-      parsed[key] = inlineValue
+      addArgValue(parsed, key, inlineValue)
     } else if (next && !next.startsWith('--')) {
-      parsed[key] = next
+      addArgValue(parsed, key, next)
       index += 1
     } else {
-      parsed[key] = true
+      addArgValue(parsed, key, true)
     }
   }
 
   return parsed
+}
+
+function addArgValue(parsed, key, value) {
+  if (parsed[key] === undefined) {
+    parsed[key] = value
+    return
+  }
+
+  parsed[key] = normalizeArgList(parsed[key]).concat(value)
+}
+
+function normalizeArgList(value) {
+  if (value === undefined || value === false) {
+    return []
+  }
+
+  return Array.isArray(value) ? value.flatMap(normalizeArgList) : String(value).split(',').filter(Boolean)
 }
 
 async function exists(path) {
