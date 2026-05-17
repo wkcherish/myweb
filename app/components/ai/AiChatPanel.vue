@@ -248,15 +248,17 @@ onBeforeUnmount(() => {
   z-index: 33;
   display: grid;
   grid-template-rows: 48px auto auto 1fr auto;
-  border: 1px solid var(--color-border);
-  border-radius: 20px;
-  background: var(--color-surface);
+  border: 1px solid color-mix(in srgb, var(--color-border) 78%, transparent);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 96%, white 4%), var(--color-surface));
   box-shadow:
-    0 0 0 1px rgb(0 0 0 / 0.03),
-    0 2px 8px rgb(0 0 0 / 0.06),
-    0 16px 40px rgb(0 0 0 / 0.12);
+    0 0 0 1px rgb(255 255 255 / 0.5) inset,
+    0 16px 48px rgb(15 23 42 / 0.14),
+    0 3px 12px rgb(15 23 42 / 0.08);
   overflow: hidden;
   user-select: none;
+  backdrop-filter: blur(18px);
 }
 
 .ai-panel.is-resizing {
@@ -268,9 +270,10 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--space-16);
-  border-bottom: 1px solid var(--color-border);
-  background: var(--color-surface);
+  padding: 0 var(--space-12) 0 var(--space-16);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 92%, white 8%), color-mix(in srgb, var(--color-surface) 86%, transparent));
   cursor: grab;
   touch-action: none;
 }
@@ -282,8 +285,13 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: var(--space-8);
   color: var(--color-fg);
-  font-size: 0.88rem;
-  font-weight: 650;
+  font-size: 0.9rem;
+  font-weight: 720;
+  letter-spacing: 0;
+}
+
+.ai-panel__title svg {
+  color: var(--color-primary);
 }
 
 .ai-panel__actions {
@@ -295,17 +303,18 @@ onBeforeUnmount(() => {
 .ai-panel__actions button {
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border: 0;
-  border-radius: 8px;
+  border-radius: 10px;
   color: var(--color-text-weak);
-  transition: color 120ms, background 120ms;
+  transition: color 120ms, background 120ms, transform 120ms;
 }
 
 .ai-panel__actions button:hover {
   color: var(--color-fg);
-  background: color-mix(in srgb, var(--color-fg) 6%, transparent);
+  background: color-mix(in srgb, var(--color-fg) 7%, transparent);
+  transform: translateY(-1px);
 }
 
 .ai-panel__actions button:disabled {
@@ -317,9 +326,9 @@ onBeforeUnmount(() => {
 .ai-panel__error {
   margin: var(--space-8) var(--space-16) 0;
   padding: var(--space-8) var(--space-12);
-  border: 1px solid color-mix(in srgb, var(--color-warning) 30%, transparent);
-  border-radius: var(--radius-8);
-  background: color-mix(in srgb, var(--color-warning) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-warning) 26%, transparent);
+  border-radius: var(--radius-12);
+  background: color-mix(in srgb, var(--color-warning) 9%, var(--color-surface));
 }
 
 .ai-panel__error p {
@@ -358,6 +367,7 @@ onBeforeUnmount(() => {
     height: 100dvh !important;
     border-radius: 0;
     border: 0;
+    box-shadow: none;
   }
 
   .ai-panel__resize {

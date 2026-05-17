@@ -69,31 +69,42 @@ defineExpose({ focus })
 
 <style scoped>
 .composer {
-  padding: var(--space-12) var(--space-16);
-  border-top: 1px solid var(--color-border);
-  background: color-mix(in srgb, var(--color-fg) 1.5%, transparent);
+  padding: var(--space-12) var(--space-16) var(--space-16);
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 52%, transparent), var(--color-surface));
 }
 
 .composer__inner {
   display: flex;
   align-items: flex-end;
   gap: var(--space-8);
-  padding: 3px 3px 3px var(--space-16);
-  border: 1.5px solid var(--color-border);
-  border-radius: 28px;
-  background: var(--color-surface);
-  transition: border-color 180ms;
+  padding: 5px 5px 5px var(--space-16);
+  border: 1px solid color-mix(in srgb, var(--color-border) 84%, transparent);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--color-surface) 94%, transparent);
+  box-shadow:
+    0 8px 22px rgb(16 24 40 / 0.055),
+    inset 0 0 0 1px rgb(255 255 255 / 0.56);
+  transition:
+    border-color 180ms,
+    box-shadow 180ms,
+    background 180ms;
 }
 
 .composer__inner:focus-within {
-  border-color: var(--color-primary);
+  border-color: color-mix(in srgb, var(--color-primary) 58%, var(--color-border));
+  background: var(--color-surface);
+  box-shadow:
+    0 10px 30px color-mix(in srgb, var(--color-primary) 10%, transparent),
+    0 0 0 3px color-mix(in srgb, var(--color-primary) 10%, transparent);
 }
 
 .composer__input {
   flex: 1;
   min-height: 24px;
   max-height: 140px;
-  padding: 8px 0;
+  padding: 8px 0 7px;
   border: 0;
   background: transparent;
   color: var(--color-fg);
@@ -114,23 +125,28 @@ defineExpose({ focus })
 .composer__btn {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border: 0;
-  border-radius: 50%;
-  background: var(--color-border);
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--color-fg) 8%, transparent);
   color: var(--color-text-weak);
   flex-shrink: 0;
-  transition: background 160ms, color 160ms, transform 160ms;
+  transition:
+    background 160ms,
+    color 160ms,
+    transform 160ms,
+    box-shadow 160ms;
 }
 
 .composer__btn.is-active {
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 78%, var(--color-accent)));
   color: #fff;
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--color-primary) 24%, transparent);
 }
 
 .composer__btn.is-active:hover {
-  transform: scale(1.07);
+  transform: translateY(-1px);
 }
 
 .composer__btn.is-loading {
