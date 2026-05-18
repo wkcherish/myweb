@@ -23,7 +23,7 @@ export const musicConfig: MusicConfig = {
   provider: 'meting',
   server: 'tencent',
   type: 'playlist',
-  playlistId: '8490098388',
+  playlistId: '8806340381',
   api: 'https://api.injahow.cn/meting/?server=:server&type=:type&id=:id&r=:r',
   autoplay: false,
   fallbackTracks: [],

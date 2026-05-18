@@ -696,7 +696,7 @@ onBeforeUnmount(() => {
       </p>
 
       <p class="music-player__track">
-        {{ currentTrackTitle || '歌单：8490098388' }}
+        {{ currentTrackTitle || `歌单：${musicConfig.playlistId}` }}
       </p>
 
       <p v-if="trackWarningMessage" class="music-player__warning">
