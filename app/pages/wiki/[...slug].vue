@@ -110,6 +110,9 @@ const resolvedPath = computed(() => page.value?.path || path)
 
     <article class="content-detail">
       <WikiDocHeader :doc="page" :path="resolvedPath" />
+      <div v-if="hasToc" class="wiki-detail-layout__mobile-toc">
+        <WikiSideToc :links="tocLinks" />
+      </div>
       <ContentRenderer :value="page" class="content-detail__body" />
       <nav class="wiki-page-switcher" aria-label="章节切换">
         <NuxtLink
@@ -310,6 +313,10 @@ const resolvedPath = computed(() => page.value?.path || path)
   color: var(--color-text-weak);
 }
 
+.wiki-detail-layout__mobile-toc {
+  display: none;
+}
+
 @media (max-width: 980px) {
   .wiki-detail-layout {
     grid-template-columns: 1fr;
@@ -318,6 +325,10 @@ const resolvedPath = computed(() => page.value?.path || path)
   .wiki-detail-layout__doc,
   .wiki-detail-layout__toc {
     display: none;
+  }
+
+  .wiki-detail-layout__mobile-toc {
+    display: block;
   }
 
   .wiki-page-switcher {

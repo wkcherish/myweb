@@ -71,6 +71,7 @@ const defaultHomeBackgroundId =
 
 const rawNuxtVersion = packageJson.devDependencies.nuxt ?? '4'
 const installedNuxtVersion = rawNuxtVersion.replace(/^[^\d]*/, '')
+const customElementTags = new Set(['meting-js', 'hover', 'lable', 'firstchild', 'focus', 'after'])
 
 export default defineNuxtConfig({
   compatibilityDate: '2026-05-15',
@@ -238,7 +239,7 @@ export default defineNuxtConfig({
   },
   vue: {
     compilerOptions: {
-      isCustomElement: (tag) => tag === 'meting-js',
+      isCustomElement: (tag) => customElementTags.has(tag.toLowerCase()),
     },
   },
 })
