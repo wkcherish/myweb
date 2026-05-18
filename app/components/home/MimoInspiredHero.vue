@@ -491,9 +491,35 @@ onBeforeUnmount(() => {
     padding-top: var(--space-48);
   }
 
+  .mimo-hero__copy {
+    width: min(100%, 390px);
+  }
+
   .mimo-hero__title {
-    white-space: normal;
-    text-wrap: balance;
+    font-size: clamp(2rem, 8.8vw, 2.55rem);
+    white-space: nowrap;
+  }
+
+  .mimo-hero__desc {
+    width: min(292px, 100%);
+    margin-top: var(--space-16);
+    font-size: clamp(0.95rem, 4vw, 1.04rem);
+    line-height: 1.65;
+  }
+
+  .mimo-hero__actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: min(320px, 100%);
+    gap: 10px;
+    margin: var(--space-24) auto 0;
+  }
+
+  .mimo-hero__link {
+    min-width: 0;
+    min-height: 42px;
+    padding: 0 10px;
+    font-size: 0.96rem;
   }
 }
 
