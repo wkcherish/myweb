@@ -198,6 +198,17 @@ onBeforeUnmount(() => {
   pointer-events: none;
 }
 
+.mimo-hero::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 42%;
+  background: radial-gradient(ellipse at 50% 78%, rgba(255, 255, 255, 0.2), transparent 58%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
 .mimo-hero__cursor {
   position: fixed;
   left: 0;
@@ -488,38 +499,284 @@ onBeforeUnmount(() => {
 @media (max-width: 700px) {
   .mimo-hero {
     min-height: calc(100svh - 68px);
-    padding-top: var(--space-48);
+    place-items: end center;
+    padding: 0 18px clamp(108px, 18svh, 148px);
+    background-position: center;
+    animation: mobile-hero-breathe 9000ms ease-in-out infinite alternate;
+  }
+
+  .mimo-hero.has-background-image {
+    --home-bg-overlay: rgba(7, 12, 24, 0.18) !important;
+  }
+
+  .mimo-hero::before {
+    background:
+      linear-gradient(180deg, rgba(15, 23, 42, 0.18) 0%, rgba(15, 23, 42, 0) 34%),
+      linear-gradient(0deg, rgba(8, 13, 25, 0.62) 0%, rgba(8, 13, 25, 0.18) 42%, rgba(8, 13, 25, 0) 76%);
+  }
+
+  .mimo-hero::after {
+    height: 48%;
+    background:
+      radial-gradient(ellipse at 50% 64%, rgba(255, 255, 255, 0.18), transparent 42%),
+      linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.06));
+    opacity: 1;
+    animation: mobile-ambient-glow 6200ms ease-in-out infinite alternate;
   }
 
   .mimo-hero__copy {
-    width: min(100%, 390px);
+    width: min(100%, 360px);
+    transform: none;
+    animation: mobile-copy-rise 720ms cubic-bezier(0.2, 0.9, 0.24, 1) both;
   }
 
   .mimo-hero__title {
-    font-size: clamp(2rem, 8.8vw, 2.55rem);
+    color: #ffffff;
+    font-size: clamp(2.12rem, 9vw, 2.72rem);
+    font-weight: 900;
+    line-height: 0.96;
     white-space: nowrap;
+    text-shadow: 0 8px 28px rgba(0, 0, 0, 0.32);
+    animation: mobile-title-glow 4200ms ease-in-out infinite;
+  }
+
+  .mimo-hero__title-text {
+    position: relative;
+  }
+
+  .mimo-hero__title-text::after {
+    content: '';
+    position: absolute;
+    right: 4%;
+    bottom: -8px;
+    left: 4%;
+    height: 2px;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.72), transparent);
+    opacity: 0.72;
+    transform: scaleX(0);
+    transform-origin: center;
+    animation: mobile-title-line 760ms 240ms cubic-bezier(0.2, 0.9, 0.24, 1) forwards;
   }
 
   .mimo-hero__desc {
-    width: min(292px, 100%);
-    margin-top: var(--space-16);
-    font-size: clamp(0.95rem, 4vw, 1.04rem);
-    line-height: 1.65;
+    width: min(286px, 100%);
+    margin-top: 18px;
+    color: rgba(255, 255, 255, 0.84);
+    background: none;
+    font-size: clamp(0.93rem, 3.8vw, 1.02rem);
+    font-weight: 760;
+    line-height: 1.62;
+    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.36);
+    animation: none;
+    opacity: 0;
+    transform: translateY(8px);
+    animation: mobile-copy-fade 680ms 160ms cubic-bezier(0.2, 0.9, 0.24, 1) forwards;
+  }
+
+  .mimo-hero.has-background-image .mimo-hero__desc {
+    color: rgba(255, 255, 255, 0.84);
+    background: none;
+    text-shadow: 0 4px 18px rgba(0, 0, 0, 0.36);
   }
 
   .mimo-hero__actions {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    width: min(320px, 100%);
-    gap: 10px;
-    margin: var(--space-24) auto 0;
+    width: min(318px, 100%);
+    gap: 11px;
+    margin: 26px auto 0;
+    transform: none;
+    opacity: 0;
+    animation: mobile-copy-fade 680ms 280ms cubic-bezier(0.2, 0.9, 0.24, 1) forwards;
   }
 
   .mimo-hero__link {
+    position: relative;
+    overflow: hidden;
     min-width: 0;
-    min-height: 42px;
+    min-height: 44px;
     padding: 0 10px;
-    font-size: 0.96rem;
+    border-color: rgba(255, 255, 255, 0.28);
+    color: rgba(255, 255, 255, 0.92);
+    background: rgba(35, 47, 66, 0.78);
+    font-size: 0.95rem;
+    font-weight: 760;
+    box-shadow:
+      0 10px 26px rgba(0, 0, 0, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    transform: translateY(8px);
+    animation: mobile-link-pop 560ms cubic-bezier(0.2, 0.9, 0.24, 1) forwards;
+  }
+
+  .mimo-hero__link::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 0 24%, rgba(255, 255, 255, 0.24) 44%, transparent 62% 100%);
+    transform: translateX(-120%);
+    animation: mobile-link-sheen 5200ms ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .mimo-hero__link:nth-child(2)::before {
+    animation-delay: 520ms;
+  }
+
+  .mimo-hero__link:nth-child(3)::before {
+    animation-delay: 1040ms;
+  }
+
+  .mimo-hero__link:nth-child(1) {
+    animation-delay: 360ms;
+  }
+
+  .mimo-hero__link:nth-child(2) {
+    animation-delay: 440ms;
+  }
+
+  .mimo-hero__link:nth-child(3) {
+    animation-delay: 520ms;
+  }
+
+  .mimo-hero__link:active {
+    transform: scale(0.97);
+    background: rgba(50, 65, 88, 0.86);
+  }
+}
+
+@media (max-width: 370px) {
+  .mimo-hero {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .mimo-hero__title {
+    font-size: clamp(1.96rem, 8.6vw, 2.18rem);
+  }
+
+  .mimo-hero__actions {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .mimo-hero__link {
+    min-height: 42px;
+    font-size: 0.9rem;
+  }
+}
+
+@keyframes mobile-hero-breathe {
+  from {
+    background-position: 50% 50%;
+  }
+
+  to {
+    background-position: 50% 52%;
+  }
+}
+
+@keyframes mobile-copy-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes mobile-copy-fade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mobile-link-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+
+  72% {
+    opacity: 1;
+    transform: translateY(-1px) scale(1.01);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes mobile-title-line {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes mobile-ambient-glow {
+  from {
+    opacity: 0.72;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mobile-title-glow {
+  0%,
+  100% {
+    text-shadow: 0 8px 28px rgba(0, 0, 0, 0.32);
+  }
+
+  50% {
+    text-shadow:
+      0 8px 28px rgba(0, 0, 0, 0.34),
+      0 0 24px rgba(255, 255, 255, 0.24);
+  }
+}
+
+@keyframes mobile-link-sheen {
+  0%,
+  58% {
+    transform: translateX(-120%);
+  }
+
+  76%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mimo-hero,
+  .mimo-hero__copy,
+  .mimo-hero__title,
+  .mimo-hero__desc,
+  .mimo-hero__actions,
+  .mimo-hero__link,
+  .mimo-hero__link::before,
+  .mimo-hero::after,
+  .mimo-hero__title-text::after {
+    animation: none;
+  }
+
+  .mimo-hero__desc,
+  .mimo-hero__actions,
+  .mimo-hero__link {
+    opacity: 1;
+    transform: none;
+  }
+
+  .mimo-hero__title-text::after {
+    transform: scaleX(1);
   }
 }
 
