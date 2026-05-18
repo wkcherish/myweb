@@ -4,7 +4,7 @@ export interface SiteNavItem {
   placeholder?: boolean
 }
 
-export type SiteContactIcon = 'website' | 'mail' | 'github' | 'gitee' | 'xiaohongshu' | 'douyin'
+export type SiteContactIcon = 'website' | 'mail' | 'github' | 'gitee' | 'xiaohongshu'
 export type SiteFooterNavIcon = 'about' | 'stats' | 'blog' | 'wiki' | 'friends' | 'more'
 
 export interface SiteFooterNavItem extends SiteNavItem {
@@ -66,13 +66,6 @@ export const siteConfig = {
       icon: 'xiaohongshu',
       external: true,
       description: 'xiaohongshu.com',
-    },
-    {
-      label: '抖音',
-      href: 'https://www.douyin.com/user/self?from_tab_name=main',
-      icon: 'douyin',
-      external: true,
-      description: 'douyin.com',
     },
   ] as SiteContactItem[],
   nav: [

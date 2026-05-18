@@ -24,7 +24,6 @@ const contactIconMap: Record<SiteContactIcon, string> = {
   github: '/icons/social/github.svg',
   gitee: '/icons/social/gitee.svg',
   xiaohongshu: '/icons/social/xiaohongshu.svg',
-  douyin: '/icons/social/douyin.svg',
 }
 
 function clearPointerFocus(event: PointerEvent) {
