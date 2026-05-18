@@ -64,6 +64,14 @@ const currentGroupPath = computed(() => getContentGroupPath(page.value || {}))
 const docNavItems = computed(() =>
   sortWikiChapterEntries((docs.value || []).filter((doc) => getContentGroupPath(doc) === currentGroupPath.value)),
 )
+const groupPrimaryDoc = computed(() => docNavItems.value.find((doc) => isIndexEntry(doc)) || docNavItems.value[0] || null)
+const wikiTitle = computed(
+  () =>
+    readContentString(groupPrimaryDoc.value || {}, 'title') ||
+    readContentString(page.value || {}, 'title') ||
+    docCategory.value,
+)
+const wikiDescription = computed(() => readContentString(groupPrimaryDoc.value || {}, 'description'))
 
 const currentDocIndex = computed(() => docNavItems.value.findIndex((doc) => doc.path === page.value?.path))
 const prevDoc = computed(() => (currentDocIndex.value > 0 ? docNavItems.value[currentDocIndex.value - 1] : null))
@@ -90,7 +98,7 @@ const resolvedPath = computed(() => page.value?.path || path)
       <div class="wiki-detail-layout__panel">
         <div class="wiki-detail-layout__panel-head">
           <strong>章节目录</strong>
-          <span>{{ readContentString(page, 'title') || docCategory }}</span>
+          <span>{{ wikiTitle }}</span>
         </div>
 
         <nav class="wiki-doc-nav">
@@ -109,7 +117,7 @@ const resolvedPath = computed(() => page.value?.path || path)
     </aside>
 
     <article class="content-detail">
-      <WikiDocHeader :doc="page" :path="resolvedPath" />
+      <WikiDocHeader :doc="page" :path="resolvedPath" :title-override="wikiTitle" :description-override="wikiDescription" />
       <div v-if="hasToc" class="wiki-detail-layout__mobile-toc">
         <WikiSideToc :links="tocLinks" />
       </div>
@@ -153,23 +161,24 @@ const resolvedPath = computed(() => page.value?.path || path)
 
 <style scoped>
 .wiki-detail-layout {
-  width: min(1480px, 100%);
+  width: min(1424px, 100%);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr) minmax(210px, 260px);
-  gap: 32px;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 820px) minmax(210px, 260px);
+  gap: clamp(20px, 2.2vw, 32px);
   align-items: start;
+  justify-content: center;
 }
 
 .wiki-detail-layout--no-toc {
-  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  width: min(1132px, 100%);
+  grid-template-columns: minmax(220px, 280px) minmax(0, 820px);
 }
 
 .content-detail {
   display: grid;
   gap: var(--space-16);
-  width: min(100%, 92ch);
-  justify-self: center;
+  width: 100%;
 }
 
 .content-detail__body {
@@ -321,6 +330,7 @@ const resolvedPath = computed(() => page.value?.path || path)
 
 @media (max-width: 980px) {
   .wiki-detail-layout {
+    width: 100%;
     grid-template-columns: 1fr;
   }
 

@@ -91,7 +91,12 @@ export const getTagTone = (tag: string) => {
 
 export const isReadmeEntry = (entry: ContentEntry) => (entry.path || '').toLowerCase().endsWith('/readme')
 
-export const isIndexEntry = (entry: ContentEntry) => (entry.path || '').toLowerCase().endsWith('/index')
+export const isIndexEntry = (entry: ContentEntry) => {
+  const path = (entry.path || '').toLowerCase()
+  const stem = (entry.stem || '').toLowerCase()
+
+  return path.endsWith('/index') || stem.endsWith('/index')
+}
 
 export const getContentParentPath = (path?: string) => {
   if (!path) return ''
@@ -112,6 +117,15 @@ export const getContentGroupPath = (entry: ContentEntry) => {
   return parentPath || path
 }
 
+const getWikiChapterOrder = (entry: ContentEntry) => {
+  const path = entry.path || ''
+  const filename = path.split('/').filter(Boolean).pop() || ''
+  const match = filename.match(/^ch(\d+)(?:-|$)/i)
+  const chapter = match?.[1]
+
+  return chapter ? Number.parseInt(chapter, 10) : Number.POSITIVE_INFINITY
+}
+
 export const sortWikiChapterEntries = <T extends ContentEntry>(entries: T[]) =>
   [...entries].sort((a, b) => {
     const aIndex = isIndexEntry(a) ? 0 : 1
@@ -119,7 +133,11 @@ export const sortWikiChapterEntries = <T extends ContentEntry>(entries: T[]) =>
 
     if (aIndex !== bIndex) return aIndex - bIndex
 
-    return (a.path || '').localeCompare(b.path || '', 'zh-Hans-CN')
+    const chapterOrderA = getWikiChapterOrder(a)
+    const chapterOrderB = getWikiChapterOrder(b)
+    if (chapterOrderA !== chapterOrderB) return chapterOrderA - chapterOrderB
+
+    return (a.path || '').localeCompare(b.path || '', 'zh-Hans-CN', { numeric: true, sensitivity: 'base' })
   })
 
 export const filterPublishedEntries = <T extends ContentEntry>(entries: T[]) =>

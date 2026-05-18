@@ -7,12 +7,14 @@ import type { ContentEntry } from '~/utils/content'
 defineProps<{
   doc: ContentEntry
   path: string
+  titleOverride?: string
+  descriptionOverride?: string
 }>()
 </script>
 
 <template>
   <header class="wiki-doc-header">
-    <WikiBreadcrumb :category="readContentString(doc, 'category')" :title="readContentString(doc, 'title')" />
+    <WikiBreadcrumb :category="readContentString(doc, 'category')" :title="titleOverride || readContentString(doc, 'title')" />
 
     <div class="wiki-doc-header__meta">
       <time>{{ formatContentDate(getContentDateFromPath(path)) }}</time>
@@ -20,9 +22,9 @@ defineProps<{
       <VisitCount :path="path" increment />
     </div>
 
-    <h1>{{ readContentString(doc, 'title') || '未命名 Wiki' }}</h1>
-    <p v-if="readContentString(doc, 'description')">
-      {{ readContentString(doc, 'description') }}
+    <h1>{{ titleOverride || readContentString(doc, 'title') || '未命名 Wiki' }}</h1>
+    <p v-if="descriptionOverride || readContentString(doc, 'description')">
+      {{ descriptionOverride || readContentString(doc, 'description') }}
     </p>
 
     <div v-if="readContentTags(doc).length" class="wiki-doc-header__tags">

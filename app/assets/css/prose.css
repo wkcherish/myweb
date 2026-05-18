@@ -12,16 +12,19 @@
 .content-detail__body > :where(h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote, pre, hr) {
   width: 100%;
   max-width: var(--prose-measure);
+  margin-inline: auto;
 }
 
 .content-detail__body > :where(table, img) {
   width: 100%;
   max-width: var(--prose-wide-measure);
+  margin-inline: auto;
 }
 
 .content-detail__body > :where(.prose-pre) {
   width: 100%;
   max-width: var(--prose-wide-measure);
+  margin-inline: auto;
 }
 
 .content-detail__body :where(h1, h2, h3, h4, h5, h6) {
