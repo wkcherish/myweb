@@ -168,6 +168,8 @@ const resolvedPath = computed(() => page.value?.path || path)
 .content-detail {
   display: grid;
   gap: var(--space-16);
+  width: min(100%, 92ch);
+  justify-self: center;
 }
 
 .content-detail__body {

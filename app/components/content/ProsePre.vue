@@ -89,7 +89,7 @@ onBeforeUnmount(() => {
 <style scoped>
 .prose-pre {
   position: relative;
-  margin: 1.6rem 0;
+  margin: 0.72rem 0;
   border: 2px solid var(--color-border);
   border-radius: 8px;
   background: var(--color-surface);

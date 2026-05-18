@@ -1,10 +1,27 @@
 .content-detail__body {
+  --prose-measure: 76ch;
+  --prose-wide-measure: 88ch;
   display: grid;
   gap: 0.42rem;
   color: var(--color-fg);
   overflow-wrap: anywhere;
   font-size: 1rem;
   line-height: 1.66;
+}
+
+.content-detail__body > :where(h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote, pre, hr) {
+  width: 100%;
+  max-width: var(--prose-measure);
+}
+
+.content-detail__body > :where(table, img) {
+  width: 100%;
+  max-width: var(--prose-wide-measure);
+}
+
+.content-detail__body > :where(.prose-pre) {
+  width: 100%;
+  max-width: var(--prose-wide-measure);
 }
 
 .content-detail__body :where(h1, h2, h3, h4, h5, h6) {
@@ -81,7 +98,6 @@
 }
 
 .content-detail__body p {
-  max-width: 76ch;
   margin: 0.06rem 0;
 }
 
@@ -138,11 +154,10 @@
 }
 
 .content-detail__body table {
-  display: block;
   width: 100%;
+  table-layout: auto;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-8);
-  overflow-x: auto;
   border-collapse: collapse;
   background: var(--color-surface);
   box-shadow: var(--shadow-soft);
