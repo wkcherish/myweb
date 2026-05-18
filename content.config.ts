@@ -18,5 +18,9 @@ export default defineContentConfig({
       type: 'page',
       source: 'todo/**/*.md',
     }),
+    resume: defineCollection({
+      type: 'page',
+      source: 'resume/**/*.md',
+    }),
   },
 })

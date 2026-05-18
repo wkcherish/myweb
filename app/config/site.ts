@@ -83,14 +83,15 @@ export const siteConfig = {
   ] as SiteNavItem[],
   moreNav: [
     { label: '数据统计分析', to: '/analytics' },
-    { label: '个人简历', to: '/resume', placeholder: true },
+    { label: '个人简历', to: '/resume' },
+    { label: '友情链接', to: '/links' },
   ] as SiteNavItem[],
   footerNav: [
     { label: '关于本站', to: '/about', icon: 'about' },
     { label: '数据统计', to: '/analytics', icon: 'stats' },
     { label: '博客', to: '/blog', icon: 'blog' },
     { label: 'Wiki', to: '/wiki', icon: 'wiki' },
-    { label: '友情链接', to: '/links', icon: 'friends', placeholder: true },
-    { label: '更多页面', to: '/resume', icon: 'more', placeholder: true },
+    { label: '友情链接', to: '/links', icon: 'friends' },
+    { label: '更多页面', to: '/resume', icon: 'more' },
   ] as SiteFooterNavItem[],
 }
