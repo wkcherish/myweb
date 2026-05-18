@@ -21,7 +21,7 @@ category: 具身智能
 
 参考链接：
 
-```Bash
+```bash
 https://blog.csdn.net/xiangshangdemayi/article/details/144728092?fromshare=blogdetail&sharetype=blogdetail&sharerId=144728092&sharerefer=PC&sharesource=qq_69379513&sharefrom=from_link
 ```
 

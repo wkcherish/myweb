@@ -79,6 +79,13 @@ def split_chapters(body: str) -> list[tuple[str, str, str]]:
         start = m.start()
         end = matches[i + 1].start() if i + 1 < len(matches) else len(body)
         content = body[start:end].strip()
+
+        # 第一个章节：把前面孤立的 preamble 内容拼到章节内容前面
+        if i == 0 and start > 0:
+            preamble = body[:start].strip()
+            if preamble:
+                content = preamble + "\n\n" + content
+
         chapters.append((seq, title, content))
 
     return chapters
