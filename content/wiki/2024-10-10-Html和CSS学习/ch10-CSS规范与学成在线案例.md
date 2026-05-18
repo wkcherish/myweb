@@ -7,7 +7,6 @@ description:
 
 ## 10.1 CSS属性书写顺序
 
-
 1.  **布局定位属性** ：display / position / float / clear / visibility / overflow（建议 display 第一个写，毕竟关系到模式）
     
 2.  **自身属性** ：width / height / margin / padding / border / background
@@ -19,13 +18,11 @@ description:
 
 暂时无法在飞书文档外展示此内容
 
-
 ## 10.2 学成在线案例反思总结
-
 
 ### 10.2.1 header头部制作
 
-![](../../public/images/feishu/assets/2024-10-10-Html和CSS学习-051.png)
+<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-051.png">
 
 *   1号是版心盒子 **header** 1200 \* 42 的盒子水平居中对齐, 上下给一个margin值就好了
     
@@ -70,7 +67,7 @@ description:
 
 ### 10.2.2 banner制作
 
-![](../../public/images/feishu/assets/2024-10-10-Html和CSS学习-052.png)
+<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-052.png">
 
 *   1号盒子是通栏的大盒子 **banner** ， 不给宽度，给高度，给一个蓝色背景
     
@@ -83,7 +80,7 @@ description:
 
 ### 10.2.3 精品推荐小模块
 
-![](../../public/images/feishu/assets/2024-10-10-Html和CSS学习-053.png)
+<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-053.png">
 
 *   大盒子水平居中 goods 精品 ，注意此处有个盒子阴影
     
@@ -96,7 +93,7 @@ description:
 
 ### 10.2.4 精品推荐大模块
 
-![](../../public/images/feishu/assets/2024-10-10-Html和CSS学习-054.png)
+<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-054.png">
 
 *   1号盒子为最大的盒子 **box** 版心水平居中对齐
     
@@ -111,7 +108,7 @@ description:
 
 ### 10.2.5 底部模块制作
 
-![](../../public/images/feishu/assets/2024-10-10-Html和CSS学习-055.png)
+<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-055.png">
 
 *   1号盒子通栏大盒子 底部 **footer** 给高度 底色是白色
     

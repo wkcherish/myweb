@@ -7,7 +7,6 @@ description:
 
 ## 8.1 css元素显示模式
 
-
 显示模式的作用是更好布局页面，元素显示模式就是元素（标签）以什么方式进行显示，比如`<div>`自己占一行，比如一行可以放多个`<span>`，HTML 元素一般分为块元素和行内元素两种类型
 
 ### 8.1.1 块元素
@@ -66,7 +65,7 @@ description:
 
 ### 8.1.4 总结
 
-![](../../public/images/feishu/assets/2024-10-10-Html和CSS学习-033.png)
+<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-033.png">
 
 ### 8.1.5 元素显示模式的转换
 
@@ -84,23 +83,21 @@ description:
 
 ### 8.1.6 小米侧边栏
 
-![](../../public/images/feishu/assets/2024-10-10-Html和CSS学习-034.png)
+<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-034.png">
 
   
 
 暂时无法在飞书文档外展示此内容
 
-![](../../public/images/feishu/assets/2024-10-10-Html和CSS学习-035.png)
+<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-035.png">
 
 行高=盒子高度：实现文字的垂直居中
 
 原理讲解：
 
-![](../../public/images/feishu/assets/2024-10-10-Html和CSS学习-036.png)
-
+<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-036.png">
 
 ## 8.2 css背景
-
 
 背景属性可以设置背景颜色、背景图片、背景平铺、背景图片位置、背景图像固定等
 
@@ -206,17 +203,15 @@ background-color:颜色值;
 
 颜色渐变：
 
-![](../../public/images/feishu/assets/2024-10-10-Html和CSS学习-037.png)
+<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-037.png">
 
-![](../../public/images/feishu/assets/2024-10-10-Html和CSS学习-038.png)
+<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-038.png">
 
 ### 8.2.9 案例-五彩导航栏
 
 暂时无法在飞书文档外展示此内容
 
-
 ## 8.3 css三大特性
-
 
 ### 8.3.1 层叠性
 
@@ -234,7 +229,7 @@ background-color:颜色值;
 
 暂时无法在飞书文档外展示此内容
 
-![](../../public/images/feishu/assets/2024-10-10-Html和CSS学习-039.png)
+<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-039.png">
 
 解释：①行高可以跟单位也可以不跟单位
 
