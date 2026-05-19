@@ -266,13 +266,13 @@ wsl
 ##### 2.3.3.2.2 CUDA
     
 
-暂时无法在飞书文档外展示此内容
+前往 NVIDIA CUDA Toolkit 下载页面：https://developer.nvidia.com/cuda-downloads
 
 ![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-024.png)![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-025.png)
 
 在下方的网站，选择合适的版本。
 
-暂时无法在飞书文档外展示此内容
+WSL2 专属 CUDA 指南：https://docs.nvidia.com/cuda/wsl-user-guide/index.html
 
 **(同实体机LINUX，往下找教程，唯一与实体机不同的地方如下图)**
 

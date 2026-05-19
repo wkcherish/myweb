@@ -8,6 +8,7 @@ import { siteConfig, type SiteContactIcon, type SiteFooterNavIcon, type SiteFoot
 const currentYear = computed(() => new Date().getFullYear())
 const footerNavItems = computed<SiteFooterNavItem[]>(() => siteConfig.footerNav ?? [])
 const contactItems = computed(() => siteConfig.socialLinks ?? [])
+const filingInfo = computed(() => siteConfig.filing)
 
 const footerIconMap: Record<SiteFooterNavIcon, Component> = {
   about: CircleAlert,
@@ -45,10 +46,41 @@ function clearPointerFocus(event: PointerEvent) {
         <p class="app-footer__line app-footer__line--strong">
           © {{ currentYear }} {{ siteConfig.author }} · {{ siteConfig.name }}
         </p>
-        <p class="app-footer__line">
-          本站持续记录开发与学习，内容来自本地 Markdown 与工程实践。
+        <p class="app-footer__filing" aria-label="备案信息">
+          <template v-if="filingInfo.icpText">
+            <a
+              :href="filingInfo.icpHref || 'https://beian.miit.gov.cn/'"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="app-footer__filing-link"
+            >
+              {{ filingInfo.icpText }}
+            </a>
+          </template>
+          <span v-else class="app-footer__filing-pending">{{ filingInfo.pendingText || '网站备案审核中...' }}</span>
+          <template v-if="filingInfo.policeText">
+            <span class="app-footer__filing-separator">·</span>
+            <a
+              :href="filingInfo.policeHref || 'http://www.beian.gov.cn/'"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="app-footer__filing-link app-footer__filing-link--police"
+            >
+              <img
+                v-if="filingInfo.policeIcon"
+                :src="filingInfo.policeIcon"
+                class="app-footer__police-icon"
+                alt=""
+                loading="lazy"
+              />
+              {{ filingInfo.policeText }}
+            </a>
+          </template>
         </p>
-        <p class="app-footer__line">点击邮箱图标可直接唤起邮件客户端发送信息。</p>
+        <p class="app-footer__line">
+          持续记录开发与学习，内容来自本地 Markdown 与工程实践。
+        </p>
+        <p class="app-footer__line app-footer__line--hint">点击邮箱图标可直接唤起邮件客户端。</p>
       </section>
 
       <nav class="app-footer__block" aria-label="站内导航">
@@ -130,6 +162,50 @@ function clearPointerFocus(event: PointerEvent) {
 
 .app-footer__line--strong {
   color: var(--color-fg);
+}
+
+.app-footer__filing {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 7px;
+  align-items: center;
+  color: var(--color-text-weak);
+  font-size: 0.82rem;
+}
+
+.app-footer__filing-link {
+  color: var(--color-text-weak);
+  text-decoration: none;
+}
+
+.app-footer__filing-link:hover {
+  color: var(--color-primary);
+}
+
+.app-footer__filing-pending {
+  opacity: 0.72;
+}
+
+.app-footer__filing-link--police {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.app-footer__police-icon {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.app-footer__filing-separator {
+  color: color-mix(in srgb, var(--color-text-weak) 62%, transparent);
+}
+
+.app-footer__line--hint {
+  font-size: 0.78rem;
+  opacity: 0.62;
 }
 
 .app-footer__nav-grid {

@@ -19,6 +19,15 @@ export interface SiteContactItem {
   description?: string
 }
 
+export interface SiteFilingInfo {
+  icpText?: string
+  icpHref?: string
+  policeText?: string
+  policeHref?: string
+  policeIcon?: string
+  pendingText?: string
+}
+
 export const siteConfig = {
   name: "Cherish's Notebook",
   shortName: 'Notebook',
@@ -32,6 +41,10 @@ export const siteConfig = {
     pwa192: '/icons/icon-192.png',
     pwa512: '/icons/icon-512.png',
   },
+  filing: {
+    pendingText: '网站备案审核中...',
+    policeIcon: '/icons/police-badge.png',
+  } as SiteFilingInfo,
   socialLinks: [
     {
       label: '个人网站',

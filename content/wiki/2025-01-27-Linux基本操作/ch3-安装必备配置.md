@@ -12,9 +12,9 @@ description:
     
       下方这俩学校二选一。
     
-    暂时无法在飞书文档外展示此内容
+    1.  清华大学开源软件镜像站：https://mirrors.tuna.tsinghua.edu.cn
     
-    暂时无法在飞书文档外展示此内容
+    2.  中国科学技术大学镜像站：https://mirrors.ustc.edu.cn
     
       可以测速，选择出速度最快的源。
     
@@ -124,7 +124,7 @@ sudo apt update
 
 以下是Google上海服务器的Chrome官网（无需挂梯）
 
-暂时无法在飞书文档外展示此内容
+https://www.google.com/chrome/
 
 ![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-048.png)
 
@@ -392,7 +392,7 @@ sudo shutdown -r now
 7.  使用Fcitx5工具箱优化Fcitx5(进入Github自己看说明书安装)
     
 
-暂时无法在飞书文档外展示此内容
+https://github.com/fcitx/fcitx5
 
   
 
@@ -414,7 +414,13 @@ sudo shutdown -r now
 
 使用dnf的系统也可能不用做。
 
-暂时无法在飞书文档外展示此内容
+```Bash
+# 检查是否已安装 pip
+pip3 --version
+# 如果未安装，先安装 pip3（见下方）
+# 配置 pip 使用清华源
+pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+```
 
 按图中顺序敲，但是不出意外的话，会报错，因为大部分发行版不自带pip，所以请接着往下看。
 
@@ -551,7 +557,7 @@ nvidia-smi
 2.  下载CUDA并安装CUDA
     
 
-暂时无法在飞书文档外展示此内容
+前往 NVIDIA CUDA Toolkit 下载页面：https://developer.nvidia.com/cuda-downloads
 
 选择一个版本，这里以CUDA12.4为例（绿色框住的都是我这台电脑对应可安装的版本，而红色框则不能）
 
@@ -653,7 +659,7 @@ nvcc -V
 1.  据安装好的CUDA版本选择合适的cuDNN版本进行下载，注意这里是需要注册登录的：
     
 
-暂时无法在飞书文档外展示此内容
+前往 NVIDIA cuDNN 下载页面：https://developer.nvidia.com/cudnn（需要注册 NVIDIA 开发者账号并登录）
 
 因为我是CUDA12.4，所以下方红圈版本都是可以安装的，越新越好。
 

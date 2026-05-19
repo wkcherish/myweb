@@ -71,15 +71,34 @@ description:
 
 ①转换为块元素：display:block;
 
-暂时无法在飞书文档外展示此内容
+```Css
+/* 将行内元素 a 转换为块级元素 */
+a {
+  display: block;
+  width: 100px;
+  height: 40px;
+}
+```
 
 ②转换为行内元素：display:inline;
 
-暂时无法在飞书文档外展示此内容
+```Css
+/* 将块级元素 div 转换为行内元素 */
+div {
+  display: inline;
+}
+```
 
 ③转换为行内块：display:inline-block;
 
-暂时无法在飞书文档外展示此内容
+```Css
+/* 将行内元素 span 转换为行内块元素 */
+span {
+  display: inline-block;
+  width: 80px;
+  height: 30px;
+}
+```
 
 ### 8.1.6 小米侧边栏
 
@@ -87,7 +106,33 @@ description:
 
   
 
-暂时无法在飞书文档外展示此内容
+```Html
+<!-- 小米侧边栏案例 -->
+<div class="sidebar">
+  <a href="#">手机 电话卡</a>
+  <a href="#">电视 盒子</a>
+  <a href="#">笔记本 平板</a>
+  <a href="#">出行 穿戴</a>
+  <a href="#">智能 路由器</a>
+  <a href="#">健康 儿童</a>
+  <a href="#">耳机 音响</a>
+</div>
+```
+
+```Css
+.sidebar a {
+  display: block;
+  width: 234px;
+  height: 42px;
+  line-height: 42px;
+  padding-left: 30px;
+  color: #fff;
+  background-color: #55585a;
+}
+.sidebar a:hover {
+  background-color: #ff6700;
+}
+```
 
 <img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-035.png">
 
@@ -111,20 +156,32 @@ background-color:颜色值;
 
 用于logo 或者一些装饰性的小图片或者是超大的背景图片, 优点是非常便于控制位置. (精灵图也是一种运用场景)
 
-暂时无法在飞书文档外展示此内容
+```Css
+div {
+  background-image: url(images/bg.png);
+}
+```
 
 | 参数值 | 作用 |
 |:---|:---|
 | none | 无背景图（默认的） |
 | url | 使用绝对或相对地址指定背景图像 |
 
-暂时无法在飞书文档外展示此内容
+```Css
+div {
+  background-image: url(images/bg.png);
+}
+```
 
 注意：背景图片后面的地址，不能忘记加url,也不能加引号
 
 ### 8.2.3 背景平铺
 
-暂时无法在飞书文档外展示此内容
+```Css
+div {
+  background-repeat: no-repeat;
+}
+```
 
 | 参数值 | 作用 |
 |:---|:---|
@@ -135,7 +192,20 @@ background-color:颜色值;
 
 ### 8.2.4 背景图片位置
 
-暂时无法在飞书文档外展示此内容
+```Css
+/* 方位名词 */
+div {
+  background-position: center top;
+}
+/* 精确单位 */
+div {
+  background-position: 20px 50px;
+}
+/* 混合单位 */
+div {
+  background-position: 20px center;
+}
+```
 
 参数代表的意思是：x 坐标和 y 坐标。 可以使用 方位名词 或者 精确单位
 
@@ -164,7 +234,16 @@ background-color:颜色值;
 
 ### 8.2.5 背景图片固定
 
-暂时无法在飞书文档外展示此内容
+```Css
+/* 背景滚动（默认） */
+div {
+  background-attachment: scroll;
+}
+/* 背景固定 */
+div {
+  background-attachment: fixed;
+}
+```
 
 | 参数 | 作用 |
 |:---|:---|
@@ -173,11 +252,20 @@ background-color:颜色值;
 
 ### 8.2.6 背景样式合写
 
-暂时无法在飞书文档外展示此内容
+```Css
+/* 背景复合写法：颜色 图片 平铺 滚动 位置 */
+div {
+  background: #fff url(images/bg.png) no-repeat fixed center top;
+}
+```
 
 ### 8.2.7 背景色半透明
 
-暂时无法在飞书文档外展示此内容
+```Css
+div {
+  background: rgba(0, 0, 0, 0.3);
+}
+```
 
 解释：
 
@@ -209,7 +297,31 @@ background-color:颜色值;
 
 ### 8.2.9 案例-五彩导航栏
 
-暂时无法在飞书文档外展示此内容
+```Html
+<div class="nav">
+  <a href="#">五彩导航1</a>
+  <a href="#">五彩导航2</a>
+  <a href="#">五彩导航3</a>
+  <a href="#">五彩导航4</a>
+  <a href="#">五彩导航5</a>
+</div>
+```
+
+```Css
+.nav a {
+  display: inline-block;
+  width: 120px;
+  height: 58px;
+  text-align: center;
+  line-height: 58px;
+  color: #fff;
+}
+.nav a:nth-child(1) { background-color: #ff6700; }
+.nav a:nth-child(2) { background-color: #ff0000; }
+.nav a:nth-child(3) { background-color: #00a4ff; }
+.nav a:nth-child(4) { background-color: #ff00ff; }
+.nav a:nth-child(5) { background-color: #00ff00; }
+```
 
 ## 8.3 css三大特性
 
@@ -227,7 +339,11 @@ background-color:颜色值;
 
 子元素可以继承父元素的样式：text-, font-, line-和color属性
 
-暂时无法在飞书文档外展示此内容
+```Css
+p {
+  color: #333;
+}
+```
 
 <img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-039.png">
 
@@ -257,7 +373,16 @@ background-color:颜色值;
 
 ! important用法：
 
-暂时无法在飞书文档外展示此内容
+```Css
+/* !important 拥有最高优先级 */
+div {
+  color: pink !important;
+}
+/* 以下规则不会生效，因为上面有 !important */
+div {
+  color: red;
+}
+```
 
 优先级注意点：
 

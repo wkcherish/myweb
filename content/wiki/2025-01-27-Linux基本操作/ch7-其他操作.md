@@ -648,7 +648,7 @@ sudo udevadm trigger
 
 由于安卓系统基于Linux内核，所以我们可以下载一个叫termux的app来敲一些Linux命令：
 
-暂时无法在飞书文档外展示此内容
+Termux 下载地址（F-Droid）：https://f-droid.org/packages/com.termux/
 
 首先打开app后，先更新软件缓存：
 

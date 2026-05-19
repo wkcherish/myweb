@@ -61,7 +61,9 @@ description:
 
 在css中去除前边的小圆点采用如下代码:
 
-暂时无法在飞书文档外展示此内容
+```Css
+list-style: none;
+```
 
 ②有序列表：
 

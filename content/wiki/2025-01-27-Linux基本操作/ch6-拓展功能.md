@@ -22,7 +22,7 @@ description:
 1.  Wayland-Waydroid(体验超级好)
     
 
-暂时无法在飞书文档外展示此内容
+Waydroid 官网与安装指南：https://waydro.id/
 
   
 
@@ -35,7 +35,7 @@ description:
 
 1.  QEMU-KVM虚拟机 + BlissOS-X86
     
-    暂时无法在飞书文档外展示此内容
+    BlissOS 官网下载：https://blissos.org/
     
     ![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-088.png)
     
@@ -94,4 +94,4 @@ description:
 ## 6.3 好看点的UEFI启动界面rEFInd
     
 
-暂时无法在飞书文档外展示此内容
+rEFInd 官网与文档：https://www.rodsbooks.com/refind/

@@ -9,7 +9,14 @@ description:
 
 ### 7.1.1 内部样式表（嵌入式）
 
-暂时无法在飞书文档外展示此内容
+```Html
+<style>
+  h1 {
+    color: blue;
+    font-size: 24px;
+  }
+</style>
+```
 
 **注意点** ：
 
@@ -21,7 +28,9 @@ description:
 
 ### 7.1.2 行内样式表（行内式）
 
-暂时无法在飞书文档外展示此内容
+```Html
+<p style="color: red; font-size: 16px;">这是一个段落</p>
+```
 
 **注意点** ：
 
@@ -41,11 +50,19 @@ description:
 
 ①css文件部分： style.css
 
-暂时无法在飞书文档外展示此内容
+```Css
+/* style.css */
+h1 {
+  color: blue;
+  font-size: 24px;
+}
+```
 
 ②html部分
 
-暂时无法在飞书文档外展示此内容
+```Html
+<link rel="stylesheet" href="style.css">
+```
 
 `<hr>`水平线标签（但是不常用！）
 
@@ -69,7 +86,16 @@ ctrl+0回到页面原来大小
 
 ⑦如果想要在生成的标签内部写内容可以用{}表示
 
-暂时无法在飞书文档外展示此内容
+```Html
+<!-- Emmet 语法示例 -->
+<!-- div*3        → 生成3个div -->
+<!-- ul>li*5      → ul下生成5个li -->
+<!-- div+p        → 兄弟div和p -->
+<!-- .demo        → <div class="demo"></div> -->
+<!-- #two         → <div id="two"></div> -->
+<!-- .demo$*3     → demo1, demo2, demo3 -->
+<!-- div{内容}     → <div>内容</div> -->
+```
 
 ### 7.2.2 快速生成css
 
@@ -81,7 +107,11 @@ ctrl+0回到页面原来大小
 
 ### 7.3.1 后代选择器
 
-暂时无法在飞书文档外展示此内容
+```Css
+.parent .child {
+  color: blue;
+}
+```
 
 元素1 元素2 {样式声明}
 
@@ -135,10 +165,31 @@ hover鼠标经过就会变
 
 active常按(点)就会变
 
-暂时无法在飞书文档外展示此内容
+```Css
+/* 链接伪类选择器 —— 按 LVHA 顺序 */
+a:link {
+  color: #333;
+  text-decoration: none;
+}
+a:visited {
+  color: purple;
+}
+a:hover {
+  color: skyblue;
+  text-decoration: underline;
+}
+a:active {
+  color: green;
+}
+```
 
 ### 7.3.5 :focus伪类选择器
 
 :focus 伪类选择器用于选取获得焦点的表单元素。 焦点就是光标，一般情况 `<input>` 类表单元素才能获取，因此这个选择器也主要针对于表单元素来说。
 
-暂时无法在飞书文档外展示此内容
+```Css
+input:focus {
+  border-color: skyblue;
+  outline: none;
+}
+```

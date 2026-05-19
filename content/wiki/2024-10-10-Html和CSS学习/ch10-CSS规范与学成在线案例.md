@@ -16,7 +16,12 @@ description:
 4.  **其他属性（CSS3）** ：content / cursor / border-radius / box-shadow / text-shadow / background:linear-gradient …
     
 
-暂时无法在飞书文档外展示此内容
+```Css
+/* 边框复合写法：粗细 样式 颜色 */
+div {
+  border: 1px solid #ccc;
+}
+```
 
 ## 10.2 学成在线案例反思总结
 
@@ -124,12 +129,16 @@ description:
 1.  html部分
     
 
-暂时无法在飞书文档外展示此内容
+```Html
+<a href="https://example.com" target="_blank">链接文字</a>
+```
 
 2.  css部分
     
 
-暂时无法在飞书文档外展示此内容
+```Html
+<a href="https://example.com" target="_blank">链接文字</a>
+```
 
 ### 10.2.7 收获
 
@@ -144,12 +153,22 @@ description:
 5.  遗忘代码
     
 
-暂时无法在飞书文档外展示此内容
+```Css
+div, p, h1, ul, li {
+  /* 块级元素：独占一行，可设宽高 */
+  display: block;
+}
+```
 
 6.  html引css的程序
     
 
-暂时无法在飞书文档外展示此内容
+```Css
+div, p, h1, ul, li {
+  /* 块级元素：独占一行，可设宽高 */
+  display: block;
+}
+```
 
 7.  浮动的盒子不会有外边距合并问题
     
@@ -162,7 +181,18 @@ description:
 11.  在写选择器时尽量写全一些，例如
     
 
-暂时无法在飞书文档外展示此内容
+```Css
+/* 静态定位（默认） */
+.static { position: static; }
+/* 相对定位 */
+.relative { position: relative; }
+/* 绝对定位 */
+.absolute { position: absolute; }
+/* 固定定位 */
+.fixed { position: fixed; }
+/* 粘性定位 */
+.sticky { position: sticky; }
+```
 
 12.  一定要用好注释
     

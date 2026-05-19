@@ -3,6 +3,8 @@ defineOptions({
   inheritAttrs: false,
 })
 
+const FEISHU_UNSUPPORTED_TEXT = '暂时无法在飞书文档外展示此内容'
+
 const props = defineProps<{
   code?: string
   language?: string
@@ -11,6 +13,7 @@ const props = defineProps<{
 }>()
 
 const attrs = useAttrs()
+const slots = useSlots()
 const root = ref<HTMLElement | null>(null)
 const codeEl = ref<HTMLElement | null>(null)
 
@@ -19,7 +22,30 @@ let timer: ReturnType<typeof setTimeout> | undefined
 
 const label = ref('CODE')
 
-const getCodeText = () => props.code || codeEl.value?.textContent?.replace(/\n$/, '') || ''
+function collectSlotText(value: unknown): string {
+  if (Array.isArray(value)) {
+    return value.map(collectSlotText).join('')
+  }
+
+  if (typeof value === 'string' || typeof value === 'number') {
+    return String(value)
+  }
+
+  if (value && typeof value === 'object') {
+    return collectSlotText((value as { children?: unknown }).children)
+  }
+
+  return ''
+}
+
+function normalizeText(value: string) {
+  return value.replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim()
+}
+
+const slotText = computed(() => collectSlotText(slots.default?.() || []))
+const isFeishuUnsupported = computed(() => normalizeText(props.code || slotText.value) === FEISHU_UNSUPPORTED_TEXT)
+
+const getCodeText = () => props.code || codeEl.value?.textContent?.replace(/\n$/, '') || slotText.value || ''
 
 const readLanguage = () => {
   const codeClass = codeEl.value?.className || ''
@@ -65,7 +91,9 @@ const copyCode = async () => {
 }
 
 onMounted(() => {
-  detectMeta()
+  if (!isFeishuUnsupported.value) {
+    detectMeta()
+  }
 })
 
 onBeforeUnmount(() => {
@@ -74,7 +102,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="root" class="prose-pre">
+  <div v-if="!isFeishuUnsupported" ref="root" class="prose-pre">
     <div class="prose-pre__bar">
       <span class="prose-pre__label">{{ label }}</span>
       <button type="button" class="prose-pre__copy" @click="copyCode">
