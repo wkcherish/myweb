@@ -33,7 +33,7 @@
 
 @media (max-width: 768px) {
   .page-shell__content {
-    padding: var(--space-24) var(--space-16) calc(var(--space-64) + 96px);
+    padding: var(--space-16) var(--space-12) var(--space-48);
   }
 }
 </style>

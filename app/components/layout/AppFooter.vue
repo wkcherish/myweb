@@ -32,7 +32,6 @@ function clearPointerFocus(event: PointerEvent) {
   if (!(target instanceof HTMLElement)) {
     return
   }
-
   requestAnimationFrame(() => {
     target.blur()
   })
@@ -41,298 +40,321 @@ function clearPointerFocus(event: PointerEvent) {
 
 <template>
   <footer class="app-footer">
-    <div class="app-footer__inner">
-      <section class="app-footer__block app-footer__block--meta">
-        <p class="app-footer__line app-footer__line--strong">
-          © {{ currentYear }} {{ siteConfig.author }} · {{ siteConfig.name }}
-        </p>
-        <p class="app-footer__filing" aria-label="备案信息">
-          <template v-if="filingInfo.icpText">
-            <a
-              :href="filingInfo.icpHref || 'https://beian.miit.gov.cn/'"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="app-footer__filing-link"
-            >
-              {{ filingInfo.icpText }}
-            </a>
-          </template>
-          <span v-else class="app-footer__filing-pending">{{ filingInfo.pendingText || '网站备案审核中...' }}</span>
-          <template v-if="filingInfo.policeText">
-            <span class="app-footer__filing-separator">·</span>
-            <a
-              :href="filingInfo.policeHref || 'http://www.beian.gov.cn/'"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="app-footer__filing-link app-footer__filing-link--police"
-            >
-              <img
-                v-if="filingInfo.policeIcon"
-                :src="filingInfo.policeIcon"
-                class="app-footer__police-icon"
-                alt=""
-                loading="lazy"
-              />
-              {{ filingInfo.policeText }}
-            </a>
-          </template>
-        </p>
-        <p class="app-footer__line">
-          持续记录开发与学习，内容来自本地 Markdown 与工程实践。
-        </p>
-        <p class="app-footer__line app-footer__line--hint">点击邮箱图标可直接唤起邮件客户端。</p>
-      </section>
+    <!-- 顶部强调线 -->
+    <div class="app-footer__accent" aria-hidden="true" />
 
-      <nav class="app-footer__block" aria-label="站内导航">
-        <p class="app-footer__title">站内导航</p>
-        <div class="app-footer__nav-grid">
-          <NuxtLink
-            v-for="item in footerNavItems"
-            :key="item.to"
-            :to="item.to"
-            class="app-footer__nav-link"
-            @pointerup="clearPointerFocus"
-          >
-            <component :is="footerIconMap[item.icon]" class="app-footer__nav-icon" aria-hidden="true" />
-            <span class="app-footer__nav-text">{{ item.label }}</span>
-            <span v-if="item.placeholder" class="app-footer__placeholder-tag">占位</span>
-          </NuxtLink>
-        </div>
+    <div class="app-footer__inner">
+      <!-- 品牌 -->
+      <div class="app-footer__brand">
+        <p class="app-footer__copyright">
+          &copy; {{ currentYear }} {{ siteConfig.author }}
+          <span class="app-footer__dot">&middot;</span>
+          {{ siteConfig.name }}
+        </p>
+        <p class="app-footer__tagline">持续记录开发与学习</p>
+      </div>
+
+      <!-- 导航 -->
+      <nav class="app-footer__nav" aria-label="站内导航">
+        <NuxtLink
+          v-for="item in footerNavItems"
+          :key="item.to"
+          :to="item.to"
+          class="app-footer__nav-link"
+          @pointerup="clearPointerFocus"
+        >
+          <component :is="footerIconMap[item.icon]" class="app-footer__nav-icon" aria-hidden="true" />
+          {{ item.label }}
+        </NuxtLink>
       </nav>
 
-      <section class="app-footer__block" aria-label="联系方式">
-        <p class="app-footer__title">联系方式</p>
-        <div class="app-footer__contact-grid">
+      <!-- 社交 -->
+      <div class="app-footer__social" aria-label="联系方式">
+        <a
+          v-for="item in contactItems"
+          :key="item.href"
+          :href="item.href"
+          class="app-footer__social-link"
+          :target="item.external ? '_blank' : undefined"
+          :rel="item.external ? 'noopener noreferrer' : undefined"
+          :aria-label="item.label"
+          :title="item.description || item.label"
+          @pointerup="clearPointerFocus"
+        >
+          <img
+            :src="contactIconMap[item.icon]"
+            class="app-footer__social-icon"
+            :alt="item.label"
+            loading="lazy"
+          />
+        </a>
+      </div>
+    </div>
+
+    <!-- 备案 -->
+    <div class="app-footer__filing-bar">
+      <p class="app-footer__filing">
+        <template v-if="filingInfo.icpText">
           <a
-            v-for="item in contactItems"
-            :key="item.href"
-            :href="item.href"
-            class="app-footer__contact-link"
-            :target="item.external ? '_blank' : undefined"
-            :rel="item.external ? 'noopener noreferrer' : undefined"
-            :aria-label="item.label"
-            :title="item.description || item.label"
-            @pointerup="clearPointerFocus"
+            :href="filingInfo.icpHref || 'https://beian.miit.gov.cn/'"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="app-footer__filing-link"
           >
-            <img :src="contactIconMap[item.icon]" class="app-footer__contact-image" :alt="item.label" loading="lazy" />
+            {{ filingInfo.icpText }}
           </a>
-        </div>
-      </section>
+        </template>
+        <span v-else class="app-footer__filing-pending">{{ filingInfo.pendingText || '网站备案审核中…' }}</span>
+        <template v-if="filingInfo.icpText && filingInfo.policeText">
+          <span class="app-footer__filing-sep">|</span>
+        </template>
+        <template v-if="filingInfo.policeText">
+          <a
+            :href="filingInfo.policeHref || 'http://www.beian.gov.cn/'"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="app-footer__filing-link app-footer__filing-link--police"
+          >
+            <img
+              v-if="filingInfo.policeIcon"
+              :src="filingInfo.policeIcon"
+              class="app-footer__police-icon"
+              alt="公安备案图标"
+              loading="lazy"
+            />
+            {{ filingInfo.policeText }}
+          </a>
+        </template>
+      </p>
     </div>
   </footer>
 </template>
 
 <style scoped>
 .app-footer {
+  position: relative;
   margin-top: auto;
-  border-top: 1px solid var(--color-border);
-  background: color-mix(in srgb, var(--color-surface) 84%, transparent);
+  background: var(--color-surface);
 }
 
+/* ====== 顶部强调线 ====== */
+.app-footer__accent {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--color-primary) 60%, transparent) 30%,
+    var(--color-primary) 50%,
+    color-mix(in srgb, var(--color-primary) 60%, transparent) 70%,
+    transparent 100%
+  );
+}
+
+/* ====== 主体内容区 ====== */
 .app-footer__inner {
-  width: 100%;
-  padding: var(--space-32) var(--space-16);
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-32) var(--space-16) var(--space-24);
   display: grid;
+  justify-items: center;
   gap: var(--space-24);
-  grid-template-columns: minmax(220px, 1.2fr) minmax(240px, 1fr) minmax(220px, 1fr);
 }
 
-.app-footer__block {
-  display: grid;
-  align-content: start;
-  gap: var(--space-12);
+/* ====== 品牌 ====== */
+.app-footer__brand {
+  text-align: center;
 }
 
-.app-footer__block--meta {
-  gap: var(--space-8);
-}
-
-.app-footer__title {
+.app-footer__copyright {
   margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
   color: var(--color-fg);
-  font-size: 0.92rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
 }
 
-.app-footer__line {
-  font-size: 0.88rem;
+.app-footer__dot {
+  color: color-mix(in srgb, var(--color-text-weak) 40%, transparent);
+}
+
+.app-footer__tagline {
+  margin: var(--space-4) 0 0;
+  font-size: 0.82rem;
   color: var(--color-text-weak);
 }
 
-.app-footer__line--strong {
+/* ====== 导航 ====== */
+.app-footer__nav {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(134px, 160px));
+  justify-content: center;
+  gap: var(--space-8);
+}
+
+.app-footer__nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  min-height: 36px;
+  padding: 0 var(--space-12);
+  border: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+  border-radius: var(--radius-pill);
+  color: var(--color-text-weak);
+  font-size: 0.88rem;
+  text-decoration: none;
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease,
+    background-color 0.18s ease,
+    transform 0.15s ease;
+}
+
+.app-footer__nav-link:hover {
   color: var(--color-fg);
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 6%, transparent);
+  transform: translateY(-1px);
+}
+
+.app-footer__nav-link.router-link-active {
+  color: var(--color-primary);
+  border-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+}
+
+.app-footer__nav-icon {
+  width: 0.88rem;
+  height: 0.88rem;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+/* ====== 社交图标 ====== */
+.app-footer__social {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-6);
+}
+
+.app-footer__social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-8);
+  border: 1px solid color-mix(in srgb, var(--color-border) 55%, transparent);
+  text-decoration: none;
+  background: transparent;
+  transition:
+    transform 0.15s ease,
+    border-color 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.app-footer__social-link:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 8%, transparent);
+}
+
+.app-footer__social-icon {
+  width: 1.05rem;
+  height: 1.05rem;
+  object-fit: contain;
+}
+
+/* ====== 备案栏 ====== */
+.app-footer__filing-bar {
+  border-top: 1px solid color-mix(in srgb, var(--color-border) 45%, transparent);
+  padding: var(--space-12) var(--space-16);
+  text-align: center;
 }
 
 .app-footer__filing {
   display: flex;
   flex-wrap: wrap;
-  gap: 0 7px;
+  justify-content: center;
   align-items: center;
+  gap: 0 var(--space-10);
+  margin: 0;
+  font-size: 0.76rem;
   color: var(--color-text-weak);
-  font-size: 0.82rem;
+  line-height: 1.8;
 }
 
 .app-footer__filing-link {
   color: var(--color-text-weak);
   text-decoration: none;
+  transition: color 0.15s ease;
 }
 
 .app-footer__filing-link:hover {
   color: var(--color-primary);
 }
 
-.app-footer__filing-pending {
-  opacity: 0.72;
-}
-
 .app-footer__filing-link--police {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
 }
 
 .app-footer__police-icon {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   object-fit: contain;
   flex-shrink: 0;
 }
 
-.app-footer__filing-separator {
-  color: color-mix(in srgb, var(--color-text-weak) 62%, transparent);
+.app-footer__filing-pending {
+  opacity: 0.65;
 }
 
-.app-footer__line--hint {
-  font-size: 0.78rem;
-  opacity: 0.62;
+.app-footer__filing-sep {
+  color: color-mix(in srgb, var(--color-text-weak) 35%, transparent);
+  user-select: none;
 }
 
-.app-footer__nav-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-10, 10px);
-}
-
-.app-footer__nav-link {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: var(--space-8);
-  min-height: 40px;
-  padding: 0 var(--space-10, 10px);
-  border: 1px solid color-mix(in srgb, var(--color-border) 84%, transparent);
-  border-radius: var(--radius-8);
-  color: var(--color-text-weak);
-  text-decoration: none;
-  transition:
-    color var(--motion-180) ease,
-    border-color var(--motion-180) ease,
-    background-color var(--motion-180) ease;
-}
-
-.app-footer__nav-link:hover,
-.app-footer__nav-link.router-link-active {
-  color: var(--color-fg);
-  border-color: color-mix(in srgb, var(--color-primary) 42%, var(--color-border));
-  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
-}
-
-.app-footer__nav-link:focus,
-.app-footer__nav-link:focus-visible,
-.app-footer__contact-link:focus,
-.app-footer__contact-link:focus-visible {
-  outline: none;
-}
-
-.app-footer__nav-icon {
-  width: 0.95rem;
-  height: 0.95rem;
-  opacity: 0.88;
-}
-
-.app-footer__nav-text {
-  line-height: 1.2;
-  font-size: 0.95rem;
-}
-
-.app-footer__placeholder-tag {
-  display: inline-flex;
-  align-items: center;
-  min-height: 19px;
-  padding: 0 7px;
-  border-radius: var(--radius-pill);
-  color: var(--color-primary);
-  font-size: 0.68rem;
-  background: color-mix(in srgb, var(--color-primary) 16%, transparent);
-}
-
-.app-footer__contact-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 46px);
-  gap: 10px;
-}
-
-.app-footer__contact-link {
-  width: 46px;
-  height: 46px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-12);
-  border: 1px solid color-mix(in srgb, var(--color-border) 82%, transparent);
-  text-decoration: none;
-  background: color-mix(in srgb, #ffffff 90%, var(--color-surface));
-  transition:
-    transform var(--motion-120) ease,
-    border-color var(--motion-180) ease,
-    background-color var(--motion-180) ease;
-}
-
-.app-footer__contact-link:hover {
-  transform: translateY(-1px);
-  border-color: color-mix(in srgb, var(--color-primary) 44%, var(--color-border));
-  background: color-mix(in srgb, #ffffff 78%, var(--color-primary));
-}
-
-.app-footer__contact-image {
-  width: 1.02rem;
-  height: 1.02rem;
-  object-fit: contain;
-}
-
-@media (max-width: 1000px) {
+/* ====== 移动端 ====== */
+@media (max-width: 768px) {
   .app-footer__inner {
-    grid-template-columns: minmax(0, 1fr);
+    padding: var(--space-20) var(--space-12) var(--space-16);
+    gap: var(--space-16);
   }
 
-  .app-footer__contact-grid {
-    grid-template-columns: repeat(auto-fit, minmax(42px, 46px));
+  .app-footer__copyright {
+    font-size: 0.9rem;
   }
-}
 
-@media (max-width: 520px) {
-  .app-footer__nav-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
+  .app-footer__nav {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-8);
   }
 
   .app-footer__nav-link {
-    min-height: 38px;
-    padding: 0 9px;
-    border-radius: var(--radius-8);
+    min-height: 34px;
+    padding: 0 var(--space-12);
+    font-size: 0.82rem;
   }
 
   .app-footer__nav-icon {
-    width: 0.88rem;
-    height: 0.88rem;
+    width: 0.82rem;
+    height: 0.82rem;
   }
 
-  .app-footer__nav-text {
-    overflow: hidden;
-    font-size: 0.86rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  .app-footer__social-link {
+    width: 34px;
+    height: 34px;
+  }
+
+  .app-footer__social-icon {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+
+  .app-footer__filing {
+    font-size: 0.72rem;
   }
 }
 </style>

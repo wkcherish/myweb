@@ -42,8 +42,13 @@ export const siteConfig = {
     pwa512: '/icons/icon-512.png',
   },
   filing: {
-    pendingText: '网站备案审核中...',
+    pendingText: '网站备案审核中…',
     policeIcon: '/icons/police-badge.png',
+    // 备案通过后填入以下信息：
+    // icpText: 'XICP备XXXXXXXXXX号-1',
+    // icpHref: 'https://beian.miit.gov.cn/',
+    // policeText: 'X公网安备 XXXXXXXXXXXX号',
+    // policeHref: 'http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=XXXXXXXXXXXXXXXXXX',
   } as SiteFilingInfo,
   socialLinks: [
     {
