@@ -8,6 +8,7 @@ const props = defineProps<{
   state: MusicPlaybackState
   statusText: string
   title: string
+  coverUrl?: string
   warningMessage?: string
 }>()
 
@@ -35,9 +36,8 @@ const isPlaying = computed(() => props.state === 'playing')
         @keydown.enter="$emit('expand')"
         @keydown.space.prevent="$emit('expand')"
       >
-        <span class="mini-music-player__icon" aria-hidden="true">
-          <PlayCircle v-if="state === 'playing'" :size="16" />
-          <PauseCircle v-else-if="state === 'paused'" :size="16" />
+        <span class="mini-music-player__artwork" aria-hidden="true">
+          <img v-if="coverUrl" :src="coverUrl" alt="" loading="lazy" draggable="false" />
           <Music2 v-else :size="16" />
         </span>
         <span class="mini-music-player__text">
@@ -118,14 +118,42 @@ const isPlaying = computed(() => props.state === 'playing')
   gap: 6px;
 }
 
-.mini-music-player__icon {
+.mini-music-player__artwork {
+  position: relative;
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 22%, var(--color-border));
   border-radius: var(--radius-pill);
-  background: color-mix(in srgb, var(--color-primary) 16%, var(--color-surface));
+  background:
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--color-surface) 94%, transparent) 0 12%, transparent 13%),
+    color-mix(in srgb, var(--color-primary) 16%, var(--color-surface));
   color: var(--color-primary);
+  box-shadow:
+    inset 0 0 0 2px color-mix(in srgb, var(--color-surface) 72%, transparent),
+    0 4px 10px rgb(15 23 42 / 0.12);
+}
+
+.mini-music-player__artwork::after {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 7px;
+  height: 7px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-surface) 90%, transparent);
+  content: '';
+  transform: translate(-50%, -50%);
+}
+
+.mini-music-player__artwork img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
 }
 
 .mini-music-player__text {
@@ -172,17 +200,19 @@ const isPlaying = computed(() => props.state === 'playing')
   line-height: 1.35;
 }
 
-.mini-music-player.is-playing .mini-music-player__icon {
-  animation: mini-music-pulse 760ms ease-in-out infinite;
+.mini-music-player.is-playing .mini-music-player__artwork {
+  animation: mini-music-spin 4.8s linear infinite;
 }
 
-@keyframes mini-music-pulse {
-  0%,
-  100% {
-    transform: scale(1);
+@keyframes mini-music-spin {
+  to {
+    transform: rotate(360deg);
   }
-  50% {
-    transform: scale(1.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mini-music-player.is-playing .mini-music-player__artwork {
+    animation: none;
   }
 }
 

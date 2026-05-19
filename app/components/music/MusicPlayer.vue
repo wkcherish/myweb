@@ -23,6 +23,13 @@ interface APlayerTrack {
   name?: string
   title?: string
   artist?: unknown
+  cover?: unknown
+  pic?: unknown
+  image?: unknown
+  img?: unknown
+  picture?: unknown
+  artwork?: unknown
+  album?: unknown
 }
 
 interface APlayerListLike {
@@ -50,6 +57,7 @@ const PANEL_POSITION_STORAGE_KEY = 'notebook:music-panel-position'
 const TRACK_WARNING_DURATION = 2600
 const DRAG_EDGE_MARGIN = 8
 const DRAG_TOP_MARGIN = 70
+const MINI_DRAG_EXPAND_SUPPRESS_MS = 700
 
 const {
   clearError,
@@ -79,6 +87,7 @@ const hasInitializedMeting = ref(false)
 const isBindingPlayer = ref(false)
 const isDragging = ref(false)
 const panelPosition = ref<FloatingPosition>({ x: null, y: null })
+const currentTrackCover = ref('')
 const trackWarningMessage = ref('')
 const dragState = ref({
   pointerId: -1,
@@ -93,6 +102,7 @@ let trackWarningTimer: ReturnType<typeof setTimeout> | null = null
 let boundPlayer: APlayerLike | null = null
 let boundEvents: Array<{ event: string; handler: (...args: unknown[]) => void }> = []
 let shouldResumeAfterTrackSwitch = false
+let miniDragSuppressExpandUntil = 0
 
 const stateTextMap: Record<MusicPlaybackState, string> = {
   idle: '等待播放',
@@ -141,6 +151,9 @@ function handleOpenUtility(event: Event) {
 
 function handleClose() {
   pausePlaybackIfPossible()
+  if (playbackState.value === 'playing' || playbackState.value === 'loading') {
+    setPlaybackState('paused')
+  }
   clearTrackWarning()
   close()
 }
@@ -339,6 +352,7 @@ function handleMiniPointerUpCleanup(event: PointerEvent) {
   dragState.value.pointerId = -1
 
   if (isDragging.value) {
+    miniDragSuppressExpandUntil = Date.now() + MINI_DRAG_EXPAND_SUPPRESS_MS
     persistPanelPosition()
     window.setTimeout(() => {
       isDragging.value = false
@@ -347,12 +361,24 @@ function handleMiniPointerUpCleanup(event: PointerEvent) {
 }
 
 function handleMiniClickCapture(event: MouseEvent) {
-  if (!isDragging.value) {
+  if (!shouldSuppressMiniExpand()) {
     return
   }
 
   event.preventDefault()
   event.stopPropagation()
+}
+
+function handleMiniExpand() {
+  if (shouldSuppressMiniExpand()) {
+    return
+  }
+
+  expand()
+}
+
+function shouldSuppressMiniExpand() {
+  return isDragging.value || Date.now() < miniDragSuppressExpandUntil
 }
 
 function bootMetingPlayer() {
@@ -590,10 +616,50 @@ function syncTrackTitleFromPlayer() {
   const title = track.name || track.title || ''
   const artist = formatArtist(track.artist)
   const merged = artist ? `${title} - ${artist}` : title
+  currentTrackCover.value = formatTrackCover(track)
 
   if (merged.trim()) {
     setCurrentTrackTitle(merged)
   }
+}
+
+function formatTrackCover(track: APlayerTrack) {
+  const directCover = firstNonEmptyString(track.cover, track.pic, track.image, track.img, track.picture, track.artwork)
+
+  if (directCover) {
+    return normalizeAssetUrl(directCover)
+  }
+
+  const album = track.album
+
+  if (album && typeof album === 'object') {
+    const albumRecord = album as Record<string, unknown>
+    const albumCover = firstNonEmptyString(albumRecord.picUrl, albumRecord.cover, albumRecord.image, albumRecord.img, albumRecord.picture)
+
+    if (albumCover) {
+      return normalizeAssetUrl(albumCover)
+    }
+  }
+
+  return ''
+}
+
+function firstNonEmptyString(...values: unknown[]) {
+  for (const value of values) {
+    if (typeof value === 'string' && value.trim()) {
+      return value.trim()
+    }
+  }
+
+  return ''
+}
+
+function normalizeAssetUrl(value: string) {
+  if (value.startsWith('//')) {
+    return `https:${value}`
+  }
+
+  return value
 }
 
 function formatArtist(rawArtist: unknown) {
@@ -799,8 +865,9 @@ onBeforeUnmount(() => {
           :state="playbackState"
           :status-text="statusText"
           :title="currentTrackTitle"
+          :cover-url="currentTrackCover"
           :warning-message="trackWarningMessage"
-          @expand="expand"
+          @expand="handleMiniExpand"
           @close="handleClose"
           @prev-track="handlePrevTrack"
           @toggle-playback="handleTogglePlayback"

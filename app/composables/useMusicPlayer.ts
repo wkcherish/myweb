@@ -40,6 +40,7 @@ export function useMusicPlayer() {
 
   function close() {
     isOpen.value = false
+    setMusicActive(false)
   }
 
   function toggleOpen() {
