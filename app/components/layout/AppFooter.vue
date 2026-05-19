@@ -237,7 +237,26 @@ function clearPointerFocus(event: PointerEvent) {
 
 @media (max-width: 520px) {
   .app-footer__nav-grid {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .app-footer__nav-link {
+    min-height: 38px;
+    padding: 0 9px;
+    border-radius: var(--radius-8);
+  }
+
+  .app-footer__nav-icon {
+    width: 0.88rem;
+    height: 0.88rem;
+  }
+
+  .app-footer__nav-text {
+    overflow: hidden;
+    font-size: 0.86rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 </style>

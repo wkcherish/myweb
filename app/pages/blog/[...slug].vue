@@ -111,7 +111,7 @@ const olderPost = computed(() =>
 }
 
 .article-nav__item {
-  min-height: 96px;
+  min-height: 88px;
   display: grid;
   align-content: center;
   gap: var(--space-4);
@@ -158,11 +158,38 @@ const olderPost = computed(() =>
 
 @media (max-width: 700px) {
   .article-nav {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-8);
+    padding-top: var(--space-12);
+  }
+
+  .article-nav__item {
+    min-height: 62px;
+    padding: 10px 12px;
+    border-radius: var(--radius-8);
+    box-shadow: none;
+  }
+
+  .article-nav__item span {
+    font-size: 0.74rem;
+  }
+
+  .article-nav__item strong {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: 0.88rem;
+    line-height: 1.25;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .article-nav__item.is-empty {
+    place-content: center;
+    text-align: center;
   }
 
   .article-nav__item.is-next {
-    text-align: left;
+    text-align: right;
   }
 }
 </style>
