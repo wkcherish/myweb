@@ -1464,9 +1464,13 @@ onBeforeUnmount(() => {
     width: 164px;
   }
 
+  .blog-pet__celebration {
+    right: 4px;
+    bottom: 72px;
+    width: 150px;
+  }
+
   .blog-pet__speech {
-    right: 0;
-    bottom: 88px;
     padding: 4px 10px;
     font-size: 0.72rem;
   }
