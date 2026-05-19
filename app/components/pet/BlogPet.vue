@@ -42,7 +42,7 @@ const celebrationParticles = [
 let celebrationTimer: ReturnType<typeof setTimeout> | null = null
 const { availableBackgrounds, selectedBackgroundId, setHomeBackground, refreshHomeBackgrounds, syncHomeBackgroundFromStorage } =
   useHomeBackground()
-const { isPlaying: isMusicPlaying } = useMusicPlayer()
+const { isMusicActive: isMusicPlaying } = useMusicPlayer()
 
 const petStyle = computed(() => {
   if (!hasCustomPosition.value) {

@@ -53,6 +53,7 @@ const {
   expand,
   isErrored,
   isExpanded,
+  isMusicActive,
   isOpen,
   open,
   playbackState,
@@ -84,6 +85,7 @@ let bindTimer: ReturnType<typeof setInterval> | null = null
 let trackWarningTimer: ReturnType<typeof setTimeout> | null = null
 let boundPlayer: APlayerLike | null = null
 let boundEvents: Array<{ event: string; handler: (...args: unknown[]) => void }> = []
+let shouldResumeAfterTrackSwitch = false
 
 const stateTextMap: Record<MusicPlaybackState, string> = {
   idle: '等待播放',
@@ -138,6 +140,7 @@ function handleClose() {
 function handleRetry() {
   clearError()
   clearTrackWarning()
+  shouldResumeAfterTrackSwitch = false
   setPlaybackState('loading')
   hasInitializedMeting.value = true
   metingRenderKey.value += 1
@@ -399,29 +402,37 @@ function attachMetingPlayer() {
   boundPlayer = instance
 
   registerPlayerEvent('loadstart', () => {
+    markPendingTrackResume()
     setPlaybackState('loading')
   })
 
-  registerPlayerEvent('play', () => {
-    clearError()
-    clearTrackWarning()
-    setPlaybackState('playing')
-    syncTrackTitleFromPlayer()
-  })
+  registerPlayerEvent('play', handlePlayerPlaying)
+  registerPlayerEvent('playing', handlePlayerPlaying)
 
   registerPlayerEvent('pause', () => {
+    if (shouldResumeAfterTrackSwitch) {
+      return
+    }
+
     if (playbackState.value !== 'error') {
       setPlaybackState('paused')
     }
   })
 
   registerPlayerEvent('canplay', () => {
+    if (shouldResumeAfterTrackSwitch || isAudioPlaying()) {
+      shouldResumeAfterTrackSwitch = false
+      setPlaybackState('playing')
+      return
+    }
+
     if (playbackState.value === 'loading') {
       setPlaybackState('paused')
     }
   })
 
   registerPlayerEvent('listswitch', () => {
+    markPendingTrackResume()
     clearTrackWarning()
     syncTrackTitleFromPlayer()
   })
@@ -430,6 +441,7 @@ function attachMetingPlayer() {
     notifyTrackWarning('当前歌曲受限制，已尝试切到下一首。')
 
     if (!playNextTrack()) {
+      shouldResumeAfterTrackSwitch = false
       setPlaybackState('paused')
     }
   })
@@ -457,12 +469,17 @@ function detachPlayerListeners() {
 
   boundEvents = []
   boundPlayer = null
+  shouldResumeAfterTrackSwitch = false
 }
 
 function playNextTrack() {
+  const shouldResume = shouldKeepPlayingAfterTrackChange()
+
   if (boundPlayer?.skipForward) {
+    shouldResumeAfterTrackSwitch = shouldResume
     boundPlayer.skipForward()
     setPlaybackState('loading')
+    resumePlaybackAfterTrackChange(shouldResume)
     return true
   }
 
@@ -474,13 +491,16 @@ function playNextTrack() {
 
   const currentIndex = typeof list.index === 'number' ? list.index : 0
   const nextIndex = (currentIndex + 1) % list.audios.length
+  shouldResumeAfterTrackSwitch = shouldResume
   list.switch(nextIndex)
   setPlaybackState('loading')
+  resumePlaybackAfterTrackChange(shouldResume)
 
   return true
 }
 
 function playPrevTrack() {
+  const shouldResume = shouldKeepPlayingAfterTrackChange()
   const list = boundPlayer?.list
 
   if (!list?.switch || !list.audios?.length) {
@@ -489,10 +509,49 @@ function playPrevTrack() {
 
   const currentIndex = typeof list.index === 'number' ? list.index : 0
   const prevIndex = (currentIndex - 1 + list.audios.length) % list.audios.length
+  shouldResumeAfterTrackSwitch = shouldResume
   list.switch(prevIndex)
   setPlaybackState('loading')
+  resumePlaybackAfterTrackChange(shouldResume)
 
   return true
+}
+
+function handlePlayerPlaying() {
+  shouldResumeAfterTrackSwitch = false
+  clearError()
+  clearTrackWarning()
+  setPlaybackState('playing')
+  syncTrackTitleFromPlayer()
+}
+
+function markPendingTrackResume() {
+  shouldResumeAfterTrackSwitch = shouldResumeAfterTrackSwitch || shouldKeepPlayingAfterTrackChange()
+}
+
+function shouldKeepPlayingAfterTrackChange() {
+  return isMusicActive.value || playbackState.value === 'playing' || isAudioPlaying()
+}
+
+function isAudioPlaying() {
+  const audio = boundPlayer?.audio
+
+  return Boolean(audio && !audio.paused && !audio.ended)
+}
+
+function resumePlaybackAfterTrackChange(shouldResume: boolean) {
+  if (!shouldResume) {
+    return
+  }
+
+  if (boundPlayer?.play) {
+    void boundPlayer.play()
+    return
+  }
+
+  if (boundPlayer?.audio) {
+    void boundPlayer.audio.play()
+  }
 }
 
 function syncTrackTitleFromPlayer() {
@@ -543,6 +602,8 @@ function formatArtist(rawArtist: unknown) {
 }
 
 function pausePlaybackIfPossible() {
+  shouldResumeAfterTrackSwitch = false
+
   if (boundPlayer?.pause) {
     boundPlayer.pause()
     return

@@ -13,7 +13,7 @@ export function useMusicPlayer() {
   const currentTrackTitle = useState<string>('music-player-current-track-title', () => '')
   const errorMessage = useState<string>('music-player-error-message', () => '')
   const hasSyncedStorage = useState<boolean>('music-player-storage-synced', () => false)
-  const { setMusicActive } = usePetAssistant()
+  const { isMusicActive, setMusicActive } = usePetAssistant()
 
   const isBusy = computed(() => playbackState.value === 'loading')
   const isPlaying = computed(() => playbackState.value === 'playing')
@@ -22,7 +22,14 @@ export function useMusicPlayer() {
   watch(
     () => playbackState.value,
     (nextState) => {
-      setMusicActive(nextState === 'playing')
+      if (nextState === 'playing') {
+        setMusicActive(true)
+        return
+      }
+
+      if (nextState === 'idle' || nextState === 'paused' || nextState === 'error') {
+        setMusicActive(false)
+      }
     },
     { immediate: true },
   )
@@ -110,6 +117,7 @@ export function useMusicPlayer() {
     isBusy,
     isErrored,
     isExpanded,
+    isMusicActive,
     isOpen,
     isPlaying,
     open,
