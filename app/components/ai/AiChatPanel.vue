@@ -369,8 +369,11 @@ onBeforeUnmount(() => {
 /* mobile */
 @media (max-width: 768px) {
   .ai-panel {
+    left: 0 !important;
+    top: 0 !important;
     right: 0;
     bottom: 0;
+    transform: none !important;
     width: 100vw !important;
     height: 100dvh !important;
     border-radius: 0;

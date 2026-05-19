@@ -4,6 +4,11 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useHomeBackground } from '~/composables/useHomeBackground'
 import { useMusicPlayer } from '~/composables/useMusicPlayer'
 
+type PetAction = 'ai' | 'background' | 'music'
+
+const actionSlots = ['left', 'center', 'right'] as const
+type PetActionSlot = (typeof actionSlots)[number]
+
 const isMenuOpen = ref(false)
 const isBackgroundPickerOpen = ref(false)
 const isCelebrating = ref(false)
@@ -31,6 +36,26 @@ const restoreDragState = ref({
   originY: 0,
   didDrag: false,
 })
+const actionOrder = ref<PetAction[]>(['ai', 'background', 'music'])
+const actionDragState = ref<{
+  key: PetAction | null
+  pointerId: number
+  pointerType: PointerEvent['pointerType'] | null
+  startX: number
+  startY: number
+  deltaX: number
+  deltaY: number
+  didDrag: boolean
+}>({
+  key: null,
+  pointerId: -1,
+  pointerType: null,
+  startX: 0,
+  startY: 0,
+  deltaX: 0,
+  deltaY: 0,
+  didDrag: false,
+})
 const celebrationParticles = [
   { x: -58, y: -68, rotate: -28, delay: 0, color: '#f472b6' },
   { x: -34, y: -92, rotate: 24, delay: 48, color: '#60a5fa' },
@@ -40,6 +65,7 @@ const celebrationParticles = [
   { x: 10, y: -126, rotate: 18, delay: 190, color: '#a78bfa' },
 ]
 let celebrationTimer: ReturnType<typeof setTimeout> | null = null
+let shouldIgnoreActionClick = false
 const { availableBackgrounds, selectedBackgroundId, setHomeBackground, refreshHomeBackgrounds, syncHomeBackgroundFromStorage } =
   useHomeBackground()
 const { isMusicActive: isMusicPlaying } = useMusicPlayer()
@@ -118,6 +144,196 @@ function handleAction(action: 'ai' | 'background' | 'music') {
 
 function selectBackground(id: string) {
   setHomeBackground(id)
+}
+
+function handleActionClick(action: PetAction) {
+  if (shouldIgnoreActionClick) {
+    shouldIgnoreActionClick = false
+    return
+  }
+
+  handleAction(action)
+}
+
+function handleActionPointerDown(event: PointerEvent, action: PetAction) {
+  if (event.pointerType === 'mouse' && event.button !== 0) {
+    return
+  }
+
+  actionDragState.value = {
+    key: action,
+    pointerId: event.pointerId,
+    pointerType: event.pointerType,
+    startX: event.clientX,
+    startY: event.clientY,
+    deltaX: 0,
+    deltaY: 0,
+    didDrag: false,
+  }
+
+  const button = event.currentTarget as HTMLElement
+  button.setPointerCapture?.(event.pointerId)
+  document.addEventListener('pointermove', handleActionPointerMove)
+  document.addEventListener('pointerup', handleActionPointerUp)
+  document.addEventListener('pointercancel', handleActionPointerCancel)
+}
+
+function handleActionPointerMove(event: PointerEvent) {
+  if (actionDragState.value.pointerId !== event.pointerId) {
+    return
+  }
+
+  const deltaX = event.clientX - actionDragState.value.startX
+  const deltaY = event.clientY - actionDragState.value.startY
+  const dragThreshold = actionDragState.value.pointerType === 'touch' ? 12 : 4
+  const didDrag = Math.abs(deltaX) + Math.abs(deltaY) > dragThreshold
+
+  actionDragState.value = {
+    ...actionDragState.value,
+    deltaX: Math.round(deltaX),
+    deltaY: Math.round(deltaY),
+    didDrag,
+  }
+}
+
+function handleActionPointerUp(event: PointerEvent) {
+  if (actionDragState.value.pointerId !== event.pointerId) {
+    return
+  }
+
+  finishActionDrag(event.clientX, event.clientY)
+}
+
+function handleActionPointerCancel(event: PointerEvent) {
+  if (actionDragState.value.pointerId !== event.pointerId) {
+    return
+  }
+
+  finishActionDrag(null, null)
+}
+
+function finishActionDrag(clientX: number | null, clientY: number | null) {
+  const draggedAction = actionDragState.value.key
+  const didDrag = actionDragState.value.didDrag
+  const shouldHandleTap = draggedAction !== null && !didDrag && clientX !== null && clientY !== null
+
+  if (draggedAction && didDrag && clientX !== null && clientY !== null) {
+    const targetAction = findClosestActionSlot(clientX, clientY, draggedAction)
+
+    if (targetAction && targetAction !== draggedAction) {
+      swapActionSlots(draggedAction, targetAction)
+    }
+  }
+
+  actionDragState.value = {
+    key: null,
+    pointerId: -1,
+    pointerType: null,
+    startX: 0,
+    startY: 0,
+    deltaX: 0,
+    deltaY: 0,
+    didDrag: false,
+  }
+
+  shouldIgnoreActionClick = didDrag || shouldHandleTap
+
+  document.removeEventListener('pointermove', handleActionPointerMove)
+  document.removeEventListener('pointerup', handleActionPointerUp)
+  document.removeEventListener('pointercancel', handleActionPointerCancel)
+
+  if (draggedAction && shouldHandleTap) {
+    handleAction(draggedAction)
+  }
+
+  if (shouldIgnoreActionClick) {
+    window.setTimeout(() => {
+      shouldIgnoreActionClick = false
+    }, 160)
+  }
+}
+
+function findClosestActionSlot(clientX: number, clientY: number, draggedAction: PetAction) {
+  if (!petRoot.value) {
+    return null
+  }
+
+  const threshold = window.matchMedia('(max-width: 768px)').matches ? 64 : 76
+  let closestAction: PetAction | null = null
+  let closestDistance = Number.POSITIVE_INFINITY
+
+  for (const button of Array.from(petRoot.value.querySelectorAll<HTMLElement>('.blog-pet__action'))) {
+    const action = button.dataset.action as PetAction | undefined
+
+    if (!action || action === draggedAction) {
+      continue
+    }
+
+    const rect = button.getBoundingClientRect()
+    const centerX = rect.left + rect.width / 2
+    const centerY = rect.top + rect.height / 2
+    const distance = Math.hypot(clientX - centerX, clientY - centerY)
+
+    if (distance < closestDistance) {
+      closestDistance = distance
+      closestAction = action
+    }
+  }
+
+  if (closestDistance > threshold) {
+    return null
+  }
+
+  return closestAction
+}
+
+function swapActionSlots(source: PetAction, target: PetAction) {
+  const nextOrder = [...actionOrder.value]
+  const sourceIndex = nextOrder.indexOf(source)
+  const targetIndex = nextOrder.indexOf(target)
+
+  if (sourceIndex < 0 || targetIndex < 0) {
+    return
+  }
+
+  const sourceAction = nextOrder[sourceIndex]
+  const targetAction = nextOrder[targetIndex]
+
+  if (!sourceAction || !targetAction) {
+    return
+  }
+
+  nextOrder[sourceIndex] = targetAction
+  nextOrder[targetIndex] = sourceAction
+  actionOrder.value = nextOrder
+}
+
+function getActionSlot(action: PetAction): PetActionSlot {
+  const index = actionOrder.value.indexOf(action)
+
+  return actionSlots[index] ?? 'center'
+}
+
+function getActionSlotClass(action: PetAction) {
+  return `is-slot-${getActionSlot(action)}`
+}
+
+function getActionDragStyle(action: PetAction) {
+  if (actionDragState.value.key !== action) {
+    return {
+      '--drag-x': '0px',
+      '--drag-y': '0px',
+    }
+  }
+
+  return {
+    '--drag-x': `${actionDragState.value.deltaX}px`,
+    '--drag-y': `${actionDragState.value.deltaY}px`,
+  }
+}
+
+function isActionDragging(action: PetAction) {
+  return actionDragState.value.key === action && actionDragState.value.didDrag
 }
 
 function triggerCelebration(event?: Event) {
@@ -322,6 +538,9 @@ onMounted(() => {
 onBeforeUnmount(() => {
   document.removeEventListener('click', handleOutsideClick)
   window.removeEventListener('notebook:pet-celebrate', triggerCelebration)
+  document.removeEventListener('pointermove', handleActionPointerMove)
+  document.removeEventListener('pointerup', handleActionPointerUp)
+  document.removeEventListener('pointercancel', handleActionPointerCancel)
 
   if (celebrationTimer) {
     window.clearTimeout(celebrationTimer)
@@ -376,7 +595,18 @@ onBeforeUnmount(() => {
   >
     <Transition name="pet-menu">
       <div v-if="isMenuOpen" class="blog-pet__menu" aria-label="宠物快捷菜单">
-        <button class="blog-pet__action blog-pet__action--ai" type="button" aria-label="AI 助手" @click.stop="handleAction('ai')">
+        <button
+          class="blog-pet__action blog-pet__action--ai"
+          :class="[getActionSlotClass('ai'), { 'is-dragging': isActionDragging('ai') }]"
+          :style="getActionDragStyle('ai')"
+          type="button"
+          aria-label="AI 助手"
+          data-action="ai"
+          @pointerdown.stop="handleActionPointerDown($event, 'ai')"
+          @pointerup.stop="handleActionPointerUp"
+          @pointercancel.stop="handleActionPointerCancel"
+          @click.stop="handleActionClick('ai')"
+        >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M8 9.5h8a3 3 0 0 1 3 3v3.2a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3v-3.2a3 3 0 0 1 3-3Z" />
             <path d="M12 9.5V6" />
@@ -389,7 +619,18 @@ onBeforeUnmount(() => {
           <span class="blog-pet__action-label">AI 助手</span>
         </button>
 
-        <button class="blog-pet__action blog-pet__action--background" type="button" aria-label="更换背景" @click.stop="handleAction('background')">
+        <button
+          class="blog-pet__action blog-pet__action--background"
+          :class="[getActionSlotClass('background'), { 'is-dragging': isActionDragging('background') }]"
+          :style="getActionDragStyle('background')"
+          type="button"
+          aria-label="更换背景"
+          data-action="background"
+          @pointerdown.stop="handleActionPointerDown($event, 'background')"
+          @pointerup.stop="handleActionPointerUp"
+          @pointercancel.stop="handleActionPointerCancel"
+          @click.stop="handleActionClick('background')"
+        >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <rect x="4" y="5" width="16" height="14" rx="3" />
             <circle cx="9" cy="10" r="1.6" />
@@ -398,7 +639,18 @@ onBeforeUnmount(() => {
           <span class="blog-pet__action-label">更换背景</span>
         </button>
 
-        <button class="blog-pet__action blog-pet__action--music" type="button" aria-label="音乐" @click.stop="handleAction('music')">
+        <button
+          class="blog-pet__action blog-pet__action--music"
+          :class="[getActionSlotClass('music'), { 'is-dragging': isActionDragging('music') }]"
+          :style="getActionDragStyle('music')"
+          type="button"
+          aria-label="音乐"
+          data-action="music"
+          @pointerdown.stop="handleActionPointerDown($event, 'music')"
+          @pointerup.stop="handleActionPointerUp"
+          @pointercancel.stop="handleActionPointerCancel"
+          @click.stop="handleActionClick('music')"
+        >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M9 18.5a2.7 2.7 0 1 1-1.2-2.2V6.4l10-2v11.4a2.7 2.7 0 1 1-1.2-2.2V8.1L9 9.6v8.9Z" />
           </svg>
@@ -791,10 +1043,10 @@ onBeforeUnmount(() => {
 
 .blog-pet__menu {
   position: absolute;
-  inset: -76px 0 auto auto;
+  inset: -96px -10px auto auto;
   z-index: 3;
-  width: 148px;
-  height: 112px;
+  width: 168px;
+  height: 124px;
   pointer-events: none;
 }
 
@@ -802,6 +1054,9 @@ onBeforeUnmount(() => {
   --action-color: #2563eb;
   --action-bg: #ffffff;
   --action-hover-bg: #2563eb;
+  --action-delay: 0ms;
+  --slot-start-x: 0px;
+  --slot-start-y: 0px;
 
   position: absolute;
   display: grid;
@@ -815,10 +1070,19 @@ onBeforeUnmount(() => {
   box-shadow: 0 14px 28px rgba(15, 23, 42, 0.16);
   cursor: pointer;
   pointer-events: auto;
+  touch-action: none;
+  translate: var(--drag-x, 0) var(--drag-y, 0);
   transition:
     background 180ms ease,
     color 180ms ease,
     transform 180ms ease;
+  animation: pet-action-unfold 420ms cubic-bezier(0.18, 1.1, 0.26, 1) var(--action-delay) backwards;
+}
+
+.blog-pet__action.is-dragging {
+  z-index: 5;
+  cursor: grabbing;
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.22);
 }
 
 .blog-pet__action:hover,
@@ -887,27 +1151,45 @@ onBeforeUnmount(() => {
   --action-color: #7c3aed;
   --action-bg: #f5f3ff;
   --action-hover-bg: #7c3aed;
-
-  left: 4px;
-  bottom: 4px;
 }
 
 .blog-pet__action--background {
   --action-color: #0284c7;
   --action-bg: #f0f9ff;
   --action-hover-bg: #0284c7;
-
-  left: 52px;
-  top: 0;
 }
 
 .blog-pet__action--music {
   --action-color: #db2777;
   --action-bg: #fdf2f8;
   --action-hover-bg: #db2777;
+}
 
-  right: 4px;
-  bottom: 4px;
+.blog-pet__action.is-slot-left {
+  --action-delay: 0ms;
+  --slot-start-x: 0px;
+  --slot-start-y: 0px;
+
+  left: 10px;
+  top: 66px;
+}
+
+.blog-pet__action.is-slot-center {
+  --action-delay: 45ms;
+  --slot-start-x: -58px;
+  --slot-start-y: 28px;
+
+  left: 68px;
+  top: 38px;
+}
+
+.blog-pet__action.is-slot-right {
+  --action-delay: 90ms;
+  --slot-start-x: -116px;
+  --slot-start-y: 0px;
+
+  left: 126px;
+  top: 66px;
 }
 
 .blog-pet__background-panel {
@@ -1142,6 +1424,23 @@ onBeforeUnmount(() => {
 
   45% {
     transform: scale(0.9);
+  }
+}
+
+@keyframes pet-action-unfold {
+  0% {
+    opacity: 0;
+    transform: translate(var(--slot-start-x), var(--slot-start-y)) scale(0.62);
+  }
+
+  68% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1.05);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
   }
 }
 
@@ -1392,6 +1691,7 @@ onBeforeUnmount(() => {
 
 @media (prefers-reduced-motion: reduce) {
   .blog-pet__button,
+  .blog-pet__action,
   .dog-head,
   .dog-tail,
   .dog-sparkles,
@@ -1411,21 +1711,22 @@ onBeforeUnmount(() => {
 
 @media (max-width: 768px) {
   .blog-pet {
-    right: 12px;
+    right: 0;
     bottom: calc(max(12px, env(safe-area-inset-bottom)) + 72px);
-    width: 80px;
-    height: 80px;
+    width: 128px;
+    height: 128px;
   }
 
   .blog-pet__button {
+    right: 12px;
     width: 80px;
     height: 80px;
   }
 
   .blog-pet__menu {
-    inset: -64px 0 auto auto;
-    width: 108px;
-    height: 84px;
+    inset: 0 0 auto auto;
+    width: 128px;
+    height: 90px;
   }
 
   .blog-pet__action {
@@ -1443,19 +1744,28 @@ onBeforeUnmount(() => {
     padding: 4px 7px;
   }
 
-  .blog-pet__action--ai {
-    left: 2px;
-    bottom: 2px;
+  .blog-pet__action.is-slot-left {
+    --slot-start-x: 0px;
+    --slot-start-y: 0px;
+
+    left: 24px;
+    top: 40px;
   }
 
-  .blog-pet__action--background {
-    left: 40px;
-    top: 0;
+  .blog-pet__action.is-slot-center {
+    --slot-start-x: -34px;
+    --slot-start-y: 20px;
+
+    left: 58px;
+    top: 20px;
   }
 
-  .blog-pet__action--music {
-    right: 2px;
-    bottom: 2px;
+  .blog-pet__action.is-slot-right {
+    --slot-start-x: -68px;
+    --slot-start-y: 0px;
+
+    left: 92px;
+    top: 40px;
   }
 
   .blog-pet__background-panel {

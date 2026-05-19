@@ -14,6 +14,11 @@ interface FloatingPosition {
   y: number | null
 }
 
+interface FiniteFloatingPosition {
+  x: number
+  y: number
+}
+
 interface APlayerTrack {
   name?: string
   title?: string
@@ -43,6 +48,8 @@ interface MetingElement extends HTMLElement {
 
 const PANEL_POSITION_STORAGE_KEY = 'notebook:music-panel-position'
 const TRACK_WARNING_DURATION = 2600
+const DRAG_EDGE_MARGIN = 8
+const DRAG_TOP_MARGIN = 70
 
 const {
   clearError,
@@ -128,6 +135,7 @@ function handleOpenUtility(event: Event) {
 
   open()
   expand()
+  queuePanelPositionNormalization()
   bootMetingPlayer()
 }
 
@@ -240,8 +248,10 @@ function handleHeaderPointerMove(event: PointerEvent) {
   const rect = panelRef.value.getBoundingClientRect()
   const width = rect.width
   const height = rect.height
-  const nextX = clamp(dragState.value.originX + deltaX, 8, window.innerWidth - width - 8)
-  const nextY = clamp(dragState.value.originY + deltaY, 70, window.innerHeight - height - 8)
+  const maxX = Math.max(DRAG_EDGE_MARGIN, window.innerWidth - width - DRAG_EDGE_MARGIN)
+  const maxY = Math.max(DRAG_TOP_MARGIN, window.innerHeight - height - DRAG_EDGE_MARGIN)
+  const nextX = clamp(dragState.value.originX + deltaX, DRAG_EDGE_MARGIN, maxX)
+  const nextY = clamp(dragState.value.originY + deltaY, DRAG_TOP_MARGIN, maxY)
 
   panelPosition.value = {
     x: Math.round(nextX),
@@ -306,8 +316,10 @@ function handleMiniPointerMove(event: PointerEvent) {
   const rect = miniWrapperRef.value.getBoundingClientRect()
   const width = rect.width
   const height = rect.height
-  const nextX = clamp(dragState.value.originX + deltaX, 8, window.innerWidth - width - 8)
-  const nextY = clamp(dragState.value.originY + deltaY, 70, window.innerHeight - height - 8)
+  const maxX = Math.max(DRAG_EDGE_MARGIN, window.innerWidth - width - DRAG_EDGE_MARGIN)
+  const maxY = Math.max(DRAG_TOP_MARGIN, window.innerHeight - height - DRAG_EDGE_MARGIN)
+  const nextX = clamp(dragState.value.originX + deltaX, DRAG_EDGE_MARGIN, maxX)
+  const nextY = clamp(dragState.value.originY + deltaY, DRAG_TOP_MARGIN, maxY)
 
   panelPosition.value = {
     x: Math.round(nextX),
@@ -332,6 +344,15 @@ function handleMiniPointerUpCleanup(event: PointerEvent) {
       isDragging.value = false
     }, 120)
   }
+}
+
+function handleMiniClickCapture(event: MouseEvent) {
+  if (!isDragging.value) {
+    return
+  }
+
+  event.preventDefault()
+  event.stopPropagation()
 }
 
 function bootMetingPlayer() {
@@ -649,7 +670,7 @@ function syncPanelPositionFromStorage() {
     const parsed = JSON.parse(rawPosition) as FloatingPosition
 
     if (isFinitePosition(parsed)) {
-      panelPosition.value = parsed
+      panelPosition.value = clampPanelPosition(parsed, getFallbackPlayerBounds())
     }
   } catch {
     localStorage.removeItem(PANEL_POSITION_STORAGE_KEY)
@@ -664,11 +685,62 @@ function persistPanelPosition() {
   localStorage.setItem(PANEL_POSITION_STORAGE_KEY, JSON.stringify(panelPosition.value))
 }
 
+function queuePanelPositionNormalization() {
+  if (!import.meta.client) {
+    return
+  }
+
+  void nextTick(() => {
+    normalizePanelPosition()
+  })
+}
+
+function normalizePanelPosition() {
+  if (!import.meta.client) {
+    return
+  }
+
+  const currentPosition = panelPosition.value
+
+  if (!isFinitePosition(currentPosition)) {
+    return
+  }
+
+  const activeElement = isExpanded.value ? panelRef.value : miniWrapperRef.value
+  const rect = activeElement?.getBoundingClientRect()
+  const fallbackBounds = getFallbackPlayerBounds()
+  const nextPosition = clampPanelPosition(currentPosition, {
+    width: rect?.width ?? fallbackBounds.width,
+    height: rect?.height ?? fallbackBounds.height,
+  })
+
+  if (nextPosition.x !== currentPosition.x || nextPosition.y !== currentPosition.y) {
+    panelPosition.value = nextPosition
+  }
+}
+
+function clampPanelPosition(position: FiniteFloatingPosition, bounds: { width: number; height: number }) {
+  const maxX = Math.max(DRAG_EDGE_MARGIN, window.innerWidth - bounds.width - DRAG_EDGE_MARGIN)
+  const maxY = Math.max(DRAG_TOP_MARGIN, window.innerHeight - bounds.height - DRAG_EDGE_MARGIN)
+
+  return {
+    x: Math.round(clamp(position.x, DRAG_EDGE_MARGIN, maxX)),
+    y: Math.round(clamp(position.y, DRAG_TOP_MARGIN, maxY)),
+  }
+}
+
+function getFallbackPlayerBounds() {
+  return {
+    width: Math.min(372, Math.max(0, window.innerWidth - 24)),
+    height: isExpanded.value ? Math.min(420, Math.max(120, window.innerHeight - DRAG_TOP_MARGIN - DRAG_EDGE_MARGIN)) : 120,
+  }
+}
+
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max)
 }
 
-function isFinitePosition(value: FloatingPosition): value is Required<FloatingPosition> {
+function isFinitePosition(value: FloatingPosition): value is FiniteFloatingPosition {
   return typeof value.x === 'number' && Number.isFinite(value.x) && typeof value.y === 'number' && Number.isFinite(value.y)
 }
 
@@ -679,13 +751,24 @@ watch(
       return
     }
 
+    queuePanelPositionNormalization()
     bootMetingPlayer()
+  },
+)
+
+watch(
+  () => isExpanded.value,
+  () => {
+    if (isOpen.value) {
+      queuePanelPositionNormalization()
+    }
   },
 )
 
 onMounted(() => {
   syncMusicPlayerFromStorage()
   syncPanelPositionFromStorage()
+  window.addEventListener('resize', queuePanelPositionNormalization)
   window.addEventListener('notebook:open-utility', handleOpenUtility)
 })
 
@@ -693,6 +776,7 @@ onBeforeUnmount(() => {
   stopBindingLoop()
   clearTrackWarning()
   detachPlayerListeners()
+  window.removeEventListener('resize', queuePanelPositionNormalization)
   window.removeEventListener('notebook:open-utility', handleOpenUtility)
   document.removeEventListener('pointermove', handleMiniPointerMove)
   document.removeEventListener('pointerup', handleMiniPointerUpCleanup)
@@ -708,6 +792,7 @@ onBeforeUnmount(() => {
         ref="miniWrapperRef"
         class="music-player__mini-wrapper"
         :class="{ 'is-dragging': isDragging }"
+        @click.capture="handleMiniClickCapture"
         @pointerdown="handleMiniPointerDown"
       >
         <MiniMusicPlayer
