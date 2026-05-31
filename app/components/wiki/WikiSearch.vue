@@ -33,6 +33,10 @@ const emit = defineEmits<{
   border: 1px solid var(--color-border);
   border-radius: var(--radius-8);
   background: var(--color-surface);
+  transition:
+    border-color var(--motion-180) ease,
+    box-shadow var(--motion-180) ease,
+    background-color var(--motion-180) ease;
 }
 
 .wiki-search input {
@@ -41,6 +45,12 @@ const emit = defineEmits<{
   border: 0;
   background: transparent;
   outline: none;
+}
+
+.wiki-search:focus-within {
+  border-color: color-mix(in srgb, var(--color-primary) 42%, var(--color-border));
+  background: color-mix(in srgb, var(--color-surface) 96%, white 4%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 10%, transparent);
 }
 
 .sr-only {

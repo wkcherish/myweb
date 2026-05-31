@@ -82,6 +82,7 @@ const olderPost = computed(() =>
   grid-template-columns: minmax(220px, 280px) minmax(0, 820px);
   gap: var(--space-32);
   align-items: start;
+  justify-content: center;
 }
 
 .article-layout--no-toc {

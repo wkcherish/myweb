@@ -91,6 +91,12 @@ const emit = defineEmits<{
   background: color-mix(in srgb, var(--color-primary) 8%, transparent);
 }
 
+.wiki-tree__item:focus-visible {
+  color: var(--color-fg);
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 14%, transparent);
+}
+
 .wiki-tree__hint {
   color: var(--color-text-weak);
   font-size: 0.84rem;

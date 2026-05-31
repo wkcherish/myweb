@@ -207,9 +207,15 @@ if (import.meta.client) {
   border-color: color-mix(in srgb, var(--color-primary) 34%, var(--color-border));
 }
 
-.mobile-nav__link:focus,
-.mobile-nav__link:focus-visible {
+.mobile-nav__link:focus:not(:focus-visible) {
   outline: none;
+}
+
+.mobile-nav__link:focus-visible {
+  color: var(--color-fg);
+  background: color-mix(in srgb, var(--color-primary) 11%, var(--color-surface));
+  border-color: color-mix(in srgb, var(--color-primary) 34%, var(--color-border));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 16%, transparent);
 }
 
 .mobile-nav__link--more {

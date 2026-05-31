@@ -244,11 +244,16 @@ onBeforeUnmount(() => {
   color: var(--color-fg);
 }
 
-.app-header__link:focus,
-.app-header__link:focus-visible,
-.app-header__more-trigger:focus,
-.app-header__more-trigger:focus-visible {
+.app-header__link:focus:not(:focus-visible),
+.app-header__more-trigger:focus:not(:focus-visible) {
   outline: none;
+}
+
+.app-header__link:focus-visible,
+.app-header__more-trigger:focus-visible {
+  color: var(--color-fg);
+  background: color-mix(in srgb, var(--color-surface-soft) 84%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 18%, transparent);
 }
 
 .app-header__more {

@@ -2,18 +2,8 @@
   color-scheme: light;
 
   /* Home hero overlays */
-  --home-bg-overlay-light: linear-gradient(
-    165deg,
-    rgba(246, 248, 252, 0.74) 0%,
-    rgba(246, 248, 252, 0.44) 54%,
-    rgba(246, 248, 252, 0.82) 100%
-  );
-  --home-bg-overlay-dark: linear-gradient(
-    165deg,
-    rgba(16, 20, 30, 0.84) 0%,
-    rgba(16, 20, 30, 0.5) 54%,
-    rgba(16, 20, 30, 0.9) 100%
-  );
+  --home-bg-overlay-light: transparent;
+  --home-bg-overlay-dark: transparent;
 
   /* Colors */
   --color-bg: #f5f7fb;
@@ -61,6 +51,31 @@
   --layout-content-width: 100%;
   --layout-wide-width: 100%;
 
+  /* Hero theme tokens */
+  --hero-title-color: #171c27;
+  --hero-link-border: rgba(23, 28, 39, 0.18);
+  --hero-link-bg: rgba(255, 255, 255, 0.76);
+  --hero-link-color: #171c27;
+  --hero-link-hover-bg: #171c27;
+  --hero-link-hover-color: #ffffff;
+  --hero-cursor-border: rgba(0, 0, 0, 0.62);
+  --hero-cursor-bg: rgba(0, 0, 0, 0.06);
+  --hero-cursor-wave-border: rgba(0, 0, 0, 0.36);
+  --hero-cursor-mag-bg: rgba(0, 0, 0, 0.72);
+  --hero-cursor-mag-border: rgba(0, 0, 0, 0.74);
+  --hero-cursor-text-color: #ffffff;
+  --hero-mobile-title-color: #ffffff;
+  --hero-mobile-link-border: rgba(255, 255, 255, 0.28);
+  --hero-mobile-link-color: rgba(255, 255, 255, 0.92);
+  --hero-mobile-link-bg: rgba(35, 47, 66, 0.78);
+  --hero-mobile-link-active-bg: rgba(50, 65, 88, 0.86);
+  --hero-mobile-overlay-top: rgba(15, 23, 42, 0.18);
+  --hero-mobile-overlay-bottom: rgba(8, 13, 25, 0.62);
+  --hero-mobile-overlay-bottom-start: rgba(8, 13, 25, 0.18);
+  --hero-mobile-glow: rgba(255, 255, 255, 0.18);
+  --hero-mobile-underline: rgba(255, 255, 255, 0.72);
+  --hero-mobile-sheen: rgba(255, 255, 255, 0.24);
+
   /* Compatibility aliases for early-stage files */
   --color-text-primary: var(--color-fg);
   --color-text-secondary: var(--color-text-weak);
@@ -81,6 +96,31 @@ html[data-theme='dark'] {
   --color-surface: #293244;
   --color-surface-soft: #354056;
   --color-overlay: rgba(20, 26, 39, 0.46);
+
+  /* Hero dark mode tokens */
+  --hero-title-color: #f3f6ff;
+  --hero-link-border: rgba(255, 255, 255, 0.22);
+  --hero-link-bg: rgba(41, 50, 68, 0.78);
+  --hero-link-color: rgba(255, 255, 255, 0.92);
+  --hero-link-hover-bg: #f3f6ff;
+  --hero-link-hover-color: #202737;
+  --hero-cursor-border: rgba(255, 255, 255, 0.5);
+  --hero-cursor-bg: rgba(255, 255, 255, 0.08);
+  --hero-cursor-wave-border: rgba(255, 255, 255, 0.3);
+  --hero-cursor-mag-bg: rgba(255, 255, 255, 0.22);
+  --hero-cursor-mag-border: rgba(255, 255, 255, 0.45);
+  --hero-cursor-text-color: #f3f6ff;
+  --hero-mobile-title-color: #f3f6ff;
+  --hero-mobile-link-border: rgba(255, 255, 255, 0.22);
+  --hero-mobile-link-color: rgba(255, 255, 255, 0.92);
+  --hero-mobile-link-bg: rgba(41, 50, 68, 0.86);
+  --hero-mobile-link-active-bg: rgba(55, 70, 95, 0.92);
+  --hero-mobile-overlay-top: rgba(10, 14, 24, 0.32);
+  --hero-mobile-overlay-bottom: rgba(10, 14, 24, 0.76);
+  --hero-mobile-overlay-bottom-start: rgba(10, 14, 24, 0.32);
+  --hero-mobile-glow: rgba(155, 175, 255, 0.12);
+  --hero-mobile-underline: rgba(155, 175, 255, 0.6);
+  --hero-mobile-sheen: rgba(255, 255, 255, 0.14);
 }
 
 *,

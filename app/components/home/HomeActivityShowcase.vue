@@ -161,15 +161,13 @@ const groups = computed<Record<CollectionName, ActivityItem[]>>(
           :to="item.path || module.to"
         >
           <span class="activity-item__inner">
-            <span class="activity-item__face activity-item__front">
-              <span class="activity-item__meta">
-                <time>{{ item.dateLabel }}</time>
-                <span v-if="item.status">{{ item.status }}</span>
-              </span>
-              <strong>{{ item.title }}</strong>
+            <span class="activity-item__meta">
+              <time>{{ item.dateLabel }}</time>
+              <span v-if="item.status">{{ item.status }}</span>
             </span>
-            <span class="activity-item__face activity-item__back">
-              <span>{{ item.description }}</span>
+            <span class="activity-item__body">
+              <strong>{{ item.title }}</strong>
+              <span class="activity-item__description">{{ item.description }}</span>
             </span>
           </span>
         </NuxtLink>
@@ -278,68 +276,66 @@ const groups = computed<Record<CollectionName, ActivityItem[]>>(
 .activity-item {
   position: relative;
   min-height: 244px;
-  perspective: 1000px;
 }
 
 .activity-item__inner {
-  position: absolute;
-  inset: 0;
-  display: block;
+  display: grid;
+  align-content: space-between;
+  gap: var(--space-16);
+  min-height: 100%;
+  padding: var(--space-18, 18px);
+  border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
   border-radius: var(--radius-8);
-  transform-style: preserve-3d;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 94%, transparent), transparent),
+    color-mix(in srgb, var(--color-surface) 92%, var(--color-bg));
+  box-shadow: 0 24px 50px rgba(18, 24, 38, 0.06);
   transition:
-    transform 680ms cubic-bezier(0.2, 0.72, 0.2, 1),
+    transform 260ms ease,
+    border-color 260ms ease,
+    background-color 260ms ease,
     box-shadow 260ms ease;
 }
 
 .activity-item:hover .activity-item__inner,
 .activity-item:focus-visible .activity-item__inner {
+  transform: translateY(-4px);
   box-shadow: var(--shadow-medium);
-}
-
-.activity-item__face {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  align-content: center;
-  gap: var(--space-10, 10px);
-  padding: var(--space-16);
-  border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
-  border-radius: var(--radius-4);
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 94%, transparent), transparent),
-    color-mix(in srgb, var(--color-surface) 92%, var(--color-bg));
-  box-shadow: 0 24px 50px rgba(18, 24, 38, 0.06);
-  backface-visibility: hidden;
+  border-color: color-mix(in srgb, var(--activity-accent) 42%, var(--color-border));
 }
 
 .activity-item__meta {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--space-8);
   color: var(--color-text-weak);
   font-size: 0.8rem;
   font-weight: 800;
 }
 
+.activity-item__body {
+  display: grid;
+  gap: var(--space-10, 10px);
+}
+
 .activity-item strong {
+  display: -webkit-box;
   font-size: clamp(1.1rem, 2vw, 1.38rem);
   line-height: 1.25;
-  text-align: center;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.activity-item__back {
+.activity-item__description {
   color: var(--color-text-weak);
   font-size: 0.94rem;
-  transform: rotateY(180deg);
-}
-
-.activity-module--flip .activity-item__back,
-.activity-module--wide .activity-item__back {
-  color: color-mix(in srgb, var(--color-fg) 82%, var(--color-text-weak));
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--activity-accent) 10%, transparent), transparent 48%),
-    color-mix(in srgb, var(--color-surface) 94%, var(--activity-accent));
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .activity-module--static .activity-module__items {
@@ -347,22 +343,19 @@ const groups = computed<Record<CollectionName, ActivityItem[]>>(
 }
 
 .activity-module--static .activity-item {
-  min-height: 180px;
+  min-height: 196px;
 }
 
-.activity-module--static .activity-item__face {
-  place-items: center;
+.activity-module--static .activity-item__inner {
+  justify-items: center;
   text-align: center;
-}
-
-.activity-module--static .activity-item__front {
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--activity-accent) 10%, transparent), transparent 40%),
     color-mix(in srgb, var(--color-surface) 92%, var(--color-bg));
 }
 
-.activity-module--static .activity-item:hover .activity-item__face,
-.activity-module--static .activity-item:focus-visible .activity-item__face {
+.activity-module--static .activity-item:hover .activity-item__inner,
+.activity-module--static .activity-item:focus-visible .activity-item__inner {
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--activity-accent) 20%, transparent), transparent 40%),
     color-mix(in srgb, var(--activity-accent) 12%, var(--color-surface));
@@ -373,22 +366,18 @@ const groups = computed<Record<CollectionName, ActivityItem[]>>(
 }
 
 .activity-module--flip .activity-item {
-  min-height: 180px;
+  min-height: 196px;
 }
 
-.activity-module--flip .activity-item__front {
+.activity-module--flip .activity-item__inner {
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--activity-accent) 8%, transparent), transparent 46%),
     color-mix(in srgb, var(--color-surface) 96%, var(--activity-accent));
 }
 
-.activity-module--flip .activity-item__inner {
-  transform-origin: center;
-}
-
-.activity-module--flip .activity-item:hover .activity-item__inner,
-.activity-module--flip .activity-item:focus-visible .activity-item__inner {
-  transform: rotateY(-180deg);
+.activity-module--flip .activity-item__description,
+.activity-module--wide .activity-item__description {
+  color: color-mix(in srgb, var(--color-fg) 82%, var(--color-text-weak));
 }
 
 .activity-module--wide .activity-module__items {
@@ -398,28 +387,27 @@ const groups = computed<Record<CollectionName, ActivityItem[]>>(
 }
 
 .activity-module--wide .activity-item {
-  min-height: 150px;
+  min-height: 164px;
 }
 
 .activity-module--wide .activity-item__inner {
-  transform-origin: center;
-}
-
-.activity-module--wide .activity-item__face {
-  align-content: center;
+  grid-template-columns: minmax(120px, 180px) minmax(0, 1fr);
+  align-items: center;
+  column-gap: clamp(var(--space-16), 4vw, var(--space-48));
   padding-inline: clamp(var(--space-24), 4vw, var(--space-48));
-}
-
-.activity-module--wide .activity-item__front {
-  text-align: left;
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--activity-accent) 8%, transparent), transparent 46%),
     color-mix(in srgb, var(--color-surface) 96%, var(--activity-accent));
 }
 
-.activity-module--wide .activity-item:hover .activity-item__inner,
-.activity-module--wide .activity-item:focus-visible .activity-item__inner {
-  transform: rotateY(180deg);
+.activity-module--wide .activity-item__meta {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-6, 6px);
+}
+
+.activity-module--wide .activity-item__body {
+  text-align: left;
 }
 
 .activity-empty {
@@ -485,6 +473,16 @@ const groups = computed<Record<CollectionName, ActivityItem[]>>(
   .activity-item {
     min-height: 168px;
   }
+
+  .activity-module--wide .activity-item__inner {
+    grid-template-columns: 1fr;
+    row-gap: var(--space-12);
+    padding-inline: var(--space-18, 18px);
+  }
+
+  .activity-module--wide .activity-item__meta {
+    flex-direction: row;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -496,19 +494,14 @@ const groups = computed<Record<CollectionName, ActivityItem[]>>(
   .activity-module__head a {
     transition: none;
   }
-
-  .activity-item:hover .activity-item__inner,
-  .activity-item:focus-visible .activity-item__inner {
-    transform: none;
-  }
 }
 
-:global(html[data-theme='dark']) .activity-item__face {
+:global(html[data-theme='dark']) .activity-item__inner {
   box-shadow: 0 18px 36px rgba(6, 10, 19, 0.32);
 }
 
 :global(html[data-theme='dark']) .activity-item__meta,
-:global(html[data-theme='dark']) .activity-item__back {
+:global(html[data-theme='dark']) .activity-item__description {
   color: color-mix(in srgb, var(--color-fg) 76%, var(--color-text-weak));
 }
 </style>

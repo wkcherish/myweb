@@ -34,10 +34,6 @@ const heroStyle = computed(() => ({
   '--title-width': `${titleWidth.value}px`,
   '--hero-scroll': scrollProgress.value.toFixed(3),
   '--home-bg-image': hasBackgroundImage.value ? `url("${selectedBackground.value.path}")` : 'none',
-  '--home-bg-overlay': hasBackgroundImage.value
-    ? `rgba(255, 255, 255, ${selectedBackground.value.overlayOpacity})`
-    : 'rgba(255, 255, 255, 0)',
-  '--home-bg-shade': hasBackgroundImage.value ? 'rgba(255, 255, 255, 0)' : 'rgba(255, 255, 255, 0.18)',
 }))
 
 function updatePointer(event: PointerEvent) {
@@ -173,6 +169,8 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .mimo-hero {
+  --home-bg-overlay: transparent;
+  --home-bg-shade: var(--hero-mobile-glow);
   position: relative;
   min-height: calc(100svh - 68px);
   overflow: hidden;
@@ -183,18 +181,28 @@ onBeforeUnmount(() => {
   background:
     linear-gradient(var(--home-bg-overlay), var(--home-bg-overlay)),
     var(--home-bg-image),
-    #ffffff;
+    var(--color-bg);
   background-position: center;
   background-size: cover;
   isolation: isolate;
   cursor: auto;
+  transition: background var(--motion-280) ease;
+}
+
+.mimo-hero.has-background-image {
+  --home-bg-overlay: var(--home-bg-overlay-light, rgba(255, 255, 255, 0));
+  --home-bg-shade: transparent;
+}
+
+:global(html[data-theme='dark']) .mimo-hero.has-background-image {
+  --home-bg-overlay: var(--home-bg-overlay-dark, rgba(16, 20, 30, 0.36));
 }
 
 .mimo-hero::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, var(--home-bg-shade), rgba(255, 255, 255, 0));
+  background: linear-gradient(180deg, var(--home-bg-shade), transparent);
   pointer-events: none;
 }
 
@@ -203,12 +211,13 @@ onBeforeUnmount(() => {
   position: absolute;
   inset: auto 0 0;
   height: 42%;
-  background: radial-gradient(ellipse at 50% 78%, rgba(255, 255, 255, 0.2), transparent 58%);
+  background: radial-gradient(ellipse at 50% 78%, var(--hero-mobile-glow), transparent 58%);
   opacity: 0;
   pointer-events: none;
   z-index: 0;
 }
 
+/* Cursor */
 .mimo-hero__cursor {
   position: fixed;
   left: 0;
@@ -219,8 +228,8 @@ onBeforeUnmount(() => {
   height: 84px;
   border-radius: 50%;
   overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.62);
-  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--hero-cursor-border);
+  background: var(--hero-cursor-bg);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.45) inset,
     0 10px 28px rgba(0, 0, 0, 0.14);
@@ -240,7 +249,7 @@ onBeforeUnmount(() => {
   content: '';
   position: absolute;
   inset: -1px;
-  border: 1px solid rgba(0, 0, 0, 0.36);
+  border: 1px solid var(--hero-cursor-wave-border);
   border-radius: inherit;
   opacity: 0;
   animation: cursor-wave 1800ms ease-out infinite;
@@ -272,8 +281,8 @@ onBeforeUnmount(() => {
   --cursor-radius: 124px;
   width: 248px;
   height: 248px;
-  border-color: rgba(0, 0, 0, 0.74);
-  background: rgba(0, 0, 0, 0.72);
+  border-color: var(--hero-cursor-mag-border);
+  background: var(--hero-cursor-mag-bg);
   backdrop-filter: contrast(1.12) saturate(1.12);
 }
 
@@ -286,7 +295,7 @@ onBeforeUnmount(() => {
   left: calc(var(--title-left, 0px) - var(--cursor-x, 0px) + var(--cursor-radius));
   top: calc(var(--title-top, 0px) - var(--cursor-y, 0px) + var(--cursor-radius));
   width: var(--title-width, 960px);
-  color: #ffffff;
+  color: var(--hero-cursor-text-color);
   font-size: clamp(2.5rem, 7.9vw, 7.35rem);
   font-weight: 850;
   line-height: 1;
@@ -301,6 +310,7 @@ onBeforeUnmount(() => {
   opacity: 1;
 }
 
+/* Copy */
 .mimo-hero__copy {
   position: relative;
   z-index: 1;
@@ -328,11 +338,19 @@ onBeforeUnmount(() => {
   position: relative;
   display: block;
   white-space: nowrap;
-  color: var(--color-fg);
+  color: var(--hero-title-color);
   font-size: clamp(2.5rem, 7.9vw, 7.35rem);
   font-weight: 850;
   line-height: 1;
   text-align: center;
+}
+
+.mimo-hero.has-background-image .mimo-hero__title {
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.24), 0 0 40px rgba(0, 0, 0, 0.12);
+}
+
+.mimo-hero.has-background-image .mimo-hero__desc {
+  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.18));
 }
 
 .mimo-hero__title-text {
@@ -395,6 +413,7 @@ onBeforeUnmount(() => {
   text-shadow: none;
 }
 
+/* Actions / Links */
 .mimo-hero__actions {
   display: flex;
   flex-wrap: wrap;
@@ -412,10 +431,10 @@ onBeforeUnmount(() => {
   min-width: 104px;
   min-height: 44px;
   padding: 0 var(--space-16);
-  border: 1px solid color-mix(in srgb, var(--color-fg) 18%, transparent);
+  border: 1px solid var(--hero-link-border);
   border-radius: var(--radius-pill);
-  color: var(--color-fg);
-  background: color-mix(in srgb, var(--color-surface) 76%, transparent);
+  color: var(--hero-link-color);
+  background: var(--hero-link-bg);
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
   backdrop-filter: blur(16px);
@@ -427,9 +446,9 @@ onBeforeUnmount(() => {
 }
 
 .mimo-hero__link:hover {
-  border-color: var(--color-fg);
-  color: var(--color-bg);
-  background: var(--color-fg);
+  border-color: var(--hero-link-hover-bg);
+  color: var(--hero-link-hover-color);
+  background: var(--hero-link-hover-bg);
   transform: translateY(-2px);
 }
 
@@ -496,6 +515,7 @@ onBeforeUnmount(() => {
   }
 }
 
+/* Mobile */
 @media (max-width: 700px) {
   .mimo-hero {
     min-height: calc(100svh - 68px);
@@ -505,21 +525,17 @@ onBeforeUnmount(() => {
     animation: mobile-hero-breathe 9000ms ease-in-out infinite alternate;
   }
 
-  .mimo-hero.has-background-image {
-    --home-bg-overlay: rgba(7, 12, 24, 0.18) !important;
-  }
-
   .mimo-hero::before {
     background:
-      linear-gradient(180deg, rgba(15, 23, 42, 0.18) 0%, rgba(15, 23, 42, 0) 34%),
-      linear-gradient(0deg, rgba(8, 13, 25, 0.62) 0%, rgba(8, 13, 25, 0.18) 42%, rgba(8, 13, 25, 0) 76%);
+      linear-gradient(180deg, var(--hero-mobile-overlay-top) 0%, transparent 34%),
+      linear-gradient(0deg, var(--hero-mobile-overlay-bottom) 0%, var(--hero-mobile-overlay-bottom-start) 42%, transparent 76%);
   }
 
   .mimo-hero::after {
     height: 48%;
     background:
-      radial-gradient(ellipse at 50% 64%, rgba(255, 255, 255, 0.18), transparent 42%),
-      linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.06));
+      radial-gradient(ellipse at 50% 64%, var(--hero-mobile-glow), transparent 42%),
+      linear-gradient(180deg, transparent, var(--hero-mobile-glow));
     opacity: 1;
     animation: mobile-ambient-glow 6200ms ease-in-out infinite alternate;
   }
@@ -531,7 +547,7 @@ onBeforeUnmount(() => {
   }
 
   .mimo-hero__title {
-    color: #ffffff;
+    color: var(--hero-mobile-title-color);
     font-size: clamp(2.12rem, 9vw, 2.72rem);
     font-weight: 900;
     line-height: 0.96;
@@ -552,7 +568,7 @@ onBeforeUnmount(() => {
     left: 4%;
     height: 2px;
     border-radius: var(--radius-pill);
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.72), transparent);
+    background: linear-gradient(90deg, transparent, var(--hero-mobile-underline), transparent);
     opacity: 0.72;
     transform: scaleX(0);
     transform-origin: center;
@@ -597,9 +613,9 @@ onBeforeUnmount(() => {
     min-width: 0;
     min-height: 44px;
     padding: 0 10px;
-    border-color: rgba(255, 255, 255, 0.28);
-    color: rgba(255, 255, 255, 0.92);
-    background: rgba(35, 47, 66, 0.78);
+    border-color: var(--hero-mobile-link-border);
+    color: var(--hero-mobile-link-color);
+    background: var(--hero-mobile-link-bg);
     font-size: 0.95rem;
     font-weight: 760;
     box-shadow:
@@ -613,7 +629,7 @@ onBeforeUnmount(() => {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(110deg, transparent 0 24%, rgba(255, 255, 255, 0.24) 44%, transparent 62% 100%);
+    background: linear-gradient(110deg, transparent 0 24%, var(--hero-mobile-sheen) 44%, transparent 62% 100%);
     transform: translateX(-120%);
     animation: mobile-link-sheen 5200ms ease-in-out infinite;
     pointer-events: none;
@@ -641,7 +657,7 @@ onBeforeUnmount(() => {
 
   .mimo-hero__link:active {
     transform: scale(0.97);
-    background: rgba(50, 65, 88, 0.86);
+    background: var(--hero-mobile-link-active-bg);
   }
 }
 

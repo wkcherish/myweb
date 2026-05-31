@@ -150,6 +150,11 @@ const hasActiveFilter = computed(() =>
   background: color-mix(in srgb, var(--color-fg) 6%, transparent);
 }
 
+.blog-filter__toggle:focus-visible,
+.blog-filter__clear:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 16%, transparent);
+}
+
 .blog-filter__chevron {
   transition: transform var(--motion-180) ease;
 }
@@ -203,6 +208,10 @@ const hasActiveFilter = computed(() =>
   border: 1px solid var(--color-border);
   border-radius: var(--radius-8);
   background: var(--color-surface);
+  transition:
+    border-color var(--motion-180) ease,
+    box-shadow var(--motion-180) ease,
+    background-color var(--motion-180) ease;
 }
 
 .blog-filter__search input {
@@ -211,6 +220,12 @@ const hasActiveFilter = computed(() =>
   border: 0;
   background: transparent;
   outline: none;
+}
+
+.blog-filter__search:focus-within {
+  border-color: color-mix(in srgb, var(--color-primary) 42%, var(--color-border));
+  background: color-mix(in srgb, var(--color-surface) 96%, white 4%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 10%, transparent);
 }
 
 .blog-filter__selects {
@@ -222,6 +237,11 @@ const hasActiveFilter = computed(() =>
 .blog-filter__selects select {
   min-height: 44px;
   padding: 0 var(--space-12);
+}
+
+.blog-filter__selects select:focus-visible {
+  border-color: color-mix(in srgb, var(--color-primary) 42%, var(--color-border));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 10%, transparent);
 }
 
 .blog-filter__tags {
@@ -251,6 +271,13 @@ const hasActiveFilter = computed(() =>
   color: var(--color-fg);
   border-color: color-mix(in srgb, var(--color-accent) 46%, var(--color-border));
   background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+}
+
+.blog-filter__tag:focus-visible {
+  color: var(--color-fg);
+  border-color: color-mix(in srgb, var(--color-primary) 42%, var(--color-border));
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 12%, transparent);
 }
 
 .sr-only {

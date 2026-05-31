@@ -159,7 +159,7 @@ onBeforeUnmount(() => {
   height: 30px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-4);
-  background-color: #ffffff;
+  background-color: var(--color-surface);
   background-position: center;
   background-size: cover;
 }
