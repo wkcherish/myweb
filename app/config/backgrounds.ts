@@ -1,6 +1,7 @@
 export type ThemeMode = 'light' | 'dark'
 export type HomeBackgroundMode = 'light' | 'dark' | 'shared'
 export type HomeBackgroundMediaType = 'image' | 'video'
+export type HomeBackgroundObjectFit = 'cover' | 'contain'
 
 const HOME_BACKGROUND_VIDEO_EXTENSIONS = new Set(['.mp4', '.webm', '.ogg', '.ogv', '.m4v'])
 
@@ -11,6 +12,9 @@ export interface HomeBackground {
   appliesTo: HomeBackgroundMode
   mediaType: HomeBackgroundMediaType
   overlayOpacity: number
+  mobileObjectFit?: HomeBackgroundObjectFit
+  mobileObjectPosition?: string
+  mobileScale?: number
 }
 
 export const DEFAULT_HOME_BACKGROUND_ID = 'school-girl-campus'

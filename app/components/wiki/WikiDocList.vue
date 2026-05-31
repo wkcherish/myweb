@@ -282,16 +282,21 @@ const getMetricValue = (path: string, key: keyof PathMetricSummary) => {
 }
 
 .wiki-doc-card__description {
-  display: -webkit-box;
-  overflow: hidden;
+  display: block;
   color: var(--color-text-weak);
   line-height: 1.65;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  max-height: 7.4rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
 }
 
 .wiki-doc-card.is-open .wiki-doc-card__description {
-  -webkit-line-clamp: 3;
+  max-height: 8.8rem;
 }
 
 .wiki-doc-card__tags {
@@ -466,16 +471,9 @@ const getMetricValue = (path: string, key: keyof PathMetricSummary) => {
   }
 
   .wiki-doc-card__description {
-    display: block;
     font-size: 0.88rem;
     line-height: 1.55;
     max-height: 6.9rem;
-    overflow-y: auto;
-    padding-right: 6px;
-    scrollbar-width: thin;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
-    touch-action: pan-y;
   }
 
   .wiki-doc-card.is-open .wiki-doc-card__description {

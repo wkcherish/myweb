@@ -1,6 +1,11 @@
 import { computed, watch } from 'vue'
 
-import type { HomeBackground, HomeBackgroundMediaType, HomeBackgroundMode } from '~/config/backgrounds'
+import type {
+  HomeBackground,
+  HomeBackgroundMediaType,
+  HomeBackgroundMode,
+  HomeBackgroundObjectFit,
+} from '~/config/backgrounds'
 import { DEFAULT_HOME_BACKGROUND_ID, fallbackHomeBackgrounds, inferHomeBackgroundMediaType } from '~/config/backgrounds'
 
 const STORAGE_KEY = 'notebook:home-background'
@@ -20,6 +25,18 @@ function isBackgroundMode(value: unknown): value is HomeBackgroundMode {
 
 function isBackgroundMediaType(value: unknown): value is HomeBackgroundMediaType {
   return value === 'image' || value === 'video'
+}
+
+function isBackgroundObjectFit(value: unknown): value is HomeBackgroundObjectFit {
+  return value === 'cover' || value === 'contain'
+}
+
+function normalizeBackgroundObjectPosition(value: unknown) {
+  return typeof value === 'string' && value.trim() ? value.trim() : 'center'
+}
+
+function normalizeBackgroundScale(value: unknown, fallback: number) {
+  return typeof value === 'number' && Number.isFinite(value) ? value : fallback
 }
 
 function resolveRuntimeBackgrounds(value: unknown) {
@@ -43,6 +60,9 @@ function resolveRuntimeBackgrounds(value: unknown) {
         typeof candidate.overlayOpacity === 'number' && Number.isFinite(candidate.overlayOpacity)
           ? candidate.overlayOpacity
           : 0
+      const mobileObjectFit = isBackgroundObjectFit(candidate.mobileObjectFit) ? candidate.mobileObjectFit : undefined
+      const mobileObjectPosition = normalizeBackgroundObjectPosition(candidate.mobileObjectPosition)
+      const mobileScale = normalizeBackgroundScale(candidate.mobileScale, mobileObjectFit === 'contain' ? 0.98 : 1.03)
 
       if (!id || !name || !path) {
         return null
@@ -55,6 +75,9 @@ function resolveRuntimeBackgrounds(value: unknown) {
         appliesTo,
         mediaType,
         overlayOpacity,
+        mobileObjectFit,
+        mobileObjectPosition,
+        mobileScale,
       }
     })
     .filter((item): item is HomeBackground => Boolean(item))

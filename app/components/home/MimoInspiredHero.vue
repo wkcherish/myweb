@@ -35,6 +35,9 @@ const heroStyle = computed(() => ({
   '--title-top': `${titleTop.value}px`,
   '--title-width': `${titleWidth.value}px`,
   '--hero-scroll': scrollProgress.value.toFixed(3),
+  '--mobile-media-fit': selectedBackground.value.mobileObjectFit ?? 'cover',
+  '--mobile-media-position': selectedBackground.value.mobileObjectPosition ?? 'center',
+  '--mobile-media-scale': `${selectedBackground.value.mobileScale ?? 1.03}`,
 }))
 
 function updatePointer(event: PointerEvent) {
@@ -581,9 +584,9 @@ onBeforeUnmount(() => {
   }
 
   .mimo-hero__media--image-focus {
-    object-fit: cover;
-    object-position: center;
-    transform: scale(1.03);
+    object-fit: var(--mobile-media-fit, cover);
+    object-position: var(--mobile-media-position, center);
+    transform: scale(var(--mobile-media-scale, 1.03));
   }
 
   .mimo-hero::before {

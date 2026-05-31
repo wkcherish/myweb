@@ -16,6 +16,47 @@ interface HomeBackgroundPayload {
   appliesTo: 'light'
   mediaType: 'image' | 'video'
   overlayOpacity: number
+  mobileObjectFit?: 'cover' | 'contain'
+  mobileObjectPosition?: string
+  mobileScale?: number
+}
+
+const HOME_DAY_BACKGROUND_MOBILE_PRESETS: Record<string, Pick<HomeBackgroundPayload, 'mobileObjectFit' | 'mobileObjectPosition' | 'mobileScale'>> = {
+  'school-girl-campus': {
+    mobileObjectFit: 'cover',
+    mobileObjectPosition: 'center 34%',
+    mobileScale: 1.03,
+  },
+  徽杭古道: {
+    mobileObjectFit: 'cover',
+    mobileObjectPosition: '64% center',
+    mobileScale: 1.04,
+  },
+  泰山: {
+    mobileObjectFit: 'cover',
+    mobileObjectPosition: 'center 34%',
+    mobileScale: 1.04,
+  },
+  忘记烦恼: {
+    mobileObjectFit: 'contain',
+    mobileObjectPosition: 'center',
+    mobileScale: 0.98,
+  },
+  心云: {
+    mobileObjectFit: 'contain',
+    mobileObjectPosition: 'center',
+    mobileScale: 0.98,
+  },
+  音乐与生活: {
+    mobileObjectFit: 'cover',
+    mobileObjectPosition: '38% center',
+    mobileScale: 1.02,
+  },
+  自由: {
+    mobileObjectFit: 'cover',
+    mobileObjectPosition: '62% center',
+    mobileScale: 1.04,
+  },
 }
 
 function formatHomeBackgroundName(stem: string) {
@@ -47,6 +88,7 @@ function loadHomeDayBackgrounds(): HomeBackgroundPayload[] {
     .filter((fileName: string) => HOME_DAY_BACKGROUND_EXTENSIONS.has(extname(fileName).toLowerCase()))
     .map((fileName: string) => {
       const stem = parse(fileName).name
+      const mobilePreset = HOME_DAY_BACKGROUND_MOBILE_PRESETS[stem]
 
       return {
         id: stem,
@@ -55,6 +97,7 @@ function loadHomeDayBackgrounds(): HomeBackgroundPayload[] {
         appliesTo: 'light' as const,
         mediaType: resolveHomeBackgroundMediaType(fileName),
         overlayOpacity: 0,
+        ...mobilePreset,
       }
     })
 
