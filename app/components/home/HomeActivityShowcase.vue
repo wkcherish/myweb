@@ -1,13 +1,5 @@
 <script setup lang="ts">
 import { ChevronDown } from 'lucide-vue-next'
-import {
-  fetchUmamiExpandedMetrics,
-  getUmamiPublicConfig,
-  hasUmamiPublicConfig,
-  normalizeUmamiPath,
-  resolveUmamiRange,
-  type UmamiMetricRow,
-} from '~/composables/useUmamiClient'
 import type { ContentEntry } from '~/utils/content'
 
 type CollectionName = 'todo' | 'blog' | 'wiki'
@@ -30,8 +22,6 @@ type WikiChapterPreview = {
   title: string
   path: string
 }
-
-type PathMetricSummary = Pick<UmamiMetricRow, 'pageviews' | 'visits'>
 
 type WikiActivityGroup = {
   keyPath: string
@@ -268,55 +258,13 @@ const regularGroups = computed<Record<RegularCollectionName, ActivityItem[]>>(
 )
 
 const wikiGroups = computed<WikiActivityGroup[]>(() => activityGroups.value?.wiki || [])
-
-const { data: wikiPathMetrics, pending: wikiPathMetricsPending } = await useLazyAsyncData<Record<string, PathMetricSummary>>(
-  'home-wiki-path-metrics',
-  async () => {
-    if (!hasUmamiPublicConfig()) {
-      return {}
-    }
-
-    try {
-      const range = resolveUmamiRange()
-      const { pathLimit } = getUmamiPublicConfig()
-      const rows = await fetchUmamiExpandedMetrics('path', range, {
-        limit: pathLimit,
-      })
-
-      return rows.reduce<Record<string, PathMetricSummary>>((accumulator, row) => {
-        accumulator[normalizeUmamiPath(row.name)] = {
-          pageviews: row.pageviews,
-          visits: row.visits,
-        }
-
-        return accumulator
-      }, {})
-    } catch {
-      return {}
-    }
-  },
-  {
-    server: false,
-    default: () => ({}),
-  },
-)
+const { readPathMetric } = useUmamiPathMetrics()
 
 const getRegularItems = (key: CollectionName) => (key === 'wiki' ? [] : regularGroups.value[key])
 
 const hasModuleItems = (key: CollectionName) => (key === 'wiki' ? wikiGroups.value.length > 0 : getRegularItems(key).length > 0)
 
 const isWikiGroupExpanded = (path: string) => expandedWikiGroups.value.includes(path)
-
-const readPathMetric = (path: string): PathMetricSummary | null => {
-  if (wikiPathMetricsPending.value) {
-    return null
-  }
-
-  return wikiPathMetrics.value[normalizeUmamiPath(path)] || {
-    pageviews: 0,
-    visits: 0,
-  }
-}
 
 const getChapterMetricLabel = (path: string) => {
   const metric = readPathMetric(path)

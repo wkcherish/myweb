@@ -25,7 +25,7 @@ defineProps<{
           <time>{{ formatContentDate(getContentDateFromPath(path)) }}</time>
         </span>
         <BaseTag>{{ readContentString(article, 'category') || '未分类' }}</BaseTag>
-        <VisitCount :path="path" increment />
+        <VisitCount :path="path" />
       </div>
     </div>
 

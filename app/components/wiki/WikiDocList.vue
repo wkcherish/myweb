@@ -1,14 +1,7 @@
 <script setup lang="ts">
 import { ChevronDown } from 'lucide-vue-next'
 import { ref } from 'vue'
-import {
-  fetchUmamiExpandedMetrics,
-  getUmamiPublicConfig,
-  hasUmamiPublicConfig,
-  normalizeUmamiPath,
-  resolveUmamiRange,
-  type UmamiMetricRow,
-} from '~/composables/useUmamiClient'
+import type { UmamiPathMetricSummary } from '~/composables/useUmamiClient'
 import BaseTag from '~/components/ui/BaseTag.vue'
 import EmptyState from '~/components/ui/EmptyState.vue'
 import {
@@ -29,45 +22,12 @@ type WikiGroup = {
   primary: ContentEntry
 }
 
-type PathMetricSummary = Pick<UmamiMetricRow, 'pageviews' | 'visits'>
-
 const props = defineProps<{
   groups: WikiGroup[]
 }>()
 
 const expandedGroups = ref<string[]>([])
-
-const { data: pathMetrics, pending: pathMetricsPending } = await useLazyAsyncData<Record<string, PathMetricSummary>>(
-  'wiki-doc-list-path-metrics-v1',
-  async () => {
-    if (!hasUmamiPublicConfig()) {
-      return {}
-    }
-
-    try {
-      const range = resolveUmamiRange()
-      const { pathLimit } = getUmamiPublicConfig()
-      const rows = await fetchUmamiExpandedMetrics('path', range, {
-        limit: pathLimit,
-      })
-
-      return rows.reduce<Record<string, PathMetricSummary>>((accumulator, row) => {
-        accumulator[normalizeUmamiPath(row.name)] = {
-          pageviews: row.pageviews,
-          visits: row.visits,
-        }
-
-        return accumulator
-      }, {})
-    } catch {
-      return {}
-    }
-  },
-  {
-    server: false,
-    default: () => ({}),
-  },
-)
+const { readPathMetric } = useUmamiPathMetrics()
 
 const getGroupKey = (group: WikiGroup) => group.path || group.primary.path || group.title
 
@@ -99,18 +59,7 @@ const getChapterCountLabel = (group: WikiGroup) => {
 
 const formatMetricCount = (value: number) => Math.max(0, Number(value || 0)).toLocaleString('zh-CN')
 
-const readPathMetric = (path: string): PathMetricSummary | null => {
-  if (pathMetricsPending.value) {
-    return null
-  }
-
-  return pathMetrics.value[normalizeUmamiPath(path)] || {
-    pageviews: 0,
-    visits: 0,
-  }
-}
-
-const getMetricValue = (path: string, key: keyof PathMetricSummary) => {
+const getMetricValue = (path: string, key: keyof UmamiPathMetricSummary) => {
   const metric = readPathMetric(path)
 
   return metric ? formatMetricCount(metric[key]) : '--'

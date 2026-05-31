@@ -14,6 +14,11 @@ export interface UmamiMetricRow {
   totaltime: number
 }
 
+export interface UmamiPathMetricSummary {
+  pageviews: number
+  visits: number
+}
+
 export interface UmamiStatsResponse {
   pageviews: number
   visitors: number
@@ -51,6 +56,8 @@ const shareTokenCache = new Map<string, UmamiShareToken>()
 const shareTokenRequestCache = new Map<string, Promise<UmamiShareToken>>()
 const statsCache = new Map<string, UmamiStatsResponse>()
 const metricsCache = new Map<string, UmamiMetricRow[]>()
+const statsRequestCache = new Map<string, Promise<UmamiStatsResponse>>()
+const metricsRequestCache = new Map<string, Promise<UmamiMetricRow[]>>()
 const cacheTimeStore = new Map<string, number>()
 
 function asNumber(value: unknown): number {
@@ -230,6 +237,8 @@ export function clearUmamiClientCache() {
   shareTokenRequestCache.clear()
   statsCache.clear()
   metricsCache.clear()
+  statsRequestCache.clear()
+  metricsRequestCache.clear()
   cacheTimeStore.clear()
 }
 
@@ -240,16 +249,26 @@ export async function fetchUmamiStats(range: UmamiRange): Promise<UmamiStatsResp
   const cachedStats = readCachedValue(cacheKey, statsCache)
   if (cachedStats) return cachedStats
 
-  const stats = await umamiApiFetch<UmamiStatsResponse>(
+  const pendingRequest = statsRequestCache.get(cacheKey)
+  if (pendingRequest) return pendingRequest
+
+  const statsRequest = umamiApiFetch<UmamiStatsResponse>(
     `/websites/${config.websiteId}/stats`,
     {
       startAt: range.startAt,
       endAt: range.endAt,
     },
   )
+    .then((stats) => {
+      saveCachedValue(cacheKey, stats, statsCache)
+      return stats
+    })
+    .finally(() => {
+      statsRequestCache.delete(cacheKey)
+    })
 
-  saveCachedValue(cacheKey, stats, statsCache)
-  return stats
+  statsRequestCache.set(cacheKey, statsRequest)
+  return statsRequest
 }
 
 export async function fetchUmamiExpandedMetrics(
@@ -263,7 +282,10 @@ export async function fetchUmamiExpandedMetrics(
   const cachedRows = readCachedValue(cacheKey, metricsCache)
   if (cachedRows) return cachedRows
 
-  const rows = await umamiApiFetch<Record<string, unknown>[]>(
+  const pendingRequest = metricsRequestCache.get(cacheKey)
+  if (pendingRequest) return pendingRequest
+
+  const metricsRequest = umamiApiFetch<Record<string, unknown>[]>(
     `/websites/${config.websiteId}/metrics/expanded`,
     {
       type,
@@ -272,11 +294,33 @@ export async function fetchUmamiExpandedMetrics(
       ...extraQuery,
     },
   )
+    .then((rows) => {
+      const normalizedRows = (rows || []).map((row) => toMetricRow(row))
+      saveCachedValue(cacheKey, normalizedRows, metricsCache)
+      return normalizedRows
+    })
+    .finally(() => {
+      metricsRequestCache.delete(cacheKey)
+    })
 
-  const normalizedRows = (rows || []).map((row) => toMetricRow(row))
+  metricsRequestCache.set(cacheKey, metricsRequest)
+  return metricsRequest
+}
 
-  saveCachedValue(cacheKey, normalizedRows, metricsCache)
-  return normalizedRows
+export async function fetchUmamiPathMetricsMap(range: UmamiRange): Promise<Record<string, UmamiPathMetricSummary>> {
+  const { pathLimit } = getUmamiPublicConfig()
+  const rows = await fetchUmamiExpandedMetrics('path', range, {
+    limit: pathLimit,
+  })
+
+  return rows.reduce<Record<string, UmamiPathMetricSummary>>((accumulator, row) => {
+    accumulator[normalizeUmamiPath(row.name)] = {
+      pageviews: row.pageviews,
+      visits: row.visits,
+    }
+
+    return accumulator
+  }, {})
 }
 
 export function normalizeUmamiPath(path: string): string {

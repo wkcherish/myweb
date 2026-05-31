@@ -19,7 +19,7 @@ defineProps<{
     <div class="wiki-doc-header__meta">
       <time>{{ formatContentDate(getContentDateFromPath(path)) }}</time>
       <BaseTag tone="accent">{{ readContentString(doc, 'category') || 'Wiki' }}</BaseTag>
-      <VisitCount :path="path" increment />
+      <VisitCount :path="path" />
     </div>
 
     <h1>{{ titleOverride || readContentString(doc, 'title') || '未命名 Wiki' }}</h1>

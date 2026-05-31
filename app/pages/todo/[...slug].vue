@@ -54,7 +54,7 @@ const hasToc = computed(() => tocLinks.value.length > 0)
       <header class="todo-header">
         <div class="todo-header__topline">
           <NuxtLink to="/todo">Todo</NuxtLink>
-          <VisitCount :path="path" increment />
+          <VisitCount :path="path" />
         </div>
         <h1>{{ page?.title }}</h1>
         <p v-if="page?.description" class="todo-header__description">{{ page.description }}</p>

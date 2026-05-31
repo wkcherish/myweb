@@ -2,28 +2,24 @@
 const props = withDefaults(
   defineProps<{
     path?: string
-    increment?: boolean
   }>(),
   {
     path: '',
-    increment: false,
   },
 )
 
-const count = ref(0)
+const route = useRoute()
+const { readPathMetric } = useUmamiPathMetrics()
 
-onMounted(() => {
-  const route = useRoute()
-  const targetPath = props.path || route.path
-  const key = `notebook:visits:${targetPath}`
-  const current = Number.parseInt(window.localStorage.getItem(key) || '0', 10) || 0
-  const next = props.increment ? current + 1 : current
+const targetPath = computed(() => props.path || route.path)
+const count = computed(() => {
+  const metric = readPathMetric(targetPath.value)
 
-  if (props.increment) {
-    window.localStorage.setItem(key, String(next))
+  if (!metric) {
+    return '--'
   }
 
-  count.value = next
+  return Math.max(0, Number(metric.visits || 0)).toLocaleString('zh-CN')
 })
 </script>
 
