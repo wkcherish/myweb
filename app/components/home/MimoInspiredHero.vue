@@ -571,7 +571,7 @@ onBeforeUnmount(() => {
   .mimo-hero {
     min-height: calc(100svh - 68px);
     place-items: end center;
-    padding: 0 18px clamp(108px, 18svh, 148px);
+    padding: 0 18px clamp(88px, 14svh, 124px);
   }
 
   .mimo-hero__media--image-fill {
@@ -581,8 +581,9 @@ onBeforeUnmount(() => {
   }
 
   .mimo-hero__media--image-focus {
-    object-fit: contain;
-    transform: scale(0.98);
+    object-fit: cover;
+    object-position: center;
+    transform: scale(1.03);
   }
 
   .mimo-hero::before {

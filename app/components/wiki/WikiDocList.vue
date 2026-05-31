@@ -194,8 +194,8 @@ const getMetricValue = (path: string, key: keyof PathMetricSummary) => {
 
 <style scoped>
 .wiki-doc-list {
-  --wiki-card-height: 258px;
-  --wiki-card-height-expanded: 408px;
+  --wiki-card-height: 272px;
+  --wiki-card-height-expanded: 432px;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-12);
@@ -239,7 +239,7 @@ const getMetricValue = (path: string, key: keyof PathMetricSummary) => {
 }
 
 .wiki-doc-card.is-open .wiki-doc-card__surface {
-  grid-template-rows: minmax(0, 0.7fr) auto minmax(0, 1.3fr);
+  grid-template-rows: minmax(0, 0.88fr) auto minmax(0, 1.12fr);
 }
 
 .wiki-doc-card__summary {
@@ -286,12 +286,12 @@ const getMetricValue = (path: string, key: keyof PathMetricSummary) => {
   overflow: hidden;
   color: var(--color-text-weak);
   line-height: 1.65;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
 }
 
 .wiki-doc-card.is-open .wiki-doc-card__description {
-  -webkit-line-clamp: 1;
+  -webkit-line-clamp: 3;
 }
 
 .wiki-doc-card__tags {
@@ -400,14 +400,17 @@ const getMetricValue = (path: string, key: keyof PathMetricSummary) => {
 }
 
 .wiki-doc-card__chapter-metrics {
-  display: grid;
-  justify-items: end;
-  gap: 2px;
-  min-width: 88px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  gap: 10px;
+  min-width: max-content;
   color: var(--color-text-weak);
   font-size: 0.74rem;
   font-weight: 700;
   text-align: right;
+  line-height: 1.2;
   white-space: nowrap;
 }
 
@@ -433,14 +436,25 @@ const getMetricValue = (path: string, key: keyof PathMetricSummary) => {
 
 @media (max-width: 720px) {
   .wiki-doc-list {
-    --wiki-card-height: 238px;
-    --wiki-card-height-expanded: 342px;
     grid-template-columns: 1fr;
   }
 
+  .wiki-doc-card {
+    height: auto;
+  }
+
+  .wiki-doc-card.is-open {
+    height: auto;
+  }
+
   .wiki-doc-card__surface {
+    grid-template-rows: auto auto 0fr;
     padding: 14px;
     gap: 10px;
+  }
+
+  .wiki-doc-card.is-open .wiki-doc-card__surface {
+    grid-template-rows: auto auto auto;
   }
 
   .wiki-doc-card__meta {
@@ -452,9 +466,20 @@ const getMetricValue = (path: string, key: keyof PathMetricSummary) => {
   }
 
   .wiki-doc-card__description {
+    display: block;
     font-size: 0.88rem;
     line-height: 1.55;
-    -webkit-line-clamp: 1;
+    max-height: 6.9rem;
+    overflow-y: auto;
+    padding-right: 6px;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+  }
+
+  .wiki-doc-card.is-open .wiki-doc-card__description {
+    max-height: 7.8rem;
   }
 
   .wiki-doc-card__footer-label {
@@ -469,7 +494,7 @@ const getMetricValue = (path: string, key: keyof PathMetricSummary) => {
   }
 
   .wiki-doc-card__chapter {
-    grid-template-columns: 20px minmax(0, 1fr) 82px;
+    grid-template-columns: 20px minmax(0, 1fr) auto;
     gap: 10px;
     padding: 10px 0;
   }
@@ -479,8 +504,13 @@ const getMetricValue = (path: string, key: keyof PathMetricSummary) => {
   }
 
   .wiki-doc-card__chapter-metrics {
-    min-width: 82px;
-    font-size: 0.7rem;
+    gap: 8px;
+    min-width: max-content;
+    font-size: 0.68rem;
+  }
+
+  .wiki-doc-card__chapters {
+    max-height: 224px;
   }
 }
 

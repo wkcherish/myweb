@@ -1213,11 +1213,27 @@ const toggleWikiGroup = (path: string) => {
   }
 
   .activity-wiki-card__chapter {
-    grid-template-columns: 24px minmax(0, 1fr);
+    grid-template-columns: 20px minmax(0, 1fr) auto;
+    gap: var(--space-8);
+    align-items: baseline;
+  }
+
+  .activity-wiki-card__chapter-index {
+    font-size: 0.8rem;
+  }
+
+  .activity-wiki-card__chapter-title {
+    font-size: 0.92rem;
+    line-height: 1.35;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .activity-wiki-card__chapter-meta {
-    display: none;
+    font-size: 0.68rem;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
   }
 }
 
