@@ -1,6 +1,21 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useHomeBackground } from '~/composables/useHomeBackground'
+
+type AutoMobileMediaDecision = {
+  fit: 'cover' | 'contain'
+  position: string
+  scale: number
+}
+
+type SaliencyProfile = {
+  naturalWidth: number
+  naturalHeight: number
+  columnWeights: number[]
+  rowWeights: number[]
+  xCenter: number
+  yCenter: number
+}
 
 const pointerX = ref(0)
 const pointerY = ref(0)
@@ -13,14 +28,31 @@ const scrollProgress = ref(0)
 const isPointerInside = ref(false)
 const isMagnifying = ref(false)
 const isPointerMoving = ref(false)
+const heroEl = ref<HTMLElement | null>(null)
 const titleEl = ref<HTMLElement | null>(null)
+const focusMediaEl = ref<HTMLImageElement | null>(null)
+const autoMobileMedia = ref<AutoMobileMediaDecision | null>(null)
 let frameId = 0
 let moveTimer: ReturnType<typeof window.setTimeout> | null = null
+const saliencyProfileCache = new Map<string, SaliencyProfile>()
 const { selectedBackground, syncHomeBackgroundFromStorage } = useHomeBackground()
 
 const hasBackgroundMedia = computed(() => Boolean(selectedBackground.value.path))
 const isBackgroundImage = computed(() => hasBackgroundMedia.value && selectedBackground.value.mediaType === 'image')
 const isBackgroundVideo = computed(() => hasBackgroundMedia.value && selectedBackground.value.mediaType === 'video')
+const effectiveMobileMediaFit = computed(() => selectedBackground.value.mobileObjectFit ?? autoMobileMedia.value?.fit ?? 'cover')
+const effectiveMobileMediaPosition = computed(() => selectedBackground.value.mobileObjectPosition ?? autoMobileMedia.value?.position ?? 'center')
+const effectiveMobileMediaScale = computed(() => {
+  if (typeof selectedBackground.value.mobileScale === 'number') {
+    return selectedBackground.value.mobileScale
+  }
+
+  if (typeof autoMobileMedia.value?.scale === 'number') {
+    return autoMobileMedia.value.scale
+  }
+
+  return effectiveMobileMediaFit.value === 'contain' ? 0.98 : 1.03
+})
 
 const heroStyle = computed(() => ({
   '--copy-x': `${pointerX.value * 26}px`,
@@ -35,10 +67,208 @@ const heroStyle = computed(() => ({
   '--title-top': `${titleTop.value}px`,
   '--title-width': `${titleWidth.value}px`,
   '--hero-scroll': scrollProgress.value.toFixed(3),
-  '--mobile-media-fit': selectedBackground.value.mobileObjectFit ?? 'cover',
-  '--mobile-media-position': selectedBackground.value.mobileObjectPosition ?? 'center',
-  '--mobile-media-scale': `${selectedBackground.value.mobileScale ?? 1.03}`,
+  '--mobile-media-fit': effectiveMobileMediaFit.value,
+  '--mobile-media-position': effectiveMobileMediaPosition.value,
+  '--mobile-media-scale': `${effectiveMobileMediaScale.value}`,
 }))
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max)
+}
+
+function smoothWeights(weights: number[]) {
+  return weights.map((_, index) => {
+    const previous = weights[index - 1] ?? weights[index] ?? 0
+    const current = weights[index] ?? 0
+    const next = weights[index + 1] ?? weights[index] ?? 0
+
+    return previous * 0.25 + current * 0.5 + next * 0.25
+  })
+}
+
+function buildSaliencyProfile(image: HTMLImageElement) {
+  const naturalWidth = image.naturalWidth
+  const naturalHeight = image.naturalHeight
+
+  if (!naturalWidth || !naturalHeight) {
+    return null
+  }
+
+  const maxSide = 64
+  const scale = Math.min(1, maxSide / Math.max(naturalWidth, naturalHeight))
+  const sampleWidth = Math.max(16, Math.round(naturalWidth * scale))
+  const sampleHeight = Math.max(16, Math.round(naturalHeight * scale))
+  const canvas = document.createElement('canvas')
+  canvas.width = sampleWidth
+  canvas.height = sampleHeight
+
+  const context = canvas.getContext('2d', { willReadFrequently: true })
+
+  if (!context) {
+    return null
+  }
+
+  context.drawImage(image, 0, 0, sampleWidth, sampleHeight)
+  const { data } = context.getImageData(0, 0, sampleWidth, sampleHeight)
+  const luminance = new Float32Array(sampleWidth * sampleHeight)
+
+  for (let index = 0; index < luminance.length; index += 1) {
+    const pixelOffset = index * 4
+    const alpha = (data[pixelOffset + 3] ?? 0) / 255
+    const red = data[pixelOffset] ?? 0
+    const green = data[pixelOffset + 1] ?? 0
+    const blue = data[pixelOffset + 2] ?? 0
+    luminance[index] = (red * 0.299 + green * 0.587 + blue * 0.114) * alpha
+  }
+
+  const rawColumnWeights = new Array(sampleWidth).fill(0)
+  const rawRowWeights = new Array(sampleHeight).fill(0)
+
+  for (let y = 0; y < sampleHeight; y += 1) {
+    for (let x = 0; x < sampleWidth; x += 1) {
+      const index = y * sampleWidth + x
+      const current = luminance[index] ?? 0
+      const right = x + 1 < sampleWidth ? luminance[index + 1] ?? current : current
+      const down = y + 1 < sampleHeight ? luminance[index + sampleWidth] ?? current : current
+      const gradient = Math.abs(current - right) + Math.abs(current - down)
+
+      rawColumnWeights[x] += gradient
+      rawRowWeights[y] += gradient
+    }
+  }
+
+  const columnWeights = smoothWeights(rawColumnWeights)
+  const rowWeights = smoothWeights(rawRowWeights)
+  const columnTotal = columnWeights.reduce((sum, value) => sum + value, 0)
+  const rowTotal = rowWeights.reduce((sum, value) => sum + value, 0)
+  const xCenter =
+    columnTotal > 0
+      ? columnWeights.reduce((sum, value, index) => sum + value * ((index + 0.5) / sampleWidth), 0) / columnTotal
+      : 0.5
+  const yCenter =
+    rowTotal > 0
+      ? rowWeights.reduce((sum, value, index) => sum + value * ((index + 0.5) / sampleHeight), 0) / rowTotal
+      : 0.5
+
+  return {
+    naturalWidth,
+    naturalHeight,
+    columnWeights,
+    rowWeights,
+    xCenter,
+    yCenter,
+  }
+}
+
+function computeRetainedWeightShare(weights: number[], visibleFraction: number, center: number) {
+  if (visibleFraction >= 1) {
+    return { share: 1, center: 0.5 }
+  }
+
+  const safeFraction = clamp(visibleFraction, 0.12, 1)
+  const half = safeFraction / 2
+  const normalizedCenter = clamp(center, half, 1 - half)
+  const start = normalizedCenter - half
+  const end = normalizedCenter + half
+  const total = weights.reduce((sum, value) => sum + value, 0)
+
+  if (total <= 0) {
+    return { share: safeFraction, center: normalizedCenter }
+  }
+
+  const inside = weights.reduce((sum, value, index) => {
+    const segmentStart = index / weights.length
+    const segmentEnd = (index + 1) / weights.length
+    const overlap = Math.max(0, Math.min(end, segmentEnd) - Math.max(start, segmentStart))
+
+    return sum + value * (overlap / (segmentEnd - segmentStart))
+  }, 0)
+
+  return {
+    share: inside / total,
+    center: normalizedCenter,
+  }
+}
+
+function formatPositionPercent(value: number) {
+  return `${(clamp(value, 0, 1) * 100).toFixed(1)}%`
+}
+
+// Auto-fit keeps cover only when the image's salient content mostly survives the mobile crop window.
+function resolveAutoMobileMedia(profile: SaliencyProfile): AutoMobileMediaDecision {
+  const heroWidth = heroEl.value?.clientWidth || window.innerWidth || 1
+  const heroHeight = heroEl.value?.clientHeight || window.innerHeight || 1
+  const viewportRatio = heroWidth / Math.max(heroHeight, 1)
+  const imageRatio = profile.naturalWidth / profile.naturalHeight
+  const visibleWidthFraction = imageRatio > viewportRatio ? viewportRatio / imageRatio : 1
+  const visibleHeightFraction = imageRatio < viewportRatio ? imageRatio / viewportRatio : 1
+  const { share: widthShare, center: widthCenter } = computeRetainedWeightShare(
+    profile.columnWeights,
+    visibleWidthFraction,
+    profile.xCenter,
+  )
+  const { share: heightShare, center: heightCenter } = computeRetainedWeightShare(
+    profile.rowWeights,
+    visibleHeightFraction,
+    profile.yCenter,
+  )
+  const retainedSaliency = widthShare * heightShare
+  const visibleAreaFraction = visibleWidthFraction * visibleHeightFraction
+  const cropSeverity = 1 - visibleAreaFraction
+  const prefersContain =
+    (visibleAreaFraction < 0.4 && retainedSaliency < 0.84) ||
+    (imageRatio < 1.45 && cropSeverity > 0.5 && retainedSaliency < 0.9)
+  const fit = prefersContain ? 'contain' : 'cover'
+  const position = fit === 'contain' ? 'center' : `${formatPositionPercent(widthCenter)} ${formatPositionPercent(heightCenter)}`
+  const scale = fit === 'contain' ? 0.98 : clamp(1.02 + cropSeverity * 0.04, 1.02, 1.08)
+
+  return {
+    fit,
+    position,
+    scale,
+  }
+}
+
+function updateAutoMobileMedia() {
+  if (!import.meta.client) {
+    return
+  }
+
+  if (selectedBackground.value.mediaType !== 'image' || !selectedBackground.value.path) {
+    autoMobileMedia.value = null
+    return
+  }
+
+  if (selectedBackground.value.mobileObjectFit) {
+    autoMobileMedia.value = null
+    return
+  }
+
+  if (window.innerWidth > 700) {
+    autoMobileMedia.value = null
+    return
+  }
+
+  const image = focusMediaEl.value
+
+  if (!image?.complete || !image.naturalWidth || !image.naturalHeight) {
+    return
+  }
+
+  let profile: SaliencyProfile | null | undefined = saliencyProfileCache.get(selectedBackground.value.path)
+
+  if (!profile) {
+    profile = buildSaliencyProfile(image)
+
+    if (!profile) {
+      return
+    }
+
+    saliencyProfileCache.set(selectedBackground.value.path, profile)
+  }
+
+  autoMobileMedia.value = resolveAutoMobileMedia(profile)
+}
 
 function updatePointer(event: PointerEvent) {
   if (event.pointerType === 'touch') {
@@ -114,17 +344,24 @@ function queueScrollUpdate() {
   frameId = window.requestAnimationFrame(updateScrollProgress)
 }
 
+function handleFocusMediaLoad() {
+  updateAutoMobileMedia()
+}
+
 onMounted(() => {
   syncHomeBackgroundFromStorage()
   updateTitleBounds()
   updateScrollProgress()
+  updateAutoMobileMedia()
   window.addEventListener('scroll', queueScrollUpdate, { passive: true })
   window.addEventListener('resize', updateTitleBounds, { passive: true })
+  window.addEventListener('resize', updateAutoMobileMedia, { passive: true })
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', queueScrollUpdate)
   window.removeEventListener('resize', updateTitleBounds)
+  window.removeEventListener('resize', updateAutoMobileMedia)
   if (moveTimer) {
     window.clearTimeout(moveTimer)
   }
@@ -132,10 +369,19 @@ onBeforeUnmount(() => {
     window.cancelAnimationFrame(frameId)
   }
 })
+
+watch(
+  () => selectedBackground.value.path,
+  () => {
+    autoMobileMedia.value = null
+    updateAutoMobileMedia()
+  },
+)
 </script>
 
 <template>
   <section
+    ref="heroEl"
     class="mimo-hero"
     :class="{
       'is-pointer-inside': isPointerInside,
@@ -160,11 +406,13 @@ onBeforeUnmount(() => {
     >
     <img
       v-if="isBackgroundImage"
+      ref="focusMediaEl"
       class="mimo-hero__media mimo-hero__media--image-focus"
       :src="selectedBackground.path"
       alt=""
       loading="eager"
       decoding="async"
+      @load="handleFocusMediaLoad"
       aria-hidden="true"
     >
     <video
