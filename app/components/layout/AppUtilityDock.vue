@@ -18,7 +18,7 @@ interface UtilityItem {
 }
 
 const activeKey = ref<UtilityKey | null>(null)
-const { availableBackgrounds, selectedBackgroundId, setHomeBackground, refreshHomeBackgrounds, syncHomeBackgroundFromStorage } =
+const { availableBackgrounds, selectedBackground, selectedBackgroundId, setHomeBackground, refreshHomeBackgrounds, syncHomeBackgroundFromStorage } =
   useHomeBackground()
 
 const utilityItems: UtilityItem[] = [
@@ -61,21 +61,55 @@ onBeforeUnmount(() => {
       <p class="utility-dock__title">{{ activeLabel }}</p>
       <div v-if="activeKey === 'settings'" class="utility-dock__settings">
         <p class="utility-dock__description">首页背景</p>
-        <div class="utility-dock__backgrounds">
+        <section class="utility-dock__preview" aria-label="当前背景预览">
+          <span
+            class="utility-dock__preview-swatch"
+            :class="{ 'is-video': selectedBackground.mediaType === 'video' }"
+            aria-hidden="true"
+          >
+            <img
+              v-if="selectedBackground.mediaType === 'image' && selectedBackground.path"
+              class="utility-dock__swatch-image"
+              :src="selectedBackground.path"
+              alt=""
+              loading="lazy"
+              decoding="async"
+            >
+          </span>
+          <span class="utility-dock__preview-meta">
+            <strong>{{ selectedBackground.name }}</strong>
+            <span v-if="selectedBackground.mediaType === 'video'" class="utility-dock__type-tag">视频</span>
+          </span>
+        </section>
+
+        <div class="utility-dock__backgrounds" role="list">
           <button
             v-for="background in availableBackgrounds"
             :key="background.id"
             class="utility-dock__background"
             :class="{ 'is-active': selectedBackgroundId === background.id }"
             type="button"
+            role="listitem"
             @click="setHomeBackground(background.id)"
           >
             <span
               class="utility-dock__swatch"
-              :style="{ backgroundImage: background.path ? `url(${background.path})` : 'none' }"
+              :class="{ 'is-video': background.mediaType === 'video' }"
               aria-hidden="true"
-            />
-            <span>{{ background.name }}</span>
+            >
+              <img
+                v-if="background.mediaType === 'image' && background.path"
+                class="utility-dock__swatch-image"
+                :src="background.path"
+                alt=""
+                loading="lazy"
+                decoding="async"
+              >
+            </span>
+            <span class="utility-dock__background-meta">
+              <span>{{ background.name }}</span>
+              <span v-if="background.mediaType === 'video'" class="utility-dock__type-tag">视频</span>
+            </span>
           </button>
         </div>
       </div>
@@ -108,7 +142,7 @@ onBeforeUnmount(() => {
 }
 
 .utility-dock__panel {
-  width: min(320px, calc(100vw - 2 * var(--space-16)));
+  width: min(360px, calc(100vw - 2 * var(--space-16)));
 }
 
 .utility-dock__title {
@@ -128,21 +162,52 @@ onBeforeUnmount(() => {
   gap: var(--space-12);
 }
 
-.utility-dock__backgrounds {
+.utility-dock__preview {
   display: grid;
   gap: var(--space-8);
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--color-border) 84%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+}
+
+.utility-dock__preview-swatch {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 96%, white 4%), color-mix(in srgb, var(--color-surface-soft) 92%, var(--color-surface)));
+}
+
+.utility-dock__preview-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.utility-dock__backgrounds {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-8);
+  max-height: min(46vh, 360px);
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 .utility-dock__background {
   display: grid;
-  grid-template-columns: 42px 1fr;
-  align-items: center;
-  gap: var(--space-12);
+  align-content: start;
+  gap: var(--space-8);
   width: 100%;
-  min-height: 48px;
+  min-height: 128px;
   padding: var(--space-8);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-8);
+  border-radius: 12px;
   background: color-mix(in srgb, var(--color-surface) 84%, transparent);
   color: var(--color-fg);
   text-align: left;
@@ -155,13 +220,53 @@ onBeforeUnmount(() => {
 }
 
 .utility-dock__swatch {
-  width: 42px;
-  height: 30px;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 16 / 10;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-4);
-  background-color: var(--color-surface);
-  background-position: center;
-  background-size: cover;
+  border-radius: 10px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 96%, white 4%), color-mix(in srgb, var(--color-surface-soft) 92%, var(--color-surface)));
+}
+
+.utility-dock__swatch-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.utility-dock__swatch.is-video,
+.utility-dock__preview-swatch.is-video {
+  background:
+    linear-gradient(135deg, rgba(19, 26, 38, 0.96), rgba(50, 65, 88, 0.82)),
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.2), transparent 40%);
+}
+
+.utility-dock__swatch.is-video::before,
+.utility-dock__preview-swatch.is-video::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 11px solid rgba(255, 255, 255, 0.88);
+  transform: translate(-35%, -50%);
+}
+
+.utility-dock__background-meta {
+  display: grid;
+  gap: 4px;
+}
+
+.utility-dock__background-meta > span:first-child {
+  display: -webkit-box;
+  overflow: hidden;
+  line-height: 1.3;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .utility-dock__actions {
@@ -180,6 +285,18 @@ onBeforeUnmount(() => {
   .utility-dock {
     right: 50%;
     transform: translateX(50%);
+  }
+
+  .utility-dock__panel {
+    width: min(336px, calc(100vw - 20px));
+  }
+
+  .utility-dock__backgrounds {
+    max-height: min(42vh, 300px);
+  }
+
+  .utility-dock__background {
+    min-height: 116px;
   }
 }
 </style>

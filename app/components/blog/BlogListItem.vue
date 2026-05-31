@@ -11,7 +11,7 @@ defineProps<{
 </script>
 
 <template>
-  <NuxtLink class="blog-list-item" :to="post.path || '/blog'">
+  <NuxtLink class="blog-list-item card-stagger" :to="post.path || '/blog'">
     <div class="blog-list-item__meta">
       <span class="blog-list-item__date">
         <CalendarDays :size="16" aria-hidden="true" />
@@ -38,24 +38,31 @@ defineProps<{
 
 <style scoped>
 .blog-list-item {
+  --card-accent: var(--color-accent);
+  position: relative;
   min-height: 190px;
   display: grid;
   gap: var(--space-16);
   padding: var(--space-24);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-8);
-  background: color-mix(in srgb, var(--color-surface) 90%, var(--color-bg));
+  border: 1px solid color-mix(in srgb, var(--color-border) 88%, transparent);
+  border-radius: var(--radius-12);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 96%, transparent), color-mix(in srgb, var(--color-surface) 88%, var(--color-bg)));
   color: var(--color-fg);
   text-decoration: none;
-  box-shadow: var(--shadow-soft);
+  box-shadow: 0 2px 8px rgba(18, 24, 38, 0.04);
   transition:
     border-color var(--motion-180) ease,
-    background-color var(--motion-180) ease;
+    transform var(--motion-240) cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow var(--motion-240) ease;
 }
 
 .blog-list-item:hover {
-  border-color: color-mix(in srgb, var(--color-accent) 42%, var(--color-border));
-  background: color-mix(in srgb, var(--color-accent) 7%, var(--color-surface));
+  border-color: color-mix(in srgb, var(--card-accent) 36%, var(--color-border));
+  transform: translateY(-4px);
+  box-shadow:
+    0 12px 32px rgba(18, 24, 38, 0.08),
+    0 0 0 1px color-mix(in srgb, var(--card-accent) 12%, transparent);
 }
 
 .blog-list-item__meta,
@@ -83,10 +90,18 @@ defineProps<{
 
 .blog-list-item h2 {
   font-size: clamp(1.18rem, 2vw, 1.42rem);
+  font-weight: 800;
+  line-height: 1.35;
+  transition: color var(--motion-180) ease;
+}
+
+.blog-list-item:hover h2 {
+  color: var(--card-accent);
 }
 
 .blog-list-item p {
   max-width: 68ch;
+  line-height: 1.66;
 }
 
 .blog-list-item__tags {

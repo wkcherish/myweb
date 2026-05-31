@@ -18,7 +18,9 @@ let frameId = 0
 let moveTimer: ReturnType<typeof window.setTimeout> | null = null
 const { selectedBackground, syncHomeBackgroundFromStorage } = useHomeBackground()
 
-const hasBackgroundImage = computed(() => Boolean(selectedBackground.value.path))
+const hasBackgroundMedia = computed(() => Boolean(selectedBackground.value.path))
+const isBackgroundImage = computed(() => hasBackgroundMedia.value && selectedBackground.value.mediaType === 'image')
+const isBackgroundVideo = computed(() => hasBackgroundMedia.value && selectedBackground.value.mediaType === 'video')
 
 const heroStyle = computed(() => ({
   '--copy-x': `${pointerX.value * 26}px`,
@@ -33,7 +35,6 @@ const heroStyle = computed(() => ({
   '--title-top': `${titleTop.value}px`,
   '--title-width': `${titleWidth.value}px`,
   '--hero-scroll': scrollProgress.value.toFixed(3),
-  '--home-bg-image': hasBackgroundImage.value ? `url("${selectedBackground.value.path}")` : 'none',
 }))
 
 function updatePointer(event: PointerEvent) {
@@ -137,13 +138,45 @@ onBeforeUnmount(() => {
       'is-pointer-inside': isPointerInside,
       'is-magnifying': isMagnifying,
       'is-pointer-moving': isPointerMoving,
-      'has-background-image': hasBackgroundImage,
+      'has-background-media': hasBackgroundMedia,
+      'has-background-video': isBackgroundVideo,
     }"
     :style="heroStyle"
     @pointerenter="handlePointerEnter"
     @pointermove="updatePointer"
     @pointerleave="handlePointerLeave"
   >
+    <img
+      v-if="isBackgroundImage"
+      class="mimo-hero__media mimo-hero__media--image-fill"
+      :src="selectedBackground.path"
+      alt=""
+      loading="eager"
+      decoding="async"
+      aria-hidden="true"
+    >
+    <img
+      v-if="isBackgroundImage"
+      class="mimo-hero__media mimo-hero__media--image-focus"
+      :src="selectedBackground.path"
+      alt=""
+      loading="eager"
+      decoding="async"
+      aria-hidden="true"
+    >
+    <video
+      v-if="isBackgroundVideo"
+      :key="selectedBackground.id"
+      class="mimo-hero__media"
+      :src="selectedBackground.path"
+      autoplay
+      loop
+      muted
+      playsinline
+      preload="auto"
+      disablepictureinpicture
+      aria-hidden="true"
+    />
     <div class="mimo-hero__cursor" aria-hidden="true">
       <span class="mimo-hero__cursor-text">你好, 我是 cherish</span>
     </div>
@@ -178,30 +211,48 @@ onBeforeUnmount(() => {
   place-items: center;
   padding: clamp(var(--space-48), 8vw, 104px) var(--space-16);
   border-radius: 0;
-  background:
-    linear-gradient(var(--home-bg-overlay), var(--home-bg-overlay)),
-    var(--home-bg-image),
-    var(--color-bg);
-  background-position: center;
-  background-size: cover;
+  background: var(--color-bg);
   isolation: isolate;
   cursor: auto;
-  transition: background var(--motion-280) ease;
+  transition: background-color var(--motion-280) ease;
 }
 
-.mimo-hero.has-background-image {
+.mimo-hero.has-background-media {
   --home-bg-overlay: var(--home-bg-overlay-light, rgba(255, 255, 255, 0));
   --home-bg-shade: transparent;
 }
 
-:global(html[data-theme='dark']) .mimo-hero.has-background-image {
+:global(html[data-theme='dark']) .mimo-hero.has-background-media {
   --home-bg-overlay: var(--home-bg-overlay-dark, rgba(16, 20, 30, 0.36));
+}
+
+.mimo-hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+}
+
+.mimo-hero__media--image-fill {
+  filter: blur(24px) saturate(1.08);
+  transform: scale(1.08);
+  opacity: 0.94;
+}
+
+.mimo-hero__media--image-focus {
+  object-fit: cover;
 }
 
 .mimo-hero::before {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 1;
   background: linear-gradient(180deg, var(--home-bg-shade), transparent);
   pointer-events: none;
 }
@@ -214,7 +265,7 @@ onBeforeUnmount(() => {
   background: radial-gradient(ellipse at 50% 78%, var(--hero-mobile-glow), transparent 58%);
   opacity: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
 }
 
 /* Cursor */
@@ -521,8 +572,17 @@ onBeforeUnmount(() => {
     min-height: calc(100svh - 68px);
     place-items: end center;
     padding: 0 18px clamp(108px, 18svh, 148px);
-    background-position: center;
-    animation: mobile-hero-breathe 9000ms ease-in-out infinite alternate;
+  }
+
+  .mimo-hero__media--image-fill {
+    filter: blur(28px) saturate(1.12);
+    transform: scale(1.14);
+    opacity: 0.88;
+  }
+
+  .mimo-hero__media--image-focus {
+    object-fit: contain;
+    transform: scale(0.98);
   }
 
   .mimo-hero::before {
@@ -679,16 +739,6 @@ onBeforeUnmount(() => {
   .mimo-hero__link {
     min-height: 42px;
     font-size: 0.9rem;
-  }
-}
-
-@keyframes mobile-hero-breathe {
-  from {
-    background-position: 50% 50%;
-  }
-
-  to {
-    background-position: 50% 52%;
   }
 }
 

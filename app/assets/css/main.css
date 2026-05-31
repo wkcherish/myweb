@@ -276,3 +276,30 @@ samp {
     scroll-behavior: auto !important;
   }
 }
+
+/* Card entrance stagger */
+@keyframes card-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-stagger {
+  animation: card-rise 480ms ease both;
+}
+
+.card-stagger:nth-child(1) { animation-delay: 0ms; }
+.card-stagger:nth-child(2) { animation-delay: 60ms; }
+.card-stagger:nth-child(3) { animation-delay: 120ms; }
+.card-stagger:nth-child(4) { animation-delay: 180ms; }
+.card-stagger:nth-child(5) { animation-delay: 240ms; }
+.card-stagger:nth-child(6) { animation-delay: 300ms; }
+.card-stagger:nth-child(7) { animation-delay: 360ms; }
+.card-stagger:nth-child(8) { animation-delay: 420ms; }
+.card-stagger:nth-child(n+9) { animation-delay: 480ms; }

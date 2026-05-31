@@ -4,8 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "cleanup": "nuxi cleanup",
+    "cleanup": "nuxi cleanup && node scripts/reset-content-cache.mjs",
+    "predev": "node scripts/reset-content-cache.mjs && nuxi prepare",
     "dev": "nuxt dev --clear --port 5176",
+    "prebuild": "node scripts/reset-content-cache.mjs && nuxi prepare",
     "build": "nuxt build",
     "generate": "nuxt generate",
     "preview": "nuxt preview --port 5176",

@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 
 import BasePanel from '~/components/ui/BasePanel.vue'
-import BaseTag from '~/components/ui/BaseTag.vue'
+import PageHero from '~/components/ui/PageHero.vue'
 import {
   clearUmamiClientCache,
   fetchUmamiExpandedMetrics,
@@ -267,18 +267,13 @@ const sections = computed(() => {
 
 <template>
   <section class="analytics-page">
-    <BasePanel tone="floating" class="analytics-hero">
-      <BaseTag tone="accent">Analytics</BaseTag>
-      <h1 class="analytics-hero__title">数据统计分析</h1>
-      <p class="analytics-hero__desc">
-        {{ pageDescription }}
-      </p>
-      <div class="analytics-hero__actions">
-        <button class="analytics-refresh-btn" type="button" :disabled="pending" @click="handleRefresh">
-          {{ pending ? '刷新中...' : '刷新数据' }}
-        </button>
-      </div>
-    </BasePanel>
+    <PageHero eyebrow="Analytics" title="数据统计分析" :description="pageDescription" accent="#3451d1" />
+
+    <div class="analytics-actions">
+      <button class="analytics-refresh-btn" type="button" :disabled="pending" @click="handleRefresh">
+        {{ pending ? '刷新中...' : '刷新数据' }}
+      </button>
+    </div>
 
     <BasePanel v-if="!isUmamiConfigured" tone="muted" class="analytics-notice">
       <p>尚未配置 Umami 参数，请在 `runtimeConfig.public.umami` 中设置 `baseUrl`、`websiteId` 与 `shareId`。</p>
@@ -289,7 +284,7 @@ const sections = computed(() => {
     </BasePanel>
 
     <section v-else-if="summaryCards.length" class="analytics-summary-grid" aria-label="统计概览">
-      <article v-for="card in summaryCards" :key="card.label" class="analytics-summary-card">
+      <article v-for="card in summaryCards" :key="card.label" class="analytics-summary-card card-stagger">
         <p class="analytics-summary-card__label">{{ card.label }}</p>
         <p class="analytics-summary-card__value">{{ card.value }}</p>
       </article>
@@ -300,7 +295,7 @@ const sections = computed(() => {
     </BasePanel>
 
     <section v-if="sections.length" class="analytics-panel-grid">
-      <BasePanel v-for="section in sections" :key="section.title" class="analytics-panel">
+      <BasePanel v-for="section in sections" :key="section.title" class="analytics-panel card-stagger">
         <h2 class="analytics-panel__title">{{ section.title }}</h2>
         <ol v-if="section.rows.length" class="analytics-list">
           <li v-for="(row, index) in section.rows" :key="`${section.title}-${row.name}-${index}`" class="analytics-list__item">
@@ -331,18 +326,9 @@ const sections = computed(() => {
   gap: var(--space-16);
 }
 
-.analytics-hero__title {
-  margin-top: var(--space-12);
-  font-size: clamp(1.65rem, 4vw, 2.2rem);
-}
-
-.analytics-hero__desc {
-  margin-top: var(--space-12);
-  max-width: 72ch;
-}
-
-.analytics-hero__actions {
-  margin-top: var(--space-16);
+.analytics-actions {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .analytics-refresh-btn {
@@ -378,14 +364,26 @@ const sections = computed(() => {
 .analytics-summary-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 10px;
+  gap: var(--space-12);
 }
 
 .analytics-summary-card {
+  position: relative;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-12);
-  background: color-mix(in srgb, var(--color-surface-soft) 74%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 96%, transparent), color-mix(in srgb, var(--color-surface) 88%, var(--color-bg)));
   padding: var(--space-12);
+  transition:
+    border-color var(--motion-180) ease,
+    transform var(--motion-240) cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow var(--motion-240) ease;
+}
+
+.analytics-summary-card:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 36%, var(--color-border));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(18, 24, 38, 0.06);
 }
 
 .analytics-summary-card__label {
@@ -398,21 +396,42 @@ const sections = computed(() => {
   color: var(--color-fg);
   font-size: 1.04rem;
   font-weight: 800;
+  transition: color var(--motion-180) ease;
+}
+
+.analytics-summary-card:hover .analytics-summary-card__value {
+  color: var(--color-primary);
 }
 
 .analytics-panel-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 12px;
+  gap: var(--space-12);
 }
 
 .analytics-panel {
   display: grid;
   gap: var(--space-10);
+  position: relative;
+  transition:
+    border-color var(--motion-180) ease,
+    transform var(--motion-240) cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow var(--motion-240) ease;
+}
+
+.analytics-panel:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 30%, var(--color-border));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(18, 24, 38, 0.06);
 }
 
 .analytics-panel__title {
   font-size: 1.02rem;
+  transition: color var(--motion-180) ease;
+}
+
+.analytics-panel:hover .analytics-panel__title {
+  color: var(--color-primary);
 }
 
 .analytics-list {
@@ -431,6 +450,14 @@ const sections = computed(() => {
   border-radius: var(--radius-8);
   padding: 6px 8px;
   background: color-mix(in srgb, var(--color-surface-soft) 76%, transparent);
+  transition:
+    background-color var(--motion-180) ease,
+    transform var(--motion-120) ease;
+}
+
+.analytics-list__item:hover {
+  background: color-mix(in srgb, var(--color-primary) 8%, var(--color-surface-soft));
+  transform: translateX(2px);
 }
 
 .analytics-list__rank {

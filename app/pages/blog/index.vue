@@ -2,9 +2,9 @@
 import BlogFilterBar from '~/components/blog/BlogFilterBar.vue'
 import BlogList from '~/components/blog/BlogList.vue'
 import BasePanel from '~/components/ui/BasePanel.vue'
-import BaseTag from '~/components/ui/BaseTag.vue'
 import EmptyState from '~/components/ui/EmptyState.vue'
 import ErrorState from '~/components/ui/ErrorState.vue'
+import PageHero from '~/components/ui/PageHero.vue'
 import type { ContentEntry } from '~/utils/content'
 
 const search = ref('')
@@ -69,10 +69,7 @@ const resetFilters = () => {
 
 <template>
   <section class="content-page">
-    <BasePanel tone="floating">
-      <BaseTag>Blog</BaseTag>
-      <h1 class="content-page__title">博客文章</h1>
-    </BasePanel>
+    <PageHero eyebrow="Blog" title="博客文章" description="记录开发笔记、学习心得和技术探索。" accent="#1c8f7d" />
 
     <BasePanel v-if="postsResult?.error">
       <ErrorState title="文章读取失败" :description="postsResult.error" />
@@ -108,10 +105,4 @@ const resetFilters = () => {
   display: grid;
   gap: var(--space-16);
 }
-
-.content-page__title {
-  margin-top: var(--space-12);
-  font-size: clamp(1.7rem, 4vw, 2.3rem);
-}
-
 </style>

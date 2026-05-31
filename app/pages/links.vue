@@ -224,15 +224,6 @@ const friendLinks = [
     box-shadow var(--motion-180) ease;
 }
 
-.friend-card::before {
-  content: '';
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 4px;
-  background: linear-gradient(180deg, var(--color-accent), var(--color-primary));
-  opacity: 0.8;
-}
-
 .friend-card:hover {
   border-color: color-mix(in srgb, var(--color-primary) 36%, var(--color-border));
   transform: translateY(-2px);

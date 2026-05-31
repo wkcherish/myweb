@@ -31,7 +31,7 @@ const priorityLabels: Record<TodoPriority, string> = {
 </script>
 
 <template>
-  <NuxtLink class="todo-item" :to="todo.path || '/todo'">
+  <NuxtLink class="todo-item card-stagger" :to="todo.path || '/todo'">
     <div class="todo-item__meta">
       <BaseTag kind="status" :tone="status">{{ statusLabels[status] }}</BaseTag>
       <BaseTag kind="priority" :tone="priority">{{ priorityLabels[priority] }}</BaseTag>
@@ -55,19 +55,31 @@ const priorityLabels: Record<TodoPriority, string> = {
 
 <style scoped>
 .todo-item {
+  --card-accent: var(--color-warning);
+  position: relative;
   min-height: 72px;
   display: grid;
   gap: var(--space-12);
   padding: var(--space-16);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-8);
-  background: color-mix(in srgb, var(--color-surface) 92%, var(--color-bg));
+  border: 1px solid color-mix(in srgb, var(--color-border) 88%, transparent);
+  border-radius: var(--radius-12);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 96%, transparent), color-mix(in srgb, var(--color-surface) 88%, var(--color-bg)));
   color: var(--color-fg);
   text-decoration: none;
+  box-shadow: 0 2px 8px rgba(18, 24, 38, 0.04);
+  transition:
+    border-color var(--motion-180) ease,
+    transform var(--motion-240) cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow var(--motion-240) ease;
 }
 
 .todo-item:hover {
-  border-color: color-mix(in srgb, var(--color-warning) 40%, var(--color-border));
+  border-color: color-mix(in srgb, var(--card-accent) 36%, var(--color-border));
+  transform: translateY(-3px);
+  box-shadow:
+    0 12px 32px rgba(18, 24, 38, 0.08),
+    0 0 0 1px color-mix(in srgb, var(--card-accent) 12%, transparent);
 }
 
 .todo-item__meta,
@@ -85,6 +97,12 @@ const priorityLabels: Record<TodoPriority, string> = {
 
 .todo-item h3 {
   font-size: 1.08rem;
+  font-weight: 800;
+  transition: color var(--motion-180) ease;
+}
+
+.todo-item:hover h3 {
+  color: var(--card-accent);
 }
 
 .todo-item__foot {

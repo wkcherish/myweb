@@ -1,7 +1,7 @@
 import { computed, watch } from 'vue'
 
-import type { HomeBackground, HomeBackgroundMode } from '~/config/backgrounds'
-import { DEFAULT_HOME_BACKGROUND_ID, fallbackHomeBackgrounds } from '~/config/backgrounds'
+import type { HomeBackground, HomeBackgroundMediaType, HomeBackgroundMode } from '~/config/backgrounds'
+import { DEFAULT_HOME_BACKGROUND_ID, fallbackHomeBackgrounds, inferHomeBackgroundMediaType } from '~/config/backgrounds'
 
 const STORAGE_KEY = 'notebook:home-background'
 
@@ -10,11 +10,16 @@ const DEFAULT_BACKGROUND: HomeBackground = fallbackHomeBackgrounds[0] ?? {
   name: '首页背景',
   path: '',
   appliesTo: 'light',
+  mediaType: 'image',
   overlayOpacity: 0,
 }
 
 function isBackgroundMode(value: unknown): value is HomeBackgroundMode {
   return value === 'light' || value === 'dark' || value === 'shared'
+}
+
+function isBackgroundMediaType(value: unknown): value is HomeBackgroundMediaType {
+  return value === 'image' || value === 'video'
 }
 
 function resolveRuntimeBackgrounds(value: unknown) {
@@ -33,6 +38,7 @@ function resolveRuntimeBackgrounds(value: unknown) {
       const name = typeof candidate.name === 'string' ? candidate.name.trim() : ''
       const path = typeof candidate.path === 'string' ? candidate.path.trim() : ''
       const appliesTo = isBackgroundMode(candidate.appliesTo) ? candidate.appliesTo : 'light'
+      const mediaType = isBackgroundMediaType(candidate.mediaType) ? candidate.mediaType : inferHomeBackgroundMediaType(path)
       const overlayOpacity =
         typeof candidate.overlayOpacity === 'number' && Number.isFinite(candidate.overlayOpacity)
           ? candidate.overlayOpacity
@@ -47,6 +53,7 @@ function resolveRuntimeBackgrounds(value: unknown) {
         name,
         path,
         appliesTo,
+        mediaType,
         overlayOpacity,
       }
     })

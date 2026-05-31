@@ -3,9 +3,9 @@ import WikiDocList from '~/components/wiki/WikiDocList.vue'
 import WikiSearch from '~/components/wiki/WikiSearch.vue'
 import WikiTree from '~/components/wiki/WikiTree.vue'
 import BasePanel from '~/components/ui/BasePanel.vue'
-import BaseTag from '~/components/ui/BaseTag.vue'
 import EmptyState from '~/components/ui/EmptyState.vue'
 import ErrorState from '~/components/ui/ErrorState.vue'
+import PageHero from '~/components/ui/PageHero.vue'
 import type { ContentEntry } from '~/utils/content'
 
 type WikiGroup = {
@@ -101,10 +101,7 @@ const filteredGroups = computed(() => {
 
 <template>
   <section class="content-page">
-    <BasePanel tone="floating">
-      <BaseTag tone="accent">Wiki</BaseTag>
-      <h1 class="content-page__title">知识库</h1>
-    </BasePanel>
+    <PageHero eyebrow="Wiki" title="知识库" description="系统化的学习笔记和技术文档。" accent="#8b5cf6" />
 
     <BasePanel v-if="docsResult?.error">
       <ErrorState title="Wiki 读取失败" :description="docsResult.error" />
@@ -129,11 +126,6 @@ const filteredGroups = computed(() => {
 .content-page {
   display: grid;
   gap: var(--space-16);
-}
-
-.content-page__title {
-  margin-top: var(--space-12);
-  font-size: clamp(1.7rem, 4vw, 2.3rem);
 }
 
 .wiki-layout {

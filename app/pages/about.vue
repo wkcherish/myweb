@@ -41,8 +41,10 @@ const timelineItems = [
 
 <template>
   <section class="about-page">
-    <header class="about-hero">
+    <header class="about-hero card-stagger">
+      <div class="about-hero__orb" aria-hidden="true" />
       <div class="about-hero__text">
+        <span class="about-hero__bar" aria-hidden="true" />
         <BaseTag tone="accent">About</BaseTag>
         <h1>关于我和这个站</h1>
         <p>
@@ -58,7 +60,7 @@ const timelineItems = [
     </header>
 
     <div class="about-grid">
-      <article v-for="item in focusItems" :key="item.title" class="about-card">
+      <article v-for="item in focusItems" :key="item.title" class="about-card card-stagger">
         <span class="about-card__icon">
           <component :is="item.icon" :size="20" aria-hidden="true" />
         </span>
@@ -67,7 +69,7 @@ const timelineItems = [
       </article>
     </div>
 
-    <section class="about-section about-identity">
+    <section class="about-section about-identity card-stagger">
       <div class="about-section__head">
         <span>
           <UserRound :size="20" aria-hidden="true" />
@@ -96,7 +98,7 @@ const timelineItems = [
       </div>
     </section>
 
-    <section class="about-section about-pet">
+    <section class="about-section about-pet card-stagger">
       <div class="about-section__head">
         <span>
           <PawPrint :size="20" aria-hidden="true" />
@@ -119,7 +121,7 @@ const timelineItems = [
       </div>
     </section>
 
-    <section class="about-section">
+    <section class="about-section card-stagger">
       <div class="about-section__head">
         <span>
           <BookOpenText :size="20" aria-hidden="true" />
@@ -149,7 +151,7 @@ const timelineItems = [
       </div>
     </section>
 
-    <section class="about-section">
+    <section class="about-section card-stagger">
       <div class="about-section__head">
         <span>
           <GraduationCap :size="20" aria-hidden="true" />
@@ -182,6 +184,7 @@ const timelineItems = [
 }
 
 .about-hero {
+  --page-accent: var(--color-accent);
   position: relative;
   overflow: hidden;
   min-height: 330px;
@@ -191,10 +194,39 @@ const timelineItems = [
   border: 1px solid color-mix(in srgb, var(--color-accent) 20%, var(--color-border));
   border-radius: var(--radius-12);
   background:
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--color-fg) 14%, transparent) 1px, transparent 1.6px),
     radial-gradient(circle at 12% 12%, color-mix(in srgb, var(--color-primary) 18%, transparent), transparent 30%),
     radial-gradient(circle at 92% 6%, color-mix(in srgb, var(--color-accent) 22%, transparent), transparent 34%),
     linear-gradient(135deg, var(--color-surface), color-mix(in srgb, var(--color-surface-soft) 86%, transparent));
+  background-size: 24px 24px, auto, auto, auto;
   box-shadow: var(--shadow-soft);
+  transition: border-color var(--motion-240) ease;
+}
+
+.about-hero:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 36%, var(--color-border));
+}
+
+.about-hero__orb {
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--color-accent) 10%, transparent), transparent 70%);
+  pointer-events: none;
+  animation: about-orb-drift 8000ms ease-in-out infinite alternate;
+}
+
+.about-hero__bar {
+  display: block;
+  width: 48px;
+  height: 3px;
+  margin-bottom: var(--space-12);
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--color-accent), color-mix(in srgb, var(--color-accent) 40%, transparent));
+  animation: about-bar-grow 680ms 120ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .about-hero::before {
@@ -305,6 +337,16 @@ const timelineItems = [
   border: 1px solid color-mix(in srgb, var(--color-border) 74%, transparent);
   border-radius: var(--radius-8);
   background: color-mix(in srgb, var(--color-surface) 72%, transparent);
+  transition:
+    border-color var(--motion-180) ease,
+    transform var(--motion-240) cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow var(--motion-240) ease;
+}
+
+.about-identity__grid > div:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 36%, var(--color-border));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(18, 24, 38, 0.06);
 }
 
 .about-identity__grid > div:nth-child(2)::before {
@@ -376,10 +418,24 @@ const timelineItems = [
 
 .about-card,
 .about-section {
+  position: relative;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-12);
   background: var(--color-surface);
   box-shadow: var(--shadow-soft);
+  transition:
+    border-color var(--motion-180) ease,
+    transform var(--motion-240) cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow var(--motion-240) ease;
+}
+
+.about-card:hover,
+.about-section:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 36%, var(--color-border));
+  transform: translateY(-3px);
+  box-shadow:
+    0 12px 32px rgba(18, 24, 38, 0.08),
+    0 0 0 1px color-mix(in srgb, var(--color-accent) 12%, transparent);
 }
 
 .about-card {
@@ -388,13 +444,18 @@ const timelineItems = [
   padding: var(--space-20, 20px);
 }
 
+.about-card h2 {
+  font-size: 1.05rem;
+  transition: color var(--motion-180) ease;
+}
+
+.about-card:hover h2 {
+  color: var(--color-accent);
+}
+
 .about-card__icon {
   color: var(--color-primary);
   background: color-mix(in srgb, var(--color-primary) 12%, transparent);
-}
-
-.about-card h2 {
-  font-size: 1.05rem;
 }
 
 .about-section {
@@ -424,6 +485,17 @@ const timelineItems = [
   padding: var(--space-16);
   border-radius: var(--radius-8);
   background: color-mix(in srgb, var(--color-surface-soft) 62%, transparent);
+  border: 1px solid transparent;
+  transition:
+    border-color var(--motion-180) ease,
+    transform var(--motion-240) cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow var(--motion-240) ease;
+}
+
+.about-note-grid > div:hover {
+  border-color: color-mix(in srgb, var(--color-primary) 30%, var(--color-border));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(18, 24, 38, 0.06);
 }
 
 .about-note-grid svg {
@@ -441,6 +513,17 @@ const timelineItems = [
   grid-template-columns: 72px minmax(0, 1fr);
   gap: var(--space-12);
   align-items: start;
+  padding: var(--space-8) 0;
+  transition: transform var(--motion-180) ease;
+}
+
+.about-timeline article:hover {
+  transform: translateX(4px);
+}
+
+.about-timeline article:not(:last-child) {
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 60%, transparent);
+  padding-bottom: var(--space-12);
 }
 
 .about-timeline article > span {
@@ -515,6 +598,37 @@ const timelineItems = [
 
   .about-timeline article {
     grid-template-columns: 58px minmax(0, 1fr);
+  }
+}
+
+@keyframes about-orb-drift {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+
+  to {
+    transform: translate(-24px, 16px) scale(1.08);
+  }
+}
+
+@keyframes about-bar-grow {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-hero__orb,
+  .about-hero__bar {
+    animation: none;
   }
 }
 </style>

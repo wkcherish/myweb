@@ -66,7 +66,7 @@ const celebrationParticles = [
 ]
 let celebrationTimer: ReturnType<typeof setTimeout> | null = null
 let shouldIgnoreActionClick = false
-const { availableBackgrounds, selectedBackgroundId, setHomeBackground, refreshHomeBackgrounds, syncHomeBackgroundFromStorage } =
+const { availableBackgrounds, selectedBackground, selectedBackgroundId, setHomeBackground, refreshHomeBackgrounds, syncHomeBackgroundFromStorage } =
   useHomeBackground()
 const { isMusicActive: isMusicPlaying } = useMusicPlayer()
 
@@ -668,21 +668,55 @@ onBeforeUnmount(() => {
         @pointerdown.stop
       >
         <p class="blog-pet__background-title">更换壁纸</p>
-        <div class="blog-pet__background-list">
+        <section class="blog-pet__background-preview" aria-label="当前壁纸预览">
+          <span
+            class="blog-pet__background-preview-swatch"
+            :class="{ 'is-video': selectedBackground.mediaType === 'video' }"
+            aria-hidden="true"
+          >
+            <img
+              v-if="selectedBackground.mediaType === 'image' && selectedBackground.path"
+              class="blog-pet__background-image"
+              :src="selectedBackground.path"
+              alt=""
+              loading="lazy"
+              decoding="async"
+            >
+          </span>
+          <span class="blog-pet__background-preview-meta">
+            <strong>{{ selectedBackground.name }}</strong>
+            <span v-if="selectedBackground.mediaType === 'video'" class="blog-pet__background-type">视频</span>
+          </span>
+        </section>
+
+        <div class="blog-pet__background-list" role="list">
           <button
             v-for="background in availableBackgrounds"
             :key="background.id"
             class="blog-pet__background"
             :class="{ 'is-active': selectedBackgroundId === background.id }"
             type="button"
+            role="listitem"
             @click.stop="selectBackground(background.id)"
           >
             <span
               class="blog-pet__background-swatch"
-              :style="{ backgroundImage: background.path ? `url(${background.path})` : 'none' }"
+              :class="{ 'is-video': background.mediaType === 'video' }"
               aria-hidden="true"
-            />
-            <span>{{ background.name }}</span>
+            >
+              <img
+                v-if="background.mediaType === 'image' && background.path"
+                class="blog-pet__background-image"
+                :src="background.path"
+                alt=""
+                loading="lazy"
+                decoding="async"
+              >
+            </span>
+            <span class="blog-pet__background-meta">
+              <span>{{ background.name }}</span>
+              <span v-if="background.mediaType === 'video'" class="blog-pet__background-type">视频</span>
+            </span>
           </button>
         </div>
       </section>
@@ -1199,7 +1233,7 @@ onBeforeUnmount(() => {
   z-index: 4;
   display: grid;
   gap: 12px;
-  width: min(268px, calc(100vw - 32px));
+  width: min(336px, calc(100vw - 24px));
   padding: 14px;
   border: 1px solid rgba(148, 163, 184, 0.34);
   border-radius: 14px;
@@ -1229,25 +1263,62 @@ onBeforeUnmount(() => {
   line-height: 1.35;
 }
 
+.blog-pet__background-preview {
+  display: grid;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.26);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.blog-pet__background-preview-swatch {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid rgba(148, 163, 184, 0.42);
+  border-radius: 10px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(241, 245, 249, 0.94));
+}
+
+.blog-pet__background-preview-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex-wrap: wrap;
+  color: #1f2937;
+  font-size: 0.84rem;
+}
+
+.blog-pet__background-preview-meta strong {
+  font-size: 0.92rem;
+}
+
 .blog-pet__background-list {
   display: grid;
-  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  max-height: min(46vh, 360px);
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 .blog-pet__background {
   position: relative;
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr);
-  align-items: center;
-  gap: 10px;
+  align-content: start;
+  gap: 8px;
   width: 100%;
-  min-height: 52px;
-  padding: 8px 34px 8px 8px;
+  min-height: 132px;
+  padding: 8px 28px 10px 8px;
   border: 1px solid rgba(148, 163, 184, 0.36);
-  border-radius: 10px;
+  border-radius: 12px;
   background: rgba(255, 255, 255, 0.78);
   color: #1f2937;
-  font-size: 0.86rem;
+  font-size: 0.8rem;
   font-weight: 650;
   line-height: 1.3;
   text-align: left;
@@ -1286,14 +1357,68 @@ onBeforeUnmount(() => {
 }
 
 .blog-pet__background-swatch {
-  width: 48px;
-  height: 34px;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 16 / 10;
   border: 1px solid rgba(148, 163, 184, 0.42);
   border-radius: 8px;
-  background-color: #ffffff;
-  background-position: center;
-  background-size: cover;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(241, 245, 249, 0.94));
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.blog-pet__background-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.blog-pet__background-swatch.is-video,
+.blog-pet__background-preview-swatch.is-video {
+  background:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(59, 130, 246, 0.42)),
+    radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.22), transparent 38%);
+}
+
+.blog-pet__background-swatch.is-video::before,
+.blog-pet__background-preview-swatch.is-video::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 11px solid rgba(255, 255, 255, 0.92);
+  transform: translate(-34%, -50%);
+}
+
+.blog-pet__background-meta {
+  display: grid;
+  gap: 4px;
+}
+
+.blog-pet__background-meta > span:first-child {
+  display: -webkit-box;
+  overflow: hidden;
+  color: #1f2937;
+  line-height: 1.3;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.blog-pet__background-type {
+  width: fit-content;
+  min-height: 20px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.12);
+  color: #1d4ed8;
+  font-size: 0.72rem;
+  font-weight: 700;
 }
 
 .blog-pet__celebration {
@@ -1771,7 +1896,18 @@ onBeforeUnmount(() => {
   .blog-pet__background-panel {
     right: -8px;
     bottom: 92px;
-    width: 164px;
+    width: min(272px, calc(100vw - 16px));
+  }
+
+  .blog-pet__background-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-height: min(42vh, 280px);
+    gap: 8px;
+  }
+
+  .blog-pet__background {
+    min-height: 114px;
+    padding-right: 24px;
   }
 
   .blog-pet__celebration {

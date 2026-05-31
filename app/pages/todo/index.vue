@@ -2,9 +2,9 @@
 import TodoBoard from '~/components/todo/TodoBoard.vue'
 import TodoOverview from '~/components/todo/TodoOverview.vue'
 import BasePanel from '~/components/ui/BasePanel.vue'
-import BaseTag from '~/components/ui/BaseTag.vue'
 import EmptyState from '~/components/ui/EmptyState.vue'
 import ErrorState from '~/components/ui/ErrorState.vue'
+import PageHero from '~/components/ui/PageHero.vue'
 import type { ContentEntry } from '~/utils/content'
 
 type TodoStatus = 'planned' | 'in-progress' | 'done' | 'paused'
@@ -59,10 +59,7 @@ const counts = computed(() => {
 
 <template>
   <section class="content-page">
-    <BasePanel tone="floating">
-      <BaseTag>Todo</BaseTag>
-      <h1 class="content-page__title">规划看板</h1>
-    </BasePanel>
+    <PageHero eyebrow="Todo" title="规划看板" description="追踪学习计划和项目进度。" accent="#b16a11" />
 
     <BasePanel v-if="todosResult?.error">
       <ErrorState title="Todo 读取失败" :description="todosResult.error" />
@@ -84,10 +81,4 @@ const counts = computed(() => {
   display: grid;
   gap: var(--space-16);
 }
-
-.content-page__title {
-  margin-top: var(--space-12);
-  font-size: clamp(1.7rem, 4vw, 2.3rem);
-}
-
 </style>

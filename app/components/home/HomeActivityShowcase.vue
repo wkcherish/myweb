@@ -12,12 +12,16 @@ import type { ContentEntry } from '~/utils/content'
 
 type CollectionName = 'todo' | 'blog' | 'wiki'
 type RegularCollectionName = Exclude<CollectionName, 'wiki'>
+type TodoStatus = 'planned' | 'in-progress' | 'done' | 'paused'
 
 type ActivityItem = {
   title: string
   description: string
   dateLabel: string
   status?: string
+  statusLabel?: string
+  targetDateLabel?: string
+  categoryLabel?: string
   sortTime: number
   path: string
 }
@@ -47,7 +51,7 @@ type HomeModule = {
   to: string
   accent: string
   eyebrow: string
-  variant: 'static' | 'flip' | 'wide'
+  variant: 'todo' | 'static' | 'flip' | 'wide'
   empty: string
   counterLabel: string
 }
@@ -59,7 +63,7 @@ const modules: HomeModule[] = [
     to: '/todo',
     accent: '#b16a11',
     eyebrow: 'Todo',
-    variant: 'static',
+    variant: 'todo',
     empty: '近一个月还没有新的 Todo 规划。',
     counterLabel: '最近 6 条',
   },
@@ -86,6 +90,13 @@ const modules: HomeModule[] = [
 ]
 
 const expandedWikiGroups = ref<string[]>([])
+
+const todoStatusLabels: Record<TodoStatus, string> = {
+  planned: '计划中',
+  'in-progress': '进行中',
+  done: '已完成',
+  paused: '搁置',
+}
 
 const oneMonthAgo = new Date()
 oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
@@ -136,18 +147,47 @@ const getWikiChapterCountLabel = (count: number) => (count ? `${count} 个小章
 
 const formatMetricCount = (value: number) => Math.max(0, Number(value || 0)).toLocaleString('zh-CN')
 
-const normalizeEntry = (entry: ContentEntry): ActivityItem | null => {
+const normalizeTodoStatus = (value: string): TodoStatus => {
+  if (value === 'in-progress' || value === 'done' || value === 'paused') {
+    return value
+  }
+
+  return 'planned'
+}
+
+const sanitizeTodoDescription = (value: string) => {
+  const trimmed = value.trim()
+
+  if (!trimmed || ['无', '暂无', 'none', 'null', 'todo'].includes(trimmed.toLowerCase())) {
+    return ''
+  }
+
+  return trimmed
+}
+
+const normalizeEntry = (entry: ContentEntry, collection: RegularCollectionName): ActivityItem | null => {
   const date = parseEntryDate(entry)
 
   if (date && date < oneMonthAgo) {
     return null
   }
 
+  const status = collection === 'todo' ? normalizeTodoStatus(readString(entry, 'status')) : readString(entry, 'status')
+  const targetDate = collection === 'todo' ? readString(entry, 'targetDate') : ''
+  const description = collection === 'todo'
+    ? sanitizeTodoDescription(readString(entry, 'description'))
+    : readString(entry, 'description') || '新增内容已进入最近一个月的首页摘要。'
+
   return {
     title: readString(entry, 'title') || '未命名内容',
-    description: readString(entry, 'description') || '新增内容已进入最近一个月的首页摘要。',
+    description,
     dateLabel: formatDate(date),
-    status: readString(entry, 'status'),
+    status,
+    statusLabel: collection === 'todo' ? todoStatusLabels[status as TodoStatus] : '',
+    targetDateLabel: collection === 'todo'
+      ? (targetDate ? formatContentDate(targetDate, '未设目标日期') : '未设目标日期')
+      : '',
+    categoryLabel: collection === 'blog' ? (readString(entry, 'category') || '未分类') : '',
     sortTime: toTimestamp(date),
     path: entry.path || '',
   }
@@ -157,7 +197,7 @@ const fetchCollection = async (collection: RegularCollectionName) => {
   const entries = filterPublishedEntries((await queryCollection(collection).all()) as ContentEntry[])
 
   return entries
-    .map((entry) => normalizeEntry(entry))
+    .map((entry) => normalizeEntry(entry, collection))
     .filter((entry): entry is ActivityItem => Boolean(entry))
     .sort((a, b) => b.sortTime - a.sortTime)
     .slice(0, 6)
@@ -315,9 +355,64 @@ const toggleWikiGroup = (path: string) => {
       <div
         v-if="hasModuleItems(module.key)"
         class="activity-module__items"
-        :class="{ 'activity-module__items--wiki': module.key === 'wiki' }"
+        :class="{
+          'activity-module__items--blog': module.key === 'blog',
+          'activity-module__items--todo': module.key === 'todo',
+          'activity-module__items--wiki': module.key === 'wiki',
+        }"
       >
-        <template v-if="module.key === 'wiki'">
+        <template v-if="module.key === 'todo'">
+          <NuxtLink
+            v-for="(item, index) in getRegularItems(module.key)"
+            :key="`${module.key}-${item.title}-${index}`"
+            class="activity-todo-card"
+            :to="item.path || module.to"
+          >
+            <span class="activity-todo-card__inner">
+              <span class="activity-todo-card__meta">
+                <time>{{ item.dateLabel }}</time>
+                <span class="activity-todo-card__status" :class="`is-${item.status || 'planned'}`">
+                  {{ item.statusLabel || '计划中' }}
+                </span>
+              </span>
+
+              <span class="activity-todo-card__body">
+                <strong>{{ item.title }}</strong>
+                <span v-if="item.description" class="activity-todo-card__description">{{ item.description }}</span>
+              </span>
+
+              <span class="activity-todo-card__foot">
+                <span>目标日期</span>
+                <span>{{ item.targetDateLabel || '未设目标日期' }}</span>
+              </span>
+            </span>
+          </NuxtLink>
+        </template>
+
+        <template v-else-if="module.key === 'blog'">
+          <NuxtLink
+            v-for="(item, index) in getRegularItems(module.key)"
+            :key="`${module.key}-${item.title}-${index}`"
+            class="activity-blog-card"
+            :to="item.path || module.to"
+          >
+            <span class="activity-blog-card__inner">
+              <span class="activity-blog-card__meta">
+                <time>{{ item.dateLabel }}</time>
+                <span class="activity-blog-card__category">{{ item.categoryLabel || '未分类' }}</span>
+              </span>
+
+              <span class="activity-blog-card__body">
+                <strong>{{ item.title }}</strong>
+                <span class="activity-blog-card__description">{{ item.description }}</span>
+              </span>
+
+              <span class="activity-blog-card__foot">继续阅读</span>
+            </span>
+          </NuxtLink>
+        </template>
+
+        <template v-else-if="module.key === 'wiki'">
           <article
             v-for="(group, index) in wikiGroups"
             :key="group.keyPath"
@@ -409,6 +504,9 @@ const toggleWikiGroup = (path: string) => {
 
 <style scoped>
 .activity-showcase {
+  --activity-module-width: min(1180px, calc(100% - var(--space-32)));
+  --activity-compact-card-height: 212px;
+  --activity-compact-card-height-mobile: 176px;
   width: 100%;
   margin: 0 auto;
   padding: var(--space-16) 0 var(--space-64);
@@ -494,11 +592,21 @@ const toggleWikiGroup = (path: string) => {
 }
 
 .activity-module__items--wiki {
-  width: min(980px, calc(100% - var(--space-32)));
+  width: var(--activity-module-width);
+  gap: var(--space-14, 14px);
+}
+
+.activity-module__items--blog,
+.activity-module__items--todo {
+  width: var(--activity-module-width);
+  align-items: stretch;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-14, 14px);
 }
 
 .activity-item,
+.activity-blog-card,
+.activity-todo-card,
 .activity-empty {
   color: var(--color-fg);
   text-decoration: none;
@@ -570,6 +678,216 @@ const toggleWikiGroup = (path: string) => {
   overflow: hidden;
 }
 
+.activity-blog-card {
+  position: relative;
+  min-height: var(--activity-compact-card-height);
+  height: 100%;
+}
+
+.activity-blog-card__inner {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  align-content: stretch;
+  gap: var(--space-14, 14px);
+  height: 100%;
+  min-height: 100%;
+  padding: clamp(var(--space-18, 18px), 2.4vw, var(--space-24));
+  border: 1px solid color-mix(in srgb, var(--color-border) 86%, transparent);
+  border-radius: var(--radius-12);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 96%, transparent), color-mix(in srgb, var(--color-surface) 88%, var(--color-bg)));
+  box-shadow: 0 18px 38px rgba(18, 24, 38, 0.06);
+  transition:
+    transform 240ms ease,
+    border-color 240ms ease,
+    background-color 240ms ease,
+    box-shadow 240ms ease;
+}
+
+.activity-blog-card:hover .activity-blog-card__inner,
+.activity-blog-card:focus-visible .activity-blog-card__inner {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-medium);
+  border-color: color-mix(in srgb, var(--activity-accent) 36%, var(--color-border));
+}
+
+.activity-blog-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-10, 10px);
+  color: var(--color-text-weak);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.activity-blog-card__category {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 12px;
+  border: 1px solid color-mix(in srgb, var(--activity-accent) 26%, var(--color-border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--activity-accent) 12%, transparent);
+  color: color-mix(in srgb, var(--activity-accent) 76%, var(--color-fg));
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.activity-blog-card__body {
+  display: grid;
+  gap: var(--space-10, 10px);
+}
+
+.activity-blog-card__body strong {
+  display: -webkit-box;
+  font-size: clamp(1.2rem, 2.2vw, 1.5rem);
+  line-height: 1.28;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.activity-blog-card__description {
+  color: color-mix(in srgb, var(--color-fg) 82%, var(--color-text-weak));
+  font-size: 0.96rem;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.activity-blog-card__foot {
+  margin-top: auto;
+  padding-top: var(--space-10, 10px);
+  border-top: 1px dashed color-mix(in srgb, var(--activity-accent) 22%, var(--color-border));
+  color: color-mix(in srgb, var(--activity-accent) 78%, var(--color-fg));
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.activity-todo-card {
+  position: relative;
+  min-height: var(--activity-compact-card-height);
+  height: 100%;
+}
+
+.activity-todo-card__inner {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  align-content: stretch;
+  gap: var(--space-14, 14px);
+  height: 100%;
+  min-height: 100%;
+  padding: clamp(var(--space-18, 18px), 2.4vw, var(--space-22, 22px));
+  border: 1px solid color-mix(in srgb, var(--color-border) 86%, transparent);
+  border-radius: var(--radius-12);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 96%, transparent), color-mix(in srgb, var(--color-surface) 88%, var(--color-bg)));
+  box-shadow: 0 18px 38px rgba(18, 24, 38, 0.06);
+  transition:
+    transform 240ms ease,
+    border-color 240ms ease,
+    background-color 240ms ease,
+    box-shadow 240ms ease;
+}
+
+.activity-todo-card:hover .activity-todo-card__inner,
+.activity-todo-card:focus-visible .activity-todo-card__inner {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-medium);
+  border-color: color-mix(in srgb, var(--activity-accent) 36%, var(--color-border));
+}
+
+.activity-todo-card__meta,
+.activity-todo-card__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-10, 10px);
+}
+
+.activity-todo-card__meta {
+  color: var(--color-text-weak);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.activity-todo-card__status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 12px;
+  border: 1px solid color-mix(in srgb, var(--todo-tone) 30%, var(--color-border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--todo-tone) 12%, transparent);
+  color: color-mix(in srgb, var(--todo-tone) 76%, var(--color-fg));
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.activity-todo-card__status.is-planned {
+  --todo-tone: #c58c2b;
+}
+
+.activity-todo-card__status.is-in-progress {
+  --todo-tone: #3b82f6;
+}
+
+.activity-todo-card__status.is-done {
+  --todo-tone: #17a56b;
+}
+
+.activity-todo-card__status.is-paused {
+  --todo-tone: #7a869a;
+}
+
+.activity-todo-card__body {
+  display: grid;
+  gap: var(--space-10, 10px);
+}
+
+.activity-todo-card__body strong {
+  display: -webkit-box;
+  font-size: clamp(1.18rem, 2.2vw, 1.46rem);
+  line-height: 1.24;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.activity-todo-card__description {
+  color: color-mix(in srgb, var(--color-fg) 82%, var(--color-text-weak));
+  font-size: 0.94rem;
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.activity-todo-card__foot {
+  padding-top: var(--space-10, 10px);
+  border-top: 1px dashed color-mix(in srgb, var(--activity-accent) 20%, var(--color-border));
+  color: var(--color-text-weak);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.activity-todo-card__foot span:last-child {
+  color: var(--color-fg);
+}
+
 .activity-module--static .activity-module__items {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -615,7 +933,7 @@ const toggleWikiGroup = (path: string) => {
 .activity-module--wide .activity-module__items {
   display: grid;
   gap: var(--space-16);
-  width: min(1180px, calc(100% - var(--space-32)));
+  width: var(--activity-module-width);
 }
 
 .activity-module--wide .activity-item {
@@ -653,8 +971,7 @@ const toggleWikiGroup = (path: string) => {
   border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
   border-radius: var(--radius-8);
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--activity-accent) 8%, transparent), transparent 52%),
-    color-mix(in srgb, var(--color-surface) 96%, var(--activity-accent));
+    linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 96%, transparent), color-mix(in srgb, var(--color-surface) 88%, var(--color-bg)));
   box-shadow: 0 24px 50px rgba(18, 24, 38, 0.06);
   transition:
     transform 260ms ease,
@@ -698,6 +1015,8 @@ const toggleWikiGroup = (path: string) => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  justify-self: end;
+  align-self: start;
   gap: var(--space-8);
   min-width: 88px;
   min-height: 44px;
@@ -826,6 +1145,8 @@ const toggleWikiGroup = (path: string) => {
 }
 
 @media (max-width: 980px) {
+  .activity-module__items--blog,
+  .activity-module__items--todo,
   .activity-module--static .activity-module__items,
   .activity-module--flip .activity-module__items {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -846,12 +1167,22 @@ const toggleWikiGroup = (path: string) => {
   }
 
   .activity-module--static .activity-module__items,
+  .activity-module__items--blog,
+  .activity-module__items--todo,
   .activity-module--flip .activity-module__items {
     grid-template-columns: 1fr;
   }
 
   .activity-item {
     min-height: 168px;
+  }
+
+  .activity-blog-card {
+    min-height: var(--activity-compact-card-height-mobile);
+  }
+
+  .activity-todo-card {
+    min-height: var(--activity-compact-card-height-mobile);
   }
 
   .activity-module--wide .activity-item__inner {
@@ -868,12 +1199,17 @@ const toggleWikiGroup = (path: string) => {
     width: 100%;
   }
 
-  .activity-wiki-card__summary {
-    grid-template-columns: 1fr;
+  .activity-module__items--blog,
+  .activity-module__items--todo {
+    width: 100%;
   }
 
   .activity-wiki-card__toggle {
-    width: fit-content;
+    gap: var(--space-6);
+    min-width: 72px;
+    min-height: 38px;
+    padding-inline: 12px;
+    font-size: 0.81rem;
   }
 
   .activity-wiki-card__chapter {
@@ -891,6 +1227,8 @@ const toggleWikiGroup = (path: string) => {
   }
 
   .activity-item__inner,
+  .activity-blog-card__inner,
+  .activity-todo-card__inner,
   .activity-module__head a,
   .activity-wiki-card__inner,
   .activity-wiki-card__toggle,
@@ -900,12 +1238,18 @@ const toggleWikiGroup = (path: string) => {
 }
 
 :global(html[data-theme='dark']) .activity-item__inner,
+:global(html[data-theme='dark']) .activity-blog-card__inner,
+:global(html[data-theme='dark']) .activity-todo-card__inner,
 :global(html[data-theme='dark']) .activity-wiki-card__inner {
   box-shadow: 0 18px 36px rgba(6, 10, 19, 0.32);
 }
 
 :global(html[data-theme='dark']) .activity-item__meta,
+:global(html[data-theme='dark']) .activity-blog-card__meta,
+:global(html[data-theme='dark']) .activity-todo-card__meta,
 :global(html[data-theme='dark']) .activity-item__description,
+:global(html[data-theme='dark']) .activity-blog-card__description,
+:global(html[data-theme='dark']) .activity-todo-card__description,
 :global(html[data-theme='dark']) .activity-wiki-card__chapter-meta {
   color: color-mix(in srgb, var(--color-fg) 76%, var(--color-text-weak));
 }

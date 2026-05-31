@@ -4,7 +4,9 @@ import { extname, parse, resolve } from 'node:path'
 import packageJson from './package.json'
 
 const HOME_DAY_BACKGROUND_DIR = resolve(process.cwd(), 'public/backgrounds/home/day')
-const HOME_DAY_BACKGROUND_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.avif'])
+const HOME_DAY_IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp', '.avif', '.gif'])
+const HOME_DAY_VIDEO_EXTENSIONS = new Set(['.mp4', '.webm', '.ogg', '.ogv', '.m4v'])
+const HOME_DAY_BACKGROUND_EXTENSIONS = new Set([...HOME_DAY_IMAGE_EXTENSIONS, ...HOME_DAY_VIDEO_EXTENSIONS])
 const PREFERRED_DEFAULT_BACKGROUND_STEM = 'school-girl-campus'
 
 interface RuntimeHomeBackground {
@@ -12,6 +14,7 @@ interface RuntimeHomeBackground {
   name: string
   path: string
   appliesTo: 'light'
+  mediaType: 'image' | 'video'
   overlayOpacity: number
 }
 
@@ -26,6 +29,10 @@ function formatHomeBackgroundName(stem: string) {
 
   const normalized = stem.replace(/[-_]+/g, ' ').trim()
   return normalized || '首页背景'
+}
+
+function resolveHomeBackgroundMediaType(fileName: string): RuntimeHomeBackground['mediaType'] {
+  return HOME_DAY_VIDEO_EXTENSIONS.has(extname(fileName).toLowerCase()) ? 'video' : 'image'
 }
 
 function loadHomeDayBackgrounds(): RuntimeHomeBackground[] {
@@ -46,6 +53,7 @@ function loadHomeDayBackgrounds(): RuntimeHomeBackground[] {
         name: formatHomeBackgroundName(stem),
         path: `/backgrounds/home/day/${encodeURI(fileName)}`,
         appliesTo: 'light' as const,
+        mediaType: resolveHomeBackgroundMediaType(fileName),
         overlayOpacity: 0,
       }
     })
@@ -206,6 +214,9 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
+    content: {
+      integrityCheck: true,
+    },
     public: {
       nuxtVersion: installedNuxtVersion,
       aiApiBase: '',
