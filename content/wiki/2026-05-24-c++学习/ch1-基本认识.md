@@ -114,10 +114,116 @@ if (0<num<100)
 }
 else if (nmu>=100&&num<200)
 {
-    cout<<"不小于100且小于200"<<endl;
+    cout<<"不小于100且小于200"<<endl; //可以无限else if,python中是elif：
 }
 else
 {
     cout<<"不小于200"<<endl;
 }
+// 嵌套if语句(if套if,注意条件即可)
 ```
+2. 三目运算符
+```c++
+//创建三个变量a,b,c
+//将a和b做比较，将变量大的值赋值给变量c
+int a=20,b=10,c=0;
+c=(a>b?a:b)
+cout<<"c="<<c<<endl;
+//在c++中三目运算符返回的是变量，可以继续赋值
+(a>b?a:b)=100;
+cout<<a<<endl; //100  a是大于b的，将100赋值给了a
+cout<<b<<endl; //10   a>b,b还是原值
+```
+3. switch语句
+执行多条件分支语句
+注意：python没有switch语句
+switch(表达式)
+{
+    case 结果1:执行语句;break;
+    case 结果2:执行语句;break;
+    case 结果3:执行语句;break;
+    ···
+    default:执行语句;break;
+}
+不写break就会一直往下执行
+```c++
+//案例-电影打分
+#include<iostream>
+using namespace std;
+int main()
+{
+    int score=0;
+    cout<<"电影打分："<<endl;
+    cin>>score;
+    switch(score)
+    {
+        case 10:cout<<"经典"<<endl;break;
+        case 9:cout<<"经典"<<endl;break;
+        case 8:cout<<"非常好"<<endl;break;
+        case 7:cout<<"非常好"<<endl;break;
+        case 6:cout<<"一般"<<endl;break;
+        case 5:cout<<"一般"<<endl;break;
+        default:cout<<"烂片"<<endl;break;
+    }
+}
+```
+if和switch区别：
+* switch缺点：判断时候只能是整行或者字符型，不可以是一个区间
+* switch优点：结构清晰，执行效率高
+### 1.6.2循环结构
+1. while循环结构
+满足循环条件，执行循环语句
+语法：while(循环条件){循环语句}
+```c++
+//打印0-9数字
+int main()
+{
+    int num=0;
+    while(num<10)
+    {
+       std::cout<<num<<std::endl;
+        num++;
+    }
+    system("pause")
+}
+```
+注意：写好循环条件，避免死循环情况
+```c++
+//循环结构-猜数字
+#include <iostream>
+#include <ctime>
+using namespace std;
+int main()
+{
+    //添加随机数种子，利用当前系统时间生成随机数，防止每次随机数相同
+    srand((unsigned int)time(NULL));
+
+    //1.系统生成随机数
+    //rand()%100 //生成0-99的随机数
+    int num=rand()%100+1; //这是个伪随机数，每次都不同，要想每次不同就添加随机数种子
+    //cout<<"系统生成了一个1-100之间的随机数，请你来猜："<<endl;
+    //2.玩家猜测
+    int val=0;
+    while (1)
+    {
+        cin>>val;
+        //3.判断玩家猜测
+        if(val<num) 
+        {
+            cout<<"猜小了！"<<endl;
+        }
+        else if (val>num)
+        {
+            cout<<"猜大了！"<<endl;
+        }
+        else
+        {
+            cout<<"猜对了！"<<endl;
+            break;
+        }
+        //猜对 退出游戏
+        //猜错 提示猜的结果 过大或者过小 重新返回第二步
+    }
+}
+```
+2. do...while循环结构
