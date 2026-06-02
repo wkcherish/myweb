@@ -228,3 +228,122 @@ int main()
 ```
 2. do...while循环结构
 语法： do{循环语句}while(循环条件)；
+与while的区别在于**do...while会先执行一次循环语句**，在判断循环语句
+```c++
+//在屏幕中输出0-9这10个数字
+int main()
+{
+    int num=0;
+    do 
+    {
+        std::cout<<num<<std::endl;
+        num++
+    }
+    while(num<10);
+    system("pause");
+}
+```
+案例-水仙花数
+描述：水仙花数是指一个3位数，它的每个位上的数字的3次幂之和等于它本身
+例如：1^3+5^3+3^3=153
+请用do...while语句，求出所有3位数的水仙花数
+```c++
+#include <iostream>
+using namespace std;
+int main()
+{
+    //1.先打印所有三位数字
+    int num=100;
+    do 
+    {
+        //2.从所有三位数字中找到水仙花数
+        int a=0; //个位
+        int b=0; //十位
+        int c=0; //百位
+        a=num%10;
+        b=num/10%10;
+        c=num/100;
+        if(a*a*a+b*b*b+c*c*c == num) //如果是水仙花数，才打印
+        {
+            cout<<num<<endl;
+        }
+        num++;
+    }
+    while (num < 1000);
+}
+```
+3. for循环语句
+语法：for(起始表达式；条件表达式；末尾循环体){循环语句;}
+```c++
+//从数字0-9打印
+for(int i=0;i<10;i++)
+{
+    cout<<i<<endl;
+}
+//上式可以进行拆分
+int i=0
+for(;;;)
+{
+    if(i>=10)
+    {
+        break;
+    }
+    cout<<i<<endl;
+    i++;
+}
+```
+小练习
+```c++
+#include<iostream>
+using namespace std;
+int main()
+{
+    //敲桌子案例
+    //1.先输出1-100的数字
+    for(int i=1; i<=100; i++)
+    {
+        //2.从100个数字中找到特殊数字，打印敲桌子
+        //如果是7的倍数、个为有7、或者十位有7,打印敲桌子
+        if(i%7==0 || i%10==7 || i/10==7)
+        {
+            cout<<"敲桌子"<<endl;
+        }
+        else
+        {
+            cout<<i<<endl;
+        }
+    }
+}
+```
+嵌套实现星图
+```c++
+#include<iostream>
+using namespace std;
+int main()
+{
+    for (int i=0;i<10;i++)
+    {
+        for (int j=0;j<10;j++)
+        {
+            cout<<"*";
+        }
+        cout<<endl;
+    }
+}
+```
+乘法口诀表
+```c++
+#include <iostream>
+using namespace std;
+int main()
+{
+    for(int i=1;i<10;i++)
+    {
+        for(int j=1;j<=i;j++)
+        {
+            cout<<j<<"*"<<i<<"="<<i*j<<'\t';
+        }
+        cout<<endl;
+    }
+} 
+```
