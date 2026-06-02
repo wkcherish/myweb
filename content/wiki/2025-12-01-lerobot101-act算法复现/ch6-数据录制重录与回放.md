@@ -25,7 +25,7 @@ lerobot-record \
 
 - `--resume=true`：已有同一数据集时继续追加 episode。
 
-![](../../../public/images/feishu/assets/2025-12-01-lerobot101-act算法复现-005.png)
+![](..//images/feishu/assets/2025-12-01-lerobot101-act算法复现-005.png)
 
 ## 6.2 重录前清理本地缓存
 

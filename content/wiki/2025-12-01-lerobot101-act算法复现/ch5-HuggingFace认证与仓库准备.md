@@ -7,9 +7,9 @@ description:
 
 ## 5.1 生成访问令牌
 
-![](../../../public/images/feishu/assets/2025-12-01-lerobot101-act算法复现-002.png)
+![](..//images/feishu/assets/2025-12-01-lerobot101-act算法复现-002.png)
 
-![](../../../public/images/feishu/assets/2025-12-01-lerobot101-act算法复现-003.png)
+![](..//images/feishu/assets/2025-12-01-lerobot101-act算法复现-003.png)
 
 建议使用环境变量保存 token，不要把真实 token 写进脚本和仓库。
 
@@ -27,7 +27,7 @@ HF_USER=$(hf auth whoami | head -n 1)
 echo "$HF_USER"
 ```
 
-![](../../../public/images/feishu/assets/2025-12-01-lerobot101-act算法复现-004.png)
+![](..//images/feishu/assets/2025-12-01-lerobot101-act算法复现-004.png)
 
 ## 5.3 创建数据集仓库与模型仓库
 
@@ -36,10 +36,10 @@ echo "$HF_USER"
 - Dataset Repo（用于上传演示数据）
 - Model Repo（用于上传训练后的 ACT 权重）
 
-![](../../../public/images/feishu/assets/2025-12-01-lerobot101-act算法复现-006.png)
+![](..//images/feishu/assets/2025-12-01-lerobot101-act算法复现-006.png)
 
-![](../../../public/images/feishu/assets/2025-12-01-lerobot101-act算法复现-007.png)
+![](..//images/feishu/assets/2025-12-01-lerobot101-act算法复现-007.png)
 
-![](../../../public/images/feishu/assets/2025-12-01-lerobot101-act算法复现-008.png)
+![](..//images/feishu/assets/2025-12-01-lerobot101-act算法复现-008.png)
 
-![](../../../public/images/feishu/assets/2025-12-01-lerobot101-act算法复现-009.png)
+![](..//images/feishu/assets/2025-12-01-lerobot101-act算法复现-009.png)

@@ -14,32 +14,32 @@ LeNet-5
 1.  原理
     
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-003.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-003.png)
 
 B是batch批次；C是channel通道
 
 2.  网络参数详细
     
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-004.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-004.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-005.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-005.png)
 
 AlexNet
 
 1.  原理
     
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-006.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-006.png)
 
 2.  网络参数详细
     
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-007.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-007.png)
 
 使用dropout使一部分神经元失活，这样可以避免数据量太大导致的过拟合发生，操作如下：
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-008.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-008.png)
 
 数据处理中的图像增强操作:
 
@@ -49,18 +49,18 @@ AlexNet
 
 操作方式：①水平翻转；②随机裁剪；③PCA
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-009.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-009.png)
 
 提升网络精确度的方法：LRN正则化
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-010.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-010.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-011.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-011.png)
 
 3.  AlexNet的总结
     
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-012.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-012.png)
 
 比LeNet模型要深一丢丢
 
@@ -125,7 +125,7 @@ if __name__=="__main__":
     print(summary(model,(1,28,28)))
 ```
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-013.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-013.png)
 
 summary这个包就是用来展示神经网络的计算过程，展示参数的变化
 
@@ -416,7 +416,7 @@ if __name__=="__main__":
 
 画图的补充点学习：
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-014.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-014.png)
 
 3.  测试
     
@@ -901,23 +901,23 @@ if __name__=="__main__":
 
 #### 2.2.1.原理
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-015.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-015.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-016.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-016.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-017.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-017.png)
 
 参数详细描述：
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-018.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-018.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-019.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-019.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-020.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-020.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-021.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-021.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-022.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-022.png)
 
 #### 2.2.2.代码实现
 
@@ -1276,72 +1276,72 @@ if __name__=="__main__":
 1.  网络结构
     
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-023.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-023.png)
 
 1x1卷积是为了减少通道数（通过填充和步幅来实现的）
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-024.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-024.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-025.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-025.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-026.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-026.png)
 
 2.  1x1卷积的优点
     
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-027.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-027.png)
 
 3.  全局平均池化层优点
     
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-028.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-028.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-029.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-029.png)
 
 4.  参数详细描述
     
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-030.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-030.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-031.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-031.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-032.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-032.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-033.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-033.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-034.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-034.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-035.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-035.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-036.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-036.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-037.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-037.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-038.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-038.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-039.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-039.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-040.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-040.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-041.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-041.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-042.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-042.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-043.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-043.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-044.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-044.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-045.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-045.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-046.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-046.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-047.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-047.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-048.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-048.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-049.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-049.png)
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-050.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-050.png)
 
 #### 2.3.2.代码实现
 

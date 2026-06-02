@@ -108,8 +108,8 @@ array([[ 1,  2,  3,  4,  5,  6],
 
 ## 5.6 重要比较：
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-022.png)
+![](/images/feishu/assets/2025-08-14-numpy-022.png)
 
 口诀：NumPy 函数要么用 `shape`，要么用 `size`，创建结构用 shape，造数据用 size
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-023.png)
+![](/images/feishu/assets/2025-08-14-numpy-023.png)

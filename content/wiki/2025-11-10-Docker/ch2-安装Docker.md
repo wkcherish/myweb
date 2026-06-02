@@ -149,7 +149,7 @@ sudo reboot
 systemctl status docker
 ```
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-001.png)
+![](/images/feishu/assets/2025-11-10-Docker-001.png)
 
 第三行显示enabled说明开机自启动成功
 
@@ -171,8 +171,8 @@ Windows的Docker显卡直通与USB直通:
 
 在Windows的Docker上想要USB直通需要先让wsl2直通该usb，再在docker run命令将该设备添加到docker。(如果把wsl2所有设备全挂载到docker了，那么只需要让usb直通wsl2)
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-002.png)
+![](/images/feishu/assets/2025-11-10-Docker-002.png)
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-003.png)
+![](/images/feishu/assets/2025-11-10-Docker-003.png)
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-004.png)
+![](/images/feishu/assets/2025-11-10-Docker-004.png)

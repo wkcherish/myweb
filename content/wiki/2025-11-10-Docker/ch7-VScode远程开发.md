@@ -3,24 +3,24 @@
 1.  插件1：微软Docker工具
     
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-023.png)
+![](/images/feishu/assets/2025-11-10-Docker-023.png)
 
 docker扩展插件已经进化为container tools了，请安装container tools
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-024.png)
+![](/images/feishu/assets/2025-11-10-Docker-024.png)
 
 2.  插件2：微软Docker远程开发工具
     
 
 下面这是远程开发的插件。
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-025.png)
+![](/images/feishu/assets/2025-11-10-Docker-025.png)
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-026.png)
+![](/images/feishu/assets/2025-11-10-Docker-026.png)
 
 上述教程已经挂载了本地磁盘了，所以在Docker容器中可以轻松访问本地的工程
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-027.png)
+![](/images/feishu/assets/2025-11-10-Docker-027.png)
 
 安装完拓展之后，vscode进行链接：
 

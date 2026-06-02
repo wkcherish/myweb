@@ -26,4 +26,4 @@ lerobot-train \
 - `--wandb.enable`：是否启用 WandB 可视化。
 - `--policy.repo_id`：训练后模型推送目标仓库。
 
-![](../../../public/images/feishu/assets/2025-12-01-lerobot101-act算法复现-010.png)
+![](..//images/feishu/assets/2025-12-01-lerobot101-act算法复现-010.png)

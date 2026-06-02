@@ -6,7 +6,7 @@ description:
 # 4.二维数组的索引与切片
 ①获取指定单个元素
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-021.png)
+![](/images/feishu/assets/2025-08-14-numpy-021.png)
 
 ```python
 #获取元素9

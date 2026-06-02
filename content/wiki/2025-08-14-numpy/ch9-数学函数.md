@@ -61,7 +61,7 @@ bb
 
 ## 9.3 求各元素的符号
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-028.png)
+![](/images/feishu/assets/2025-08-14-numpy-028.png)
 
 ## 9.4 modf函数
 
@@ -84,7 +84,7 @@ np.rint()
 
 对各元素分别向上取整、向下取整、四舍五入
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-029.png)
+![](/images/feishu/assets/2025-08-14-numpy-029.png)
 
 ## 9.6 around()函数
 
@@ -96,11 +96,11 @@ around()函数也可以实现对数的小数位数进行操作
 
 2.decimals:舍入的小数位数。默认值为0。如果为负，整数将四舍五入到小数点左侧的位置
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-030.png)
+![](/images/feishu/assets/2025-08-14-numpy-030.png)
 
 ## 9.7 三角函数
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-031.png)
+![](/images/feishu/assets/2025-08-14-numpy-031.png)
 
 引入图像模块非常重要
 

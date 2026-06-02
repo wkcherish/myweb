@@ -19,7 +19,7 @@ description:
 
 ③往盒子里装内容
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-040.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-040.png">
 
 ### 9.1.1 边框（border）
 
@@ -166,7 +166,7 @@ table {
 
 当盒子中嵌套盒子时，让子盒子与父盒子进行隔开时，对子盒子使用margin时，子盒子并不产生影响，子盒子与父盒子没有隔开，父盒子产生了影响，发生了类似于塌陷的效果
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-041.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-041.png">
 
 解决方案：
 
@@ -183,7 +183,7 @@ table {
 
 ③可以为父亲元素添加overflow:hidden
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-042.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-042.png">
 
 ```Css
 /* margin 复合写法（同上） */
@@ -192,7 +192,7 @@ table {
 }
 ```
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-043.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-043.png">
 
 以后如果父盒子给定了宽高，子盒子要实现在父盒子中的居中效果，如果不给父盒子上边框，子盒子的margin对于竖直方向就会失效，但是水平方向不会失效
 
@@ -230,21 +230,21 @@ table {
 *   用选区拖动 可以测量大小
     
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-044.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-044.png">
 
 *   Ctrl+ D 可以取消选区，或者在旁边空白处点击一下也可以取消选区
     
 *   吸管取色工具
     
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-045.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-045.png">
 
 ### 9.1.6 案例
 
 1.  小米商品
     
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-046.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-046.png">
 
 ```Css
 /* margin 复合写法（同上） */
@@ -256,7 +256,7 @@ table {
 2.  快报模块
     
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-047.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-047.png">
 
 ```Html
 <!-- HTML 代码示例 -->
@@ -272,7 +272,7 @@ table {
 
 圆角边框的原理为拿着设定半径的圆去矩形等形状的角位置去截弧
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-048.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-048.png">
 
 ```Css
 div {
@@ -486,8 +486,8 @@ overflow: hidden;
 
 用切片工具选中：
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-049.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-049.png">
 
 文件 -> 导出
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-050.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-050.png">

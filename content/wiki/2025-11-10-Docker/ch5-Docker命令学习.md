@@ -48,7 +48,7 @@ docker search 可以查看Docker Hub上关键字的镜像仓库
 
 docker images 可以查看已经下载的镜像
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-010.png)
+![](/images/feishu/assets/2025-11-10-Docker-010.png)
 
 **Nginx 是一个高性能的 HTTP 和反向代理 Web 服务器**
 

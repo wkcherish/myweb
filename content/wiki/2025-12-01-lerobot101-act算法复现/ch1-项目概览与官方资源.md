@@ -15,7 +15,7 @@ https://github.com/huggingface/lerobot
 
 复现大体流程：
 
-![](../../../public/images/feishu/assets/2025-12-01-lerobot101-act算法复现-001.png)
+![](..//images/feishu/assets/2025-12-01-lerobot101-act算法复现-001.png)
 
 本教程的目标是打通这条链路：
 

@@ -71,4 +71,4 @@ while listener.running:
     scene.step()
 ```
 
-![](../../public/images/feishu/assets/2025-01-09-Genesis-AI项目-001.png)
+![](/images/feishu/assets/2025-01-09-Genesis-AI项目-001.png)

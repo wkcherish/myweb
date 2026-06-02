@@ -24,4 +24,4 @@ end=time.time()
 end-start
 ```
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-039.png)
+![](/images/feishu/assets/2025-08-14-numpy-039.png)

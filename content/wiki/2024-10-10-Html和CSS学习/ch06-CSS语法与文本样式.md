@@ -9,7 +9,7 @@ description:
 
 由两部分组成，选择器及一条或多条声明
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-019.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-019.png">
 
 **注意点：**
 
@@ -21,11 +21,11 @@ description:
 
 ④属性和属性值之间用英文“;”分开
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-020.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-020.png">
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-021.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-021.png">
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-022.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-022.png">
 
 ## 6.2 css选择器
 
@@ -37,7 +37,7 @@ description:
 
 ②缺点：不能设计差异化样式，只能选择全部的当前标签
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-023.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-023.png">
 
 ### 6.2.2 类选择器
 
@@ -45,7 +45,7 @@ description:
 
 ②样例
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-024.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-024.png">
 
 ③ **注意点** ：类选择器用"."进行标识，后面紧跟类名（自己命名的）；
 
@@ -57,7 +57,7 @@ description:
 
 命名要有意义；
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-025.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-025.png">
 
 类选择器也可以指定特殊的元素p.center{}
 
@@ -74,7 +74,7 @@ p.center {
 
 ①使用方式：在标签class属性中写多个类名；多个类名中间必须用空格分开；这个标签就可以分别具有这些类名的样式
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-026.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-026.png">
 
 ②多类名开发使用场景：可以把一些标签元素相同的样式（共同的部分）放到一个类里面；这些标签都可以调用这个公共的类，然后再调用自己独有的类；可以节省CSS代码，统一修改也非常方便；开发中要多使用
 
@@ -84,7 +84,7 @@ id选择器可以为标有特定id的HTML元素指定特定的样式
 
 HTML元素以id属性来设置id选择器，css中id选择器以"#"来定义
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-027.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-027.png">
 
 ①口诀：样式#定义，结构id调用，只能给一个标签调用，别人切勿使用
 
@@ -100,7 +100,7 @@ color="red"}
 
 ### 6.2.6 总结
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-028.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-028.png">
 
 ## 6.3 css字体属性
 
@@ -156,13 +156,13 @@ font-style: normal；
 
 ②italic：浏览器会显示斜体的字体样式
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-029.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-029.png">
 
 ### 6.3.5 字体符合属性
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-030.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-030.png">
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-031.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-031.png">
 
 以上都对√，第一个用的是类选择器，第二个用的是标签选择器
 
@@ -189,7 +189,7 @@ p {
 }
 ```
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-032.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-032.png">
 
 ### 6.4.2 对齐文本
 

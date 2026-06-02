@@ -37,7 +37,7 @@ Waydroid 官网与安装指南：https://waydro.id/
     
     BlissOS 官网下载：https://blissos.org/
     
-    ![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-088.png)
+    ![](/images/feishu/assets/2025-01-27-Linux基本操作-088.png)
     
     3.  比较推荐的配置
         

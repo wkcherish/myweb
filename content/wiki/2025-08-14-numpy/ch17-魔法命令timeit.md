@@ -17,6 +17,6 @@ timeit命令参数，-n指定每轮测试次数，-r指定测试轮数(默认为
 
 初始化语句每轮测试只执行一次，且不参与计时。第二行至整个单元格末尾语句会执行相应次数，并参与计时
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-040.png)
+![](/images/feishu/assets/2025-08-14-numpy-040.png)
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-041.png)
+![](/images/feishu/assets/2025-08-14-numpy-041.png)

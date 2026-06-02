@@ -13,7 +13,7 @@ memit不是Ipython的内置，需要安装memory\_profiler模块(pip install mem
 
 安装后，需要通过%load\_ext memory\_profiler载入，才能使用
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-043.png)
+![](/images/feishu/assets/2025-08-14-numpy-043.png)
 
 补充：
 

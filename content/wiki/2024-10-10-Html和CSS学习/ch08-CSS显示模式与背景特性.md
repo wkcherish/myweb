@@ -65,7 +65,7 @@ description:
 
 ### 8.1.4 总结
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-033.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-033.png">
 
 ### 8.1.5 元素显示模式的转换
 
@@ -102,7 +102,7 @@ span {
 
 ### 8.1.6 小米侧边栏
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-034.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-034.png">
 
   
 
@@ -134,13 +134,13 @@ span {
 }
 ```
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-035.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-035.png">
 
 行高=盒子高度：实现文字的垂直居中
 
 原理讲解：
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-036.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-036.png">
 
 ## 8.2 css背景
 
@@ -291,9 +291,9 @@ div {
 
 颜色渐变：
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-037.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-037.png">
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-038.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-038.png">
 
 ### 8.2.9 案例-五彩导航栏
 
@@ -345,7 +345,7 @@ p {
 }
 ```
 
-<img style="max-width:100%" src="../../public/images/feishu/assets/2024-10-10-Html和CSS学习-039.png">
+<img style="max-width:100%" src="/images/feishu/assets/2024-10-10-Html和CSS学习-039.png">
 
 解释：①行高可以跟单位也可以不跟单位
 

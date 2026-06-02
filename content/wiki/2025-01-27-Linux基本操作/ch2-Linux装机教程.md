@@ -20,15 +20,15 @@ https://mirrors.tuna.tsinghua.edu.cn/ubuntu-releases/24.04/
 
 [https://www.virtualbox.org/wiki/Download\_Old\_Builds\_7\_0](https://www.virtualbox.org/wiki/Download_Old_Builds_7_0)
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-001.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-001.png)
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-002.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-002.png)
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-003.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-003.png)
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-004.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-004.png)
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-005.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-005.png)
 
 内存4G（4096MB）；
 
@@ -42,15 +42,15 @@ CPU给4个核；
 
 按照1.1的步骤下载Ubuntu
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-006.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-006.png)
 
 点击启动(绿色大箭头)，过一段时间出现下图中的小界面，往下拉选择中文简体，然后点击“安装Ubuntu”
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-007.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-007.png)
 
 键盘布局默认“Chinese”并点击“继续”，如果找不到“继续”就用Alt+F7，然后往上拖鼠标即可看到（注意拖鼠标的过程中不要点击鼠标，拖到目标位置后再点击鼠标）。
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-008.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-008.png)
 
 选择“正常安装”(找不到都用Alt+F7)， **不选** “安装Ubuntu时下载更新”，其余都默认并继续
 
@@ -70,17 +70,17 @@ CPU给4个核；
 
 #### 2.2.3.1 全屏
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-009.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-009.png)
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-010.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-010.png)
 
 #### 2.2.3.2 文件交换
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-011.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-011.png)
 
 #### 2.2.3.3 新建文本文档
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-012.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-012.png)
 
   
 
@@ -118,7 +118,7 @@ CPU给4个核；
         1.  无法调用本机摄像头，或说调用本机摄像头会巨麻烦。（虽无法调用本机摄像头，但是可以使用USB的摄像头）
             
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-013.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-013.png)
 
 ### 2.3.2 安装教程
     
@@ -131,15 +131,15 @@ CPU给4个核；
 
 用Win+R输入`appwiz.cpl`：
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-014.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-014.png)
 
 点击OK进入 **程序和功能/Programs and Features** 界面，点击 **启用或关闭Windows功能/Turn Windows features on or off** ：
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-015.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-015.png)
 
 选择 **适用于Linux的Windows子系统/Windows Subsystem for Linux** 和 **虚拟机平台/Virtual Machine Platform** 功能：
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-016.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-016.png)
 
   
 
@@ -160,7 +160,7 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
 
 用管理员权限打开powershell
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-017.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-017.png)
 
 升级WSL并设置默认版本为WSL2
 
@@ -179,7 +179,7 @@ wsl --set-default-version 2
 
 直接打开Microsoft Store搜索对应的发行版下载即可(比如Ubuntu 24.04 LTS)
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-018.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-018.png)
 
 2.  方式二(命令行安装)
     
@@ -192,7 +192,7 @@ wsl --list --online
 
   
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-019.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-019.png)
 
 选择对应发行版并安装
 
@@ -221,7 +221,7 @@ wsl --unregister <distro>
 
 输出Version为2即正常
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-020.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-020.png)
 
   
 
@@ -239,7 +239,7 @@ wsl
 
 输入密码(建议低于6位的数字，并且在输入密码时，终端上不会显示输入的字符，但是已经正常输入了)
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-021.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-021.png)
 
   
 
@@ -259,16 +259,16 @@ wsl
 
 不用安装，只要你的Windows安装了驱动，你的WSL2就已经安装好驱动了。
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-022.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-022.png)
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-023.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-023.png)
 
 ##### 2.3.3.2.2 CUDA
     
 
 前往 NVIDIA CUDA Toolkit 下载页面：https://developer.nvidia.com/cuda-downloads
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-024.png)![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-025.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-024.png)![](/images/feishu/assets/2025-01-27-Linux基本操作-025.png)
 
 在下方的网站，选择合适的版本。
 
@@ -276,15 +276,15 @@ WSL2 专属 CUDA 指南：https://docs.nvidia.com/cuda/wsl-user-guide/index.html
 
 **(同实体机LINUX，往下找教程，唯一与实体机不同的地方如下图)**
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-026.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-026.png)
 
 挨行敲一遍
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-027.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-027.png)
 
 敲完后，输入`nvcc -V`检测是否安装成功，如果出现下图，证明没配置环境。
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-028.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-028.png)
 
 （请详看下方教程的**安装CUDA的配置环境来看**如何配置环境）
 
@@ -297,7 +297,7 @@ WSL2 专属 CUDA 指南：https://docs.nvidia.com/cuda/wsl-user-guide/index.html
 
 (同实体机LINUX，往下找教程)
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-029.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-029.png)
 
 #### 2.3.3.3 VScode远程开发
     
@@ -306,24 +306,24 @@ WSL2 专属 CUDA 指南：https://docs.nvidia.com/cuda/wsl-user-guide/index.html
 
 安装该插件(WSL2有自己的远程开发插件，无需使用SSH）。
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-030.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-030.png)
 
 连接WSL2
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-031.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-031.png)
 
 远程开发成功。
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-032.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-032.png)
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-033.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-033.png)
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-034.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-034.png)
 
 #### 2.3.3.4 Linux终端使用Windows软件
     
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-035.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-035.png)
 
 #### 2.3.3.5 OpenGL有问题
     

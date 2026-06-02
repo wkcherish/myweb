@@ -9,7 +9,7 @@ description:
 
 补充一点安装cuda和cudnn时，使用指令比较好一些，不用单独进行安装，安装pytorch时直接安依赖包就可以（ `pytorch-cuda=12.4` 是一个“ **元包（meta-package）** ”，它并不包含真正的 CUDA 文件，而是一个 **依赖集合，** 里边包含了所需要的一些包，需要注意的是安装前先查看电脑支持的cuda最高版本，要安装的cuda版本小于等于13.0
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-001.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-001.png)
 
 ```bash
 # CUDA 12.4
@@ -39,6 +39,6 @@ cudnn_version=torch.backends.cudnn.version()
 print("cudnn version",cudnn_version)
 ```
 
-![](../../public/images/feishu/assets/2025-11-03-深度学习基础-002.png)
+![](/images/feishu/assets/2025-11-03-深度学习基础-002.png)
 
 cuda:0 指的是一块显卡

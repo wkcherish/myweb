@@ -15,21 +15,21 @@ numpy.array(object, dtype = None, copy = True, order = None, subok = False, ndmi
 
 参数：
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-001.png)
+![](/images/feishu/assets/2025-08-14-numpy-001.png)
 
 ### 2.2.2 实例
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-002.png)
+![](/images/feishu/assets/2025-08-14-numpy-002.png)
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-003.png)
+![](/images/feishu/assets/2025-08-14-numpy-003.png)
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-004.png)
+![](/images/feishu/assets/2025-08-14-numpy-004.png)
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-005.png)
+![](/images/feishu/assets/2025-08-14-numpy-005.png)
 
 在使用admin属性指定维度时，如果是ndim=3，表示创建一个三维的数组；如果ndim=4，表示创建了一个四维的数组，上述结果就变为：
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-006.png)
+![](/images/feishu/assets/2025-08-14-numpy-006.png)
 
 ## 2.2 随机数创建数组
 
@@ -90,11 +90,11 @@ np.random.randint(1,11,size=(10))
 
 ②生成二维数组
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-007.png)
+![](/images/feishu/assets/2025-08-14-numpy-007.png)
 
 ③生成三维数组
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-008.png)
+![](/images/feishu/assets/2025-08-14-numpy-008.png)
 
 ### 2.2.2 rand语句
 
@@ -143,7 +143,7 @@ array([[1, 2, 3],
 
 randn()函数返回一个或一组数据，具有标准正态分布（期望为0，方差为1）
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-009.png)
+![](/images/feishu/assets/2025-08-14-numpy-009.png)
 
 ### 2.4.2 常规正态分布
 
@@ -154,7 +154,7 @@ random.normal(loc,scale,size)也可以生成正态分布
 #size:用于确定是几维的数列
 ```
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-010.png)
+![](/images/feishu/assets/2025-08-14-numpy-010.png)
 
 ## 2.5 ndarry属性（数组属性）
 
@@ -243,7 +243,7 @@ numpy.empty(shape,dtype=float,order='c')
 
 order:有"C"和"F"两个选项,分别代表，行优先和列优先，在计算机内存中的存储元素的顺序。
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-011.png)
+![](/images/feishu/assets/2025-08-14-numpy-011.png)
 
 ②empty()用法
 
@@ -257,7 +257,7 @@ y
 
 输出结果：
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-012.png)
+![](/images/feishu/assets/2025-08-14-numpy-012.png)
 
 ```python
 x=np.arange(1,6)
@@ -272,7 +272,7 @@ np.add(x,2,out=y)
 
 `np.empty_like()`不会清空内存中的原数据，它只是分配一块与原数组相同大小和类型的内存区域。
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-013.png)
+![](/images/feishu/assets/2025-08-14-numpy-013.png)
 
 ### 2.6.4 ？？用法
 
@@ -318,7 +318,7 @@ np.full_like(a,10)
 
 输出结果：
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-014.png)
+![](/images/feishu/assets/2025-08-14-numpy-014.png)
 
 ### 2.6.6 创建单位矩阵
 
@@ -338,9 +338,9 @@ np.identity(5,dtype=int)
 
 两个函数是有区别的
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-015.png)
+![](/images/feishu/assets/2025-08-14-numpy-015.png)
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-016.png)
+![](/images/feishu/assets/2025-08-14-numpy-016.png)
 
 ```python
 # 创建一个 3 行 4 列的矩阵，对角线在第 0 条（默认）
@@ -375,7 +375,7 @@ dtype：ndarry的数据类型
 """
 ```
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-017.png)
+![](/images/feishu/assets/2025-08-14-numpy-017.png)
 
 这里num=是可以省略的
 
@@ -402,7 +402,7 @@ dtype：ndarry的数据类型
 """
 ```
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-018.png)
+![](/images/feishu/assets/2025-08-14-numpy-018.png)
 
 logspace()函数中的num参数也是可以不写num=的
 

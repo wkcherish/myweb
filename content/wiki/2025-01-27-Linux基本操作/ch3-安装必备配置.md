@@ -24,11 +24,11 @@ description:
     
       在北方（山东）测速如下：
     
-    ![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-036.png)
+    ![](/images/feishu/assets/2025-01-27-Linux基本操作-036.png)
     
       在南方（广东）测速如下：
     
-    ![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-037.png)
+    ![](/images/feishu/assets/2025-01-27-Linux基本操作-037.png)
     
       在南北都比较快的是`北京外国语大学BFSU`和`南方科技大学SUSTech`，不想测速可以无脑选，也可以测速选择最好的源。
     
@@ -47,21 +47,21 @@ description:
     
       在以下界面，用键盘按ggdG（注意区分大小写）
     
-    ![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-038.png)
+    ![](/images/feishu/assets/2025-01-27-Linux基本操作-038.png)
     
-    ![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-039.png)
+    ![](/images/feishu/assets/2025-01-27-Linux基本操作-039.png)
     
       选择好Ubuntu版本后，
     
-    ![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-040.png)
+    ![](/images/feishu/assets/2025-01-27-Linux基本操作-040.png)
     
       粘贴进去
     
-    ![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-041.png)
+    ![](/images/feishu/assets/2025-01-27-Linux基本操作-041.png)
     
       按一下ESC，然后英文冒号，输入 `:wq!`然后回车
     
-    ![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-042.png)
+    ![](/images/feishu/assets/2025-01-27-Linux基本操作-042.png)
     
       输入以下命令
     
@@ -71,7 +71,7 @@ description:
     
       下方出现对应学校源网站则成功
     
-    ![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-043.png)
+    ![](/images/feishu/assets/2025-01-27-Linux基本操作-043.png)
     
       至此换源结束
     
@@ -90,15 +90,15 @@ description:
 
 选择好Ubuntu版本后，复制下方的内容。
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-044.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-044.png)
 
 粘贴进去
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-045.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-045.png)
 
 按一下ESC，然后英文冒号，输入 `:wq!`然后回车
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-046.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-046.png)
 
 输入以下命令
 
@@ -108,7 +108,7 @@ sudo apt update
 
 这里被替换成对应学校则成功
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-047.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-047.png)
 
   
 
@@ -126,13 +126,13 @@ sudo apt update
 
 https://www.google.com/chrome/
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-048.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-048.png)
 
 咱们这里是Ubuntu所以是Debian系的系统，所以选deb扩展名的程序包。（也就是红色框框）
 
 红帽系则需要安装的是rpm扩展名程序包。（也就是蓝色框框）
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-049.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-049.png)
 
 ```Bash
 #某些发行版中，可能Downloads是中文下载，所以就需要  cd ~/下载
@@ -141,7 +141,7 @@ cd ~/Downloads
 sudo apt install ./google-chrome-stable_current_amd64.deb
 ```
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-050.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-050.png)
 
 ### 3.2.2 查看snap包应用数量
     
@@ -161,7 +161,7 @@ fastfetch
 
 这里显示，一共有3162个debian的程序，7个snap程序
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-051.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-051.png)
 
 ### 3.2.3 移除snap应用
     
@@ -183,7 +183,7 @@ sudo systemctl disable snapd.seeded.service
 snap list
 ```
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-052.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-052.png)
 
 卸载掉图中所有应用，按照 **先删除应用软件，再删除非应用软件** 的顺序进行删除
 
@@ -204,7 +204,7 @@ sudo snap remove bare
 sudo snap remove snapd
 ```
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-053.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-053.png)
 
 输入以下命令查看是否还有snap包
 
@@ -218,7 +218,7 @@ fastfetch
 
   
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-054.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-054.png)
 
 ### 3.2.4 移除snap
     
@@ -254,7 +254,7 @@ Pin: release a=*
 Pin-Priority: -10
 ```
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-055.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-055.png)
 
 ### 3.2.6 测试是否成功
     
@@ -266,7 +266,7 @@ sudo apt install firefox
 
 这里提示snapd无法被安装，就证明成功了
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-056.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-056.png)
 
 ### 3.2.7 重新安装FireFox浏览器（没大有必要）
     
@@ -312,9 +312,9 @@ sudo apt dist-update
 
 官网下载搜狗输入法
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-057.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-057.png)
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-058.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-058.png)
 
 打开终端输入如下
 
@@ -325,19 +325,19 @@ sudo apt install ./sogoupinyin_4.2.1.145_amd64.deb
 
 打开Fcitx
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-059.png)![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-060.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-059.png)![](/images/feishu/assets/2025-01-27-Linux基本操作-060.png)
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-061.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-061.png)
 
 添加搜狗输入法
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-062.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-062.png)
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-063.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-063.png)
 
 将搜狗输入法设置为唯一输入法
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-064.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-064.png)
 
 ### 3.3.2 Fcitx5(Ubuntu22.04及以上、Debian12及以上)
     
@@ -367,18 +367,18 @@ sudo apt install fcitx5 fcitx5-chinese-addons
 4.  启动Fcitx5
     
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-065.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-065.png)
 
 5.  修改一些设置
     
 
 将Pinyin和Keyboard - English US加入到左边。
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-066.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-066.png)
 
 添加快捷键以便于更好切换中英文
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-067.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-067.png)
 
 6.  重启
     
@@ -424,7 +424,7 @@ pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
 按图中顺序敲，但是不出意外的话，会报错，因为大部分发行版不自带pip，所以请接着往下看。
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-068.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-068.png)
 
 ```Bash
 #安装pip3
@@ -443,7 +443,7 @@ python3 -m pip install --upgrade pip
 
 成功的话，会看到Looking后面是tsinghua字样。
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-069.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-069.png)
 
   
 
@@ -541,7 +541,7 @@ nvidia-smi
 
 （此教程以Debian 12 Bookworm和RTX3060Laptop为例）(Ubuntu也类似)
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-070.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-070.png)
 
 1.  先查看显卡驱动所支持的最高CUDA版本
     
@@ -552,7 +552,7 @@ nvidia-smi
 
 左边是英伟达驱动版本，右边是所支持CUDA的最高版本，注意是最高版本，比这个版本低的CUDA都是可以安装的。(不用追求最高，稳定即可，虽然都很稳定)
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-071.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-071.png)
 
 2.  下载CUDA并安装CUDA
     
@@ -561,13 +561,13 @@ nvidia-smi
 
 选择一个版本，这里以CUDA12.4为例（绿色框住的都是我这台电脑对应可安装的版本，而红色框则不能）
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-072.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-072.png)
 
 我这里是Intel CPU(X86\_64架构或者叫amd64架构)，所以选择X86\_64。（AMD和Intel全是X86的，如果分不清，请看[Vinci机器人队单片机教程](https://sdutvincirobot.feishu.cn/wiki/PqsGwcPCuidbN6k13jfcGWtWn0b)）
 
 我是Debian12，所以选择了Debian12 ,(你是Ubuntu要选择Ubuntu)如下图所示，建议选择runfile文件进行安装。
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-073.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-073.png)
 
 将最下方框框里的命令敲入终端
 
@@ -584,23 +584,23 @@ sudo chmod a+x ./cuda_12.4.0_550.54.14_linux.run
 sudo ./cuda_12.4.0_550.54.14_linux.run
 ```
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-074.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-074.png)
 
 正在安装中：
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-075.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-075.png)
 
 输入accept接受即可
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-076.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-076.png)
 
 因为我们已经安装了驱动，所以删掉该项，Install即可。
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-077.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-077.png)
 
 等待片刻后，一般不出红色字体就是安装成功了，可以读读英语确认一下。(顺便确定一下位置)
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-078.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-078.png)
 
 3.  配置环境
     
@@ -619,7 +619,7 @@ Please make sure that
 which nvcc
 ```
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-079.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-079.png)
 
 所以我进行以下操作：
 
@@ -634,7 +634,7 @@ export PATH=/usr/local/cuda-12.4/bin:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda-12.4/lib64:$LD_LIBRARY_PATH
 ```
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-080.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-080.png)
 
 ```Shell
 # 刷新当前终端的环境变量
@@ -645,7 +645,7 @@ nvcc -V
 
 出现下图这种则安装成功。
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-081.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-081.png)
 
   
 
@@ -663,11 +663,11 @@ nvcc -V
 
 因为我是CUDA12.4，所以下方红圈版本都是可以安装的，越新越好。
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-082.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-082.png)
 
 红色是X86架构的所有Linux通用的，所以我选择红色的。
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-083.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-083.png)
 
 绿色的是X86架构的Ubuntu，是Ubuntu且CPU为X86架构的可以选择下载。
 
@@ -677,14 +677,14 @@ nvcc -V
 
 下载好的：
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-084.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-084.png)
 
 2.  安装cuDNN
     
 
 找到该文件所在目录，并打开终端，cd到该目录。
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-085.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-085.png)
 
 解压文件，并复制到对应位置完成安装
 
@@ -714,7 +714,7 @@ cat /usr/local/cuda/include/cudnn_version.h | grep CUDNN_MAJOR -A 2
 
 出现下图这样的就是安装成功了
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-086.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-086.png)
 
   
 
@@ -747,7 +747,7 @@ cd /usr/local/cuda-12.4/targets/x86_64-linux/lib
  ls
 ```
 
-![](../../public../../public/images/feishu/assets/2025-01-27-Linux基本操作-087.png)
+![](/images/feishu/assets/2025-01-27-Linux基本操作-087.png)
 
 如上图，我需要将`libcudnn_xxx_xxxxx.so.8.9.7`和`libcudnn_xxx_xxxxx.so.8`和`libcudnn_xxx_xxxxx.so`软链接
 

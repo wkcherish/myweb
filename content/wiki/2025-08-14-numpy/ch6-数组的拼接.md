@@ -44,7 +44,7 @@ np.concatenate((aa,bb),axis=0)
 
 结果：
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-024.png)
+![](/images/feishu/assets/2025-08-14-numpy-024.png)
 
 ```python
 #指定axis为1进行拼接
@@ -53,7 +53,7 @@ np.concatenate((aa,bb),axis=1)
 
 结果：
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-025.png)
+![](/images/feishu/assets/2025-08-14-numpy-025.png)
 
 **二维数组总结：0竖着方向，1横着方向**
 
@@ -116,7 +116,7 @@ np.hstack((aa,bb))
 
 结果：
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-026.png)
+![](/images/feishu/assets/2025-08-14-numpy-026.png)
 
 等效于concatenate()函数中axis=1时的情况
 
@@ -148,7 +148,7 @@ np.vstack([aa,bb])
 
 结果：
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-027.png)
+![](/images/feishu/assets/2025-08-14-numpy-027.png)
 
 ②三维数组
 

@@ -31,7 +31,7 @@ mprun测试的函数必须定义在独立模块中，不能定义在交互式Ipy
 
 如果需要重新加载模块，可以调用importlib模块提供reload函数
 
-![](../../public/images/feishu/assets/2025-08-14-numpy-044.png)
+![](/images/feishu/assets/2025-08-14-numpy-044.png)
 
 这个时候如果将函数里边range()范围改了，则重新运行之后，结果increment的每一句代码是不变的
 

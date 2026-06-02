@@ -45,11 +45,11 @@ docker build -t ros-humble-opencv411-cuda128-cudnn970-jammy:latest .
 docker build -t ros-jazzy-opencv411-cuda128-cudnn970-noble:latest .
 ```
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-011.png)
+![](/images/feishu/assets/2025-11-10-Docker-011.png)
 
 镜像大小5GB(压缩后的大小详见DockerHub)
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-012.png)
+![](/images/feishu/assets/2025-11-10-Docker-012.png)
 
 将 Docker 镜像推送到 Docker Hub 的步骤如下：
 
@@ -129,9 +129,9 @@ docker push tungchiahui/ros-noetic-focal-arm64:latest
 *   如果你打算将镜像公开，可以设置为公共仓库；如果希望只有你自己可以访问，可以设置为私有仓库
     
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-013.png)
+![](/images/feishu/assets/2025-11-10-Docker-013.png)
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-014.png)
+![](/images/feishu/assets/2025-11-10-Docker-014.png)
 
 #### 6.2.2.手动创建(跨平台多架构构建)
 
@@ -226,9 +226,9 @@ docker buildx build \
 
 说明： –platform 指定多架构。 –push 是必须的，因为 buildx 的多平台构建默认是不能本地加载的（除非加 –load，但那只能支持单一架构）
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-015.png)
+![](/images/feishu/assets/2025-11-10-Docker-015.png)
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-016.png)
+![](/images/feishu/assets/2025-11-10-Docker-016.png)
 
 #### 6.2.3.清除构建缓存
 
@@ -237,7 +237,7 @@ docker buildx build \
 docker builder prune -f  
 ```
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-017.png)
+![](/images/feishu/assets/2025-11-10-Docker-017.png)
 
 ### 6.3.补充
 
@@ -272,9 +272,9 @@ docker run -d -p 92:80 nginx:tuling
 
 4、访问 http://Docker宿主机IP:92/，可看到下图所示界面
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-018.png)
+![](/images/feishu/assets/2025-11-10-Docker-018.png)
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-019.png)
+![](/images/feishu/assets/2025-11-10-Docker-019.png)
 
 #### 6.3.2.使用Dockerfile构建微服务镜像
 
@@ -305,7 +305,7 @@ docker build -t tulingmall-member:0.0.5 .
 
 格式： docker build -t 镜像名称:标签 Dockerfile的相对位置
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-020.png)
+![](/images/feishu/assets/2025-11-10-Docker-020.png)
 
 4、启动镜像，加-d可在后台启动
 
@@ -326,7 +326,7 @@ tulingmall-member:0.0.5
 
 5、访问会员服务接口
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-021.png)
+![](/images/feishu/assets/2025-11-10-Docker-021.png)
 
 #### 6.3.3.将微服务镜像发布到阿里云
 
@@ -338,7 +338,7 @@ tulingmall-member:0.0.5
 
 然后，在linux服务器上用docker login命令登录镜像仓库
 
-![](../../public/images/feishu/assets/2025-11-10-Docker-022.png)
+![](/images/feishu/assets/2025-11-10-Docker-022.png)
 
 要把镜像推送到镜像仓库
 
