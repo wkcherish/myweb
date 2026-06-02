@@ -92,8 +92,32 @@ cout << "整型变量a=" <<a<<endl;
 1. if语句
 单行、多行、多条件if语句
 ```c++
-if(score>600){
+//单行格式if语句：if (条件){条件满足执行的语句}
+if(score>600)
+{
     cout<<'这是单行if语句'<<endl;
 }
-
+//多行格式if语句：if (条件){条件满足执行的语句}else{条件不满足执行的语句}
+cin >> score
+if(score<=600)
+{
+    cout>>"小于等于600"<<endl;
+}
+else
+{
+    cout>>"大于600">>endl;
+}
+//多条件格式if语句：if (条件){条件1满足执行的语句}else if{条件2满足执行的语句}····else{条件不满足执行的语句}
+if (0<num<100)
+{
+    cout<<"小于100"<<endl;
+}
+else if (nmu>=100&&num<200)
+{
+    cout<<"不小于100且小于200"<<endl;
+}
+else
+{
+    cout<<"不小于200"<<endl;
+}
 ```
