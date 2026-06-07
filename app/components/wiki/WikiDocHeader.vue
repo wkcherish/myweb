@@ -7,6 +7,7 @@ import type { ContentEntry } from '~/utils/content'
 defineProps<{
   doc: ContentEntry
   path: string
+  metricPaths?: string[]
   titleOverride?: string
   descriptionOverride?: string
 }>()
@@ -19,7 +20,7 @@ defineProps<{
     <div class="wiki-doc-header__meta">
       <time>{{ formatContentDate(getContentDateFromPath(path)) }}</time>
       <BaseTag tone="accent">{{ readContentString(doc, 'category') || 'Wiki' }}</BaseTag>
-      <VisitCount :path="path" />
+      <VisitCount :path="path" :paths="metricPaths?.length ? metricPaths : [path]" variant="summary" />
     </div>
 
     <h1>{{ titleOverride || readContentString(doc, 'title') || '未命名 Wiki' }}</h1>

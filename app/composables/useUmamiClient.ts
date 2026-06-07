@@ -17,6 +17,8 @@ export interface UmamiMetricRow {
 export interface UmamiPathMetricSummary {
   pageviews: number
   visits: number
+  bounces: number
+  totaltime: number
 }
 
 export interface UmamiStatsResponse {
@@ -317,6 +319,8 @@ export async function fetchUmamiPathMetricsMap(range: UmamiRange): Promise<Recor
     accumulator[normalizeUmamiPath(row.name)] = {
       pageviews: row.pageviews,
       visits: row.visits,
+      bounces: row.bounces,
+      totaltime: row.totaltime,
     }
 
     return accumulator

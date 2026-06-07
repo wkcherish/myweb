@@ -2,6 +2,7 @@
 import { ChevronDown } from 'lucide-vue-next'
 import { ref } from 'vue'
 import type { UmamiPathMetricSummary } from '~/composables/useUmamiClient'
+import VisitCount from '~/components/content/VisitCount.vue'
 import BaseTag from '~/components/ui/BaseTag.vue'
 import EmptyState from '~/components/ui/EmptyState.vue'
 import {
@@ -57,6 +58,11 @@ const getChapterCountLabel = (group: WikiGroup) => {
   return `${count} 个章节`
 }
 
+const getGroupMetricPaths = (group: WikiGroup) => {
+  const paths = [...new Set(group.items.map((item) => getWikiRoutePath(item)).filter(Boolean))]
+  return paths.length ? paths : [getWikiRoutePath(group.primary)]
+}
+
 const formatMetricCount = (value: number) => Math.max(0, Number(value || 0)).toLocaleString('zh-CN')
 
 const getMetricValue = (path: string, key: keyof UmamiPathMetricSummary) => {
@@ -79,6 +85,7 @@ const getMetricValue = (path: string, key: keyof UmamiPathMetricSummary) => {
           <NuxtLink class="wiki-doc-card__main" :to="getWikiRoutePath(group.primary)">
             <div class="wiki-doc-card__meta">
               <time>{{ formatContentDate(getContentDate(group.primary, ['date', 'updatedAt'])) }}</time>
+              <VisitCount :paths="getGroupMetricPaths(group)" variant="pair" />
             </div>
             <h2>{{ group.title }}</h2>
             <p class="wiki-doc-card__description">
@@ -216,9 +223,18 @@ const getMetricValue = (path: string, key: keyof UmamiPathMetricSummary) => {
 
 .wiki-doc-card__meta {
   justify-content: space-between;
+  min-width: 0;
   color: var(--color-text-weak);
   font-size: 0.82rem;
   font-weight: 700;
+}
+
+.wiki-doc-card__meta time {
+  flex: 0 0 auto;
+}
+
+.wiki-doc-card__meta :deep(.visit-count-pair) {
+  flex: 0 1 auto;
 }
 
 .wiki-doc-card__main h2 {

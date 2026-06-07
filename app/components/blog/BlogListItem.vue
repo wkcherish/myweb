@@ -26,12 +26,12 @@ defineProps<{
     </div>
 
     <div class="blog-list-item__foot">
-      <div class="blog-list-item__tags">
+      <div v-if="readContentTags(post).length" class="blog-list-item__tags">
         <BaseTag v-for="tag in readContentTags(post)" :key="tag" tone="accent">
           {{ tag }}
         </BaseTag>
       </div>
-      <VisitCount :path="post.path" />
+      <VisitCount :path="post.path" variant="pair" />
     </div>
   </NuxtLink>
 </template>
@@ -108,5 +108,21 @@ defineProps<{
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-8);
+  min-width: 0;
+}
+
+.blog-list-item__foot :deep(.visit-count-pair) {
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+@media (max-width: 560px) {
+  .blog-list-item__foot {
+    justify-content: flex-start;
+  }
+
+  .blog-list-item__foot :deep(.visit-count-pair) {
+    margin-left: 0;
+  }
 }
 </style>

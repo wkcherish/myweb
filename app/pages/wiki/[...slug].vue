@@ -89,7 +89,19 @@ const tocLinks = computed(() => {
 })
 
 const hasToc = computed(() => tocLinks.value.length > 0)
-const resolvedPath = computed(() => page.value?.path || path)
+const resolvedRoutePath = computed(() => (page.value ? getWikiRoutePath(page.value) : path))
+const wikiMetricPaths = computed(() => {
+  if (!page.value) {
+    return [resolvedRoutePath.value]
+  }
+
+  if (!isIndexEntry(page.value)) {
+    return [resolvedRoutePath.value]
+  }
+
+  const paths = [...new Set(docNavItems.value.map((doc) => getWikiRoutePath(doc)))]
+  return paths.length ? paths : [resolvedRoutePath.value]
+})
 </script>
 
 <template>
@@ -117,7 +129,13 @@ const resolvedPath = computed(() => page.value?.path || path)
     </aside>
 
     <article class="content-detail">
-      <WikiDocHeader :doc="page" :path="resolvedPath" :title-override="wikiTitle" :description-override="wikiDescription" />
+      <WikiDocHeader
+        :doc="page"
+        :path="resolvedRoutePath"
+        :metric-paths="wikiMetricPaths"
+        :title-override="wikiTitle"
+        :description-override="wikiDescription"
+      />
       <div v-if="hasToc" class="wiki-detail-layout__mobile-toc">
         <WikiSideToc :links="tocLinks" />
       </div>

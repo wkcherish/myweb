@@ -20,12 +20,12 @@ defineProps<{
       </NuxtLink>
 
       <div class="article-header__meta">
-        <span>
+        <span class="article-header__date">
           <CalendarDays :size="17" aria-hidden="true" />
           <time>{{ formatContentDate(getContentDateFromPath(path)) }}</time>
         </span>
         <BaseTag>{{ readContentString(article, 'category') || '未分类' }}</BaseTag>
-        <VisitCount :path="path" />
+        <VisitCount :path="path" variant="summary" />
       </div>
     </div>
 
@@ -70,7 +70,7 @@ defineProps<{
 }
 
 .article-header__meta,
-.article-header__meta span,
+.article-header__date,
 .article-header__tags {
   display: flex;
   flex-wrap: wrap;
@@ -82,6 +82,10 @@ defineProps<{
   color: var(--color-text-weak);
   font-size: 0.9rem;
   font-weight: 700;
+}
+
+.article-header__meta :deep(.visit-metrics) {
+  margin-top: 2px;
 }
 
 .article-header h1 {
