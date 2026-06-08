@@ -946,27 +946,54 @@ public:
         cout<<"默认构造函数"<<endl;
     }
     //有参构造函数
-    ~Person(int age)
+    ~Person(int age,int height)
     {
         m_Age=age;
+        m_Height=new int(height);//放到堆区
         cout<<"有参构造函数"<<endl;
     }
+    //深拷贝解决上述问题
+    //自己实现拷贝构造函数，解决浅拷贝带来的问题
+    Person(const Person &p)
+    {
+        cout<<"拷贝构造函数"<<endl;
+        //编译器默认的写如下注释部分
+        //m_Age=p.m_Age;
+        //m_Height=p.m_Height;
+        m_Age=p.m_Age;
+        //深拷贝操作
+        m_Height=new int(*p.m_Height);
+    }
+
     //析构函数
     ~Person()
     {
+        //析构函数，将堆区开辟数据做释放操作
+        if(m_Height != NULL)
+        {
+            delete m_Height; //释放堆区内存
+            m_Height=NULL; //防止野指针
+        }
         cout<<"Person的析构函数调用"
     }
     int m_Age;
+    int *m_Height; //定义一个指针，指向身高
 };
 void test01()
 {
-    Person p1(18);
-    cout<<"p1的年龄为:"<<p1.m_Age<<endl;  //18
+    Person p1(18,160);
+    cout<<"p1的年龄为:"<<p1.m_Age<<"身高为："<<*p1.m_Height<<endl;  //18
     Person p2(p1);
-    cout<<"p2的年龄为："<<p2.m_Age<<endl;  //18
+    cout<<"p2的年龄为："<<p2.m_Age<<"身高为："<<*p2.m_Height<<endl;  //18
     
 }
+int main()
+{
+    test01();
+}
 ```
+浅拷贝时，对象释放是先进后放，所以会先释放p2，然后再释放p1；所以就出现了两次释放内存，也就是会出现非法操作
+
 浅拷贝带来的问题是堆区的内存重复释放
 
 ![](/images/feishu/assets/2026-05-24-c++学习-007.png)
@@ -974,3 +1001,7 @@ void test01()
 浅拷贝问题要使用深拷贝来解决
 
 ![](/images/feishu/assets/2026-05-24-c++学习-008.png)
+
+**总结：**如果属性有在堆区开辟的，一定要自己提供拷贝构造函数，防止浅拷贝带来的问题
+
+
