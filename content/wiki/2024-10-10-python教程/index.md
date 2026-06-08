@@ -1,7 +1,7 @@
 ---
 title: Python教程
 description: 参考黑马程序员 Python 快速入门路线整理的零基础到综合案例笔记
-category: 编程
+category: 机器人
 ---
 
 # Python教程

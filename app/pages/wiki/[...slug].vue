@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-vue-next'
 import WikiDocHeader from '~/components/wiki/WikiDocHeader.vue'
 import WikiSideToc from '~/components/wiki/WikiSideToc.vue'
 import type { ContentEntry } from '~/utils/content'
+import { getWikiChapterAliasKeys, getWikiRoutePath, normalizeWikiRouteLookupPath } from '~/utils/wikiPath'
 
 type TocLink = {
   id: string
@@ -21,13 +22,9 @@ type WikiDoc = ContentEntry & {
 
 const findByWikiRoutePath = async (lookupPath: string) => {
   const entries = (await queryCollection('wiki').all()) as WikiDoc[]
-  const normalizedLookup = lookupPath.toLowerCase().replace(/\/index$/i, '')
+  const normalizedLookup = normalizeWikiRouteLookupPath(lookupPath).toLowerCase()
 
-  return (
-    entries.find((entry) => getWikiRoutePath(entry).toLowerCase() === normalizedLookup) ||
-    entries.find((entry) => getWikiRoutePath(entry).toLowerCase() === `${normalizedLookup}/index`) ||
-    null
-  )
+  return entries.find((entry) => normalizeWikiRouteLookupPath(getWikiRoutePath(entry)).toLowerCase() === normalizedLookup) || null
 }
 
 const route = useRoute()
@@ -101,6 +98,57 @@ const wikiMetricPaths = computed(() => {
 
   const paths = [...new Set(docNavItems.value.map((doc) => getWikiRoutePath(doc)))]
   return paths.length ? paths : [resolvedRoutePath.value]
+})
+
+const currentWikiSourcePath = computed(() => page.value?.stem || page.value?.path || '')
+const currentWikiGroupRoutePath = computed(() => {
+  const groupRootDoc = groupPrimaryDoc.value || page.value
+  return groupRootDoc ? getWikiRoutePath(groupRootDoc) : ''
+})
+const currentWikiLinkMap = computed<Record<string, string>>(() => {
+  const map: Record<string, string> = {}
+
+  for (const doc of docNavItems.value) {
+    if (isIndexEntry(doc)) {
+      continue
+    }
+
+    const targetPath = getWikiRoutePath(doc)
+
+    for (const key of getWikiChapterAliasKeys(doc)) {
+      map[key] = targetPath
+    }
+  }
+
+  return map
+})
+
+const wikiRenderSourcePath = useState<string>('wiki-render-source-path', () => '')
+const wikiRenderGroupRoutePath = useState<string>('wiki-render-group-route-path', () => '')
+const wikiRenderLinkMap = useState<Record<string, string>>('wiki-render-link-map', () => ({}))
+
+const syncWikiRenderContext = () => {
+  wikiRenderSourcePath.value = currentWikiSourcePath.value
+  wikiRenderGroupRoutePath.value = currentWikiGroupRoutePath.value
+  wikiRenderLinkMap.value = currentWikiLinkMap.value
+}
+
+syncWikiRenderContext()
+
+watch(
+  [currentWikiSourcePath, currentWikiGroupRoutePath, currentWikiLinkMap],
+  syncWikiRenderContext,
+)
+
+onBeforeUnmount(() => {
+  if (wikiRenderSourcePath.value === currentWikiSourcePath.value) {
+    wikiRenderSourcePath.value = ''
+  }
+
+  if (wikiRenderGroupRoutePath.value === currentWikiGroupRoutePath.value) {
+    wikiRenderGroupRoutePath.value = ''
+    wikiRenderLinkMap.value = {}
+  }
 })
 </script>
 
