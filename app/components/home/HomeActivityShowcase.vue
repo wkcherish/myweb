@@ -64,7 +64,7 @@ const modules: HomeModule[] = [
     accent: '#1c8f7d',
     eyebrow: 'Blog',
     variant: 'flip',
-    empty: '近一个月还没有新的博客。',
+    empty: '还没有可展示的博客。',
     counterLabel: '最近 6 条',
   },
   {
@@ -158,7 +158,7 @@ const sanitizeTodoDescription = (value: string) => {
 const normalizeEntry = (entry: ContentEntry, collection: RegularCollectionName): ActivityItem | null => {
   const date = parseEntryDate(entry)
 
-  if (date && date < oneMonthAgo) {
+  if (collection === 'todo' && date && date < oneMonthAgo) {
     return null
   }
 
@@ -166,7 +166,7 @@ const normalizeEntry = (entry: ContentEntry, collection: RegularCollectionName):
   const targetDate = collection === 'todo' ? readString(entry, 'targetDate') : ''
   const description = collection === 'todo'
     ? sanitizeTodoDescription(readString(entry, 'description'))
-    : readString(entry, 'description') || '新增内容已进入最近一个月的首页摘要。'
+    : readString(entry, 'description') || '这篇文章暂时还没有摘要。'
 
   return {
     title: readString(entry, 'title') || '未命名内容',
