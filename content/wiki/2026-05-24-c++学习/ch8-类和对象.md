@@ -930,3 +930,47 @@ int main() {
 	return 0;
 }
 ```
+### 8.2.5深拷贝和浅拷贝
+浅拷贝：简单的赋值拷贝操作
+
+深拷贝：在堆区重新申请空间，进行拷贝操作
+```c++
+#include<iostream>
+using namespace std;
+class Person
+{
+public:
+    //默认构造函数
+    Person()
+    {
+        cout<<"默认构造函数"<<endl;
+    }
+    //有参构造函数
+    ~Person(int age)
+    {
+        m_Age=age;
+        cout<<"有参构造函数"<<endl;
+    }
+    //析构函数
+    ~Person()
+    {
+        cout<<"Person的析构函数调用"
+    }
+    int m_Age;
+};
+void test01()
+{
+    Person p1(18);
+    cout<<"p1的年龄为:"<<p1.m_Age<<endl;  //18
+    Person p2(p1);
+    cout<<"p2的年龄为："<<p2.m_Age<<endl;  //18
+    
+}
+```
+浅拷贝带来的问题是堆区的内存重复释放
+
+![](/images/feishu/assets/2026-05-24-c++学习-007.png)
+
+浅拷贝问题要使用深拷贝来解决
+
+![](/images/feishu/assets/2026-05-24-c++学习-008.png)
