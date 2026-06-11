@@ -1005,3 +1005,306 @@ int main()
 **总结：**如果属性有在堆区开辟的，一定要自己提供拷贝构造函数，防止浅拷贝带来的问题
 
 
+
+### 8.2.6初始化列表
+
+作用：初始化属性
+
+语法：
+```
+构造函数():属性1(值1),属性2(值2).....{}
+```
+
+例子
+```c++
+#include<iostream>
+using namespace std;
+class Person
+{
+    public:
+
+	////传统方式初始化
+	//Person(int a, int b, int c) {
+	//	m_A = a;
+	//	m_B = b;
+	//	m_C = c;
+	//}
+
+	//初始化列表方式初始化
+    //使用有参构造函数
+	Person(int a, int b, int c) :m_A(a), m_B(b), m_C(c) {}
+	void PrintPerson() {
+		cout << "mA:" << m_A << endl;
+		cout << "mB:" << m_B << endl;
+		cout << "mC:" << m_C << endl;
+	}
+private:
+	int m_A;
+	int m_B;
+	int m_C;
+};
+
+int main() 
+{
+
+	Person p(1, 2, 3);
+	p.PrintPerson();
+
+
+	system("pause");
+
+	return 0;
+}
+```
+通过有参构造函数的参数赋值给后面的属性的形式实现初始化列表的,**参数名就是定义的对象属性**，**属性后面的值为有参构造函数的形参**
+```c++
+Person(int a.int b,int b):m_A(a),m_B(c),m_C(b) {}
+```
+
+### 8.2.7类对象作为类成员
+c++类中的成员可以是另一个类的对象，该成员被称为类成员
+
+例如：
+```c++
+A{};
+B
+{
+    A a;
+}
+//B类中有对象A作为成员，A为对象成员
+```
+
+案例
+```c++
+//phone这个对象作为Person这个类的类成员
+class Phone
+{
+public：
+    // 赋值(构造函数)
+    Phone(string pName)
+    {
+        m_pName=pName;
+        cout<<"Phone的构造函数调用";
+    }
+    ~Phone()
+    {
+        cout<<"Phone析构函数调用"<<endl;
+    }
+    //
+    string m_PName;
+};
+class Person
+{
+public:
+    //赋值
+    Person(string name,string pname):m_name(name),m_phone.m_PName(pname) 
+    {
+        cout<<"Person的构造函数调用";
+    }
+    ~Person()
+    {
+        cout<<"Person析构函数调用"<<endl;
+    }
+    //姓名
+    string m_name;
+    //手机
+    Phone m_Phone;
+};
+void test01()
+{
+    Person p("张三","安卓");
+    cout<<p.Name<<"拿着："<<p.m_phone.m_PName;
+}
+int main()
+{
+    test01();
+}
+```
+注意：
+```c++
+    //不需要写这个：
+    // Person(string name,string pname):m_name(name),m_phone.m_PName(pname) {}
+```
+因为Phone这个类里面写了有参构造函数，所以不需要调用他的属性直接传值通过有参构造函数就可以实现初始化phone
+
+```c++
+Person(string name.string pname):m_name(name),m_phone(pname) {}
+```
+
+采用的是隐式转换法，实际为如下：
+`m_phone(pname)`=`Phone m_phone=pname`
+
+**总结**：这里可以直接类比人的胳膊腿，肯定得全有之后才能构造人！析构函数是遵循先进后出的规律！（析构函数的调用顺序与构造函数的调用顺序是相反的）
+
+因此，这里应当是先Phone构造函数调用，然后再Person构造函数调用；Person的析构函数先调用，Phone的析构函数在调用；
+
+### 8.2.8静态对象
+静态对象在成员对象前static，称为静态对象
+
+静态对象分为两类：
+1. 静态成员变量  
+* ①所有对象共享同一份数据   (理解的话可以当作指针，例如a=10;b=20;此时a=20，这里只例子仅仅为解释共享同一份数据)
+* ②在编译阶段分配内存
+* ③类内声明，类外初始化
+
+2. 静态成员函数
+* ①所有对象共享同一个函数
+* ②静态成员函数只能访问静态成员变量
+
+#### 8.2.8.1静态成员变量 
+```c++
+#include<iostream>
+using namespace std;
+class Person
+{
+public:
+    //非静态成员变量
+    // int m_A;
+    //定义静态成员变量
+    static int m_A;
+
+
+};
+void test01()
+{
+    Person p;
+    //输出类成员变量这块内存
+    cout<<p.m_A<<endl;
+}
+int main()
+{
+    test01()
+}
+```
+此时输出是报错的：无法解析外部命令
+
+解决这一问题：必须用到类内声明，类外初始化操作
+
+```c++
+#include<iostream>
+using namespace std;
+class Person
+{
+public:
+    //类内声明
+    static int m_A;
+};
+//类外初始化
+int Person::m_A=10;
+void test01()
+{
+    Person p;
+    //访问变量的原内存空间
+    //100
+    cout<<p.m_A<<endl;
+    Person p2;
+    p2.m_A=200;
+    //继续访问这片空间
+    //200
+    cout<<p2.m_A<<endl;
+}
+int main()
+{
+    test01();
+}
+```
+
+**静态变量的访问**
+```c++
+#include<iostream>
+using namespace std;
+class Person
+{
+public:
+    //类内声明
+    static int m_A;
+private:
+    //静态成员变量也是有访问权限的
+    static int m_B;
+};
+//类外初始化
+int Person::m_A=10;
+int Person::m_B=20;
+void test02()
+{
+    //静态成员变量 不属于某个对象上，所有对象都共享同一份数据
+    //静态成员变量有两种访问方式：
+    //1.通过对象进行访问
+    Person p;  
+    cout<<p.m_A<<endl;
+    //这里其实也可以不用创建对象，因为它本身也不属于某个对象，采用下面方法
+    //2.通过类名进行访问
+    cout<<Person::m_A<<endl;
+    cout<<Person::m_B<<endl; //没有访问权限，报错
+}
+int main()
+{
+    test02();
+}
+```
+
+#### 8.2.8.2静态成员函数
+
+1.静态成员函数定义与访问
+
+```c++
+class Person
+{
+public:
+    //在公共权限下定义静态成员函数
+    static void func()
+    {
+        coout<<"静态成员函数的调用"<<endl;
+    }
+};
+void test01()
+{
+    //静态成员函数的调用方式:
+    //1.通过对象访问
+    Person p;
+    p.func();
+    //2.通过类名访问
+    Person::func();
+}
+```
+
+2. 静态成员函数只能访问静态成员变量
+```c++
+class Person
+{
+public:
+    //在公共权限下定义静态成员函数
+    static void func()
+    {
+        m_A=100; //静态成员函数可以访问 静态成员变量
+        //m_B=200;//这行直接报错，因为Person::func();调用函数时，编译器是不知道改p1的m_B还是p2的m_B;m_A是对所有对象公用，但是m_B专属于某个对象
+        coout<<"静态成员函数的调用"<<endl;
+    }
+    static int m_A; //静态成员变量
+    int m_B; //非静态成员变量
+
+private:
+    //静态成员变量也是有访问权限的
+    static void func2()
+    {
+        cout<<"这是私有权限下的静态函数调用"<<endl;
+    }
+
+
+};
+int Person::m_A=0;
+void test01()
+{
+    //静态成员函数的调用方式:
+    //1.通过对象访问
+    Person p;
+    p.func();
+    //2.通过类名访问
+    Person::func();
+    //Person::func2();   报错，类外是访问不到私有静态成员函数的
+}
+int main()
+{
+    test01();
+}
+```
