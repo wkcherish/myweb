@@ -1308,3 +1308,113 @@ int main()
     test01();
 }
 ```
+
+### 8.3C++对象模型和this指针
+#### 8.3.1成员变量和成员函数分开存储
+
+在c++中，类内的成员变量和成员函数分开存储
+
+只有非静态成员变量才属于类的对象上
+
+##### 8.3.1.1空对象占的内存大小
+
+```c++
+#include<iostraem>
+using namespace std;
+class Person
+{
+
+};
+void test01()
+{
+    Person p;
+    cout<<"size of p="<<sizeoif(p)<<endl; //查看这个空类的占用的内存空间
+}
+int main()
+{
+    test01();
+}
+```
+
+输出结果为：size of p=1
+
+原因：C++编译器会给每个空对象也分配一个字节空间，是为了区分空对象占内存的位置
+
+每一个空对象也应该有一个独一无二的内存地址（可以这样理解：一个字节的空间不用来存储数据，而是作为标记去区分不同的对象）
+
+##### 8.3.1.2成员变量与成员函数分开存储
+
+```c++
+#include<iostream>
+using namespace std;
+class Person 
+{
+    int m_A;//非静态成员变量
+};
+void test01()
+{
+    Person p;
+    cout<<"size of p="<<sizeof(p)<<endl; //查看不是空对象时占用多少内存
+
+}
+int main()
+{
+    test01();
+}
+```
+输出结果：size of p=4
+
+解释：对象是空的话就占用一字节内存；如果对象不为空，占用的内存空间就是变量占用内存空间的情况
+
+1. 如果加上非静态成员变量，Person类修改如下
+```c++
+class Person
+{
+    int m_A;
+    static int m_B;
+};
+// 静态成员变量类内声明，类外初始化
+int Person::m_B=0;
+```
+
+输出结果：4
+
+解释：静态成员变量不属于某一个对象上，因此还是看int m_A;占用4字节
+
+2. 加上非静态成员函数
+
+```c++
+class  Person
+{
+    int m_A;
+    void func()
+    {
+
+    }
+};
+
+```
+
+输出结果：4
+成员函数与成员变量是分开存储的，非静态成员函数不属于类对象上
+
+3. 加上静态成员函数
+```c++
+class  Person
+{
+    int m_A;
+    void func()
+    {
+
+    }
+    static void func1()
+    {
+
+    }
+};
+
+```
+输出结果：4
+
+解释：静态成员函数也不属于类上
+
